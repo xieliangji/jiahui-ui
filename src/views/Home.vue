@@ -1,18 +1,27 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <sugar-page nav-title="首页">
+    <div id="sugarHome" slot="default">
+
+    </div>
+  </sugar-page>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
+import SugarPage from "@/components/SugarPage";
 export default {
-  name: 'Home',
-  components: {
-    HelloWorld
+  name: "Home",
+  components: {SugarPage},
+  data(){
+    return {
+
+    }
+  },
+  methods: {
+
   }
 }
 </script>
+
+<style scoped>
+
+</style>
