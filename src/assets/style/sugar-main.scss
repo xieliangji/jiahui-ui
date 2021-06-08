@@ -123,7 +123,7 @@ el-XXX 全局样式覆盖
 
 // 全局过渡样式
 .fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
+  transition: opacity .25s;
 }
 .fade-enter, .fade-leave-to{
   opacity: 0;

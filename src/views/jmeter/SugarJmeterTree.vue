@@ -42,7 +42,7 @@ import {
   LoginConfig,
   CounterConfig, RandomVariableConfig
 } from "@/views/jmeter/js/ConfigElement";
-import {IfController} from "@/views/jmeter/js/Controller";
+import {IfController, LoopController, TransactionController, WhileController} from "@/views/jmeter/js/Controller";
 
 export default {
   name: "SugarJmeterTree",
@@ -84,6 +84,9 @@ export default {
     this.treeData[0].children.push(new CounterConfig())
     this.treeData[0].children.push(new RandomVariableConfig())
     this.treeData[0].children.push(new IfController())
+    this.treeData[0].children.push(new TransactionController())
+    this.treeData[0].children.push(new LoopController())
+    this.treeData[0].children.push(new WhileController())
   },
   computed: {
     categories(){

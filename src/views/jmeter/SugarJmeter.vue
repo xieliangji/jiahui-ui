@@ -42,8 +42,10 @@
         <config-element-login :key="19" v-if="currentElement.type === JT.LoginConfig" :element="currentElement"></config-element-login>
         <config-element-counter :key="20" v-if="currentElement.type === JT.CounterConfig" :element="currentElement"></config-element-counter>
         <config-element-random :key="21" v-if="currentElement.type === JT.RandomVariableConfig" :element="currentElement"></config-element-random>
-
-
+        <controller-if :key="22" v-if="currentElement.type === JT.IfController" :element="currentElement"></controller-if>
+        <controller-transaction :key="23" v-if="currentElement.type === JT.TransactionController" :element="currentElement"></controller-transaction>
+        <controller-loop :key="24" v-if="currentElement.type === JT.LoopController" :element="currentElement">ss</controller-loop>
+        <controller-while :key="25" v-if="currentElement.type === JT.WhileController" :element="currentElement"></controller-while>
 
       </transition>
     </div>
@@ -74,9 +76,17 @@ import ConfigElementSimple from "@/views/jmeter/ConfigElementSimple";
 import ConfigElementLogin from "@/views/jmeter/ConfigElementLogin";
 import ConfigElementCounter from "@/views/jmeter/ConfigElementCounter";
 import ConfigElementRandom from "@/views/jmeter/ConfigElementRandom";
+import ControllerIf from "@/views/jmeter/ControllerIf";
+import ControllerTransaction from "@/views/jmeter/ControllerTransaction";
+import ControllerLoop from "@/views/jmeter/ControllerLoop";
+import ControllerWhile from "@/views/jmeter/ControllerWhile";
 export default {
   name: "SugarJmeter",
   components: {
+    ControllerWhile,
+    ControllerLoop,
+    ControllerTransaction,
+    ControllerIf,
     ConfigElementRandom,
     ConfigElementCounter,
     ConfigElementLogin,
