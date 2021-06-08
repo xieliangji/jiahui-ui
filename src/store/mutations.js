@@ -13,5 +13,14 @@ export default {
     initTestPlan: state => {
         state.testPlan = new TestPlan()
         state.currentTestElement = state.testPlan
+    },
+
+    /**
+     * 设置当前测试计划节点元素
+     * @param state
+     * @param jmeterTestElement
+     */
+    setCurrentTestElement: (state, jmeterTestElement) => {
+        state.currentTestElement = jmeterTestElement
     }
 }

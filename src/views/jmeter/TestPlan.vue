@@ -1,8 +1,8 @@
 <template>
-  <sugar-jmeter-element :title="$JL.TestPlan" :jmeter-element="element">
+  <sugar-jmeter-element :jmeter-element="element">
     <div class="sugar-flex-col test-plan-arg">
       <div>用户自定义变量</div>
-      <div style="border: 1px solid #F0F2F0;">
+      <div style="border: 1px solid #DCDFE6;">
         <el-table :key="testPlanArgumentTableKey" ref="testPlanArgumentTable" height="600px" :data="element.arguments" empty-text=" " highlight-current-row row-key="id" @row-click="handleRowClick">
           <el-table-column prop="name">
             <div slot="header" class="sugar-table-header">名称</div>
@@ -70,8 +70,17 @@ export default {
     handleDel(){
       for(let index = 0; index < this.element.arguments.length && this.currentArgument !== undefined; index++){
         if(this.currentArgument.id === this.element.arguments[index].id){
+          if(this.element.arguments.length === 0){
+            this.currentArgument = undefined
+          } else {
+            if(index < this.element.arguments.length - 1){
+              this.currentArgument = this.element.arguments[index + 1]
+            } else {
+              this.currentArgument = this.element.arguments[index - 1]
+            }
+          }
           this.element.arguments.splice(index, 1)
-          this.currentArgument = undefined
+          this.$refs.testPlanArgumentTable.setCurrentRow(this.currentArgument)
           break
         }
       }
@@ -102,7 +111,6 @@ export default {
               this.$nextTick(() => this.$refs.testPlanArgumentTable.setCurrentRow(this.currentArgument))
             }
           }
-
           return
         }
       }

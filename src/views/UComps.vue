@@ -225,7 +225,7 @@ export default {
 <style lang="scss">
 $color: #536976; // 字体颜色
 $activeColor: #4AC29A; // 激活状态颜色
-$borderColor: #bdc3c7; // 边框颜色
+$borderColor: #DCDFE6; // 边框颜色
 $hoverBorderColor: #F0F2F0;
 $backgroundColor: #FFFFFF;
 $hoverBgColor: #F0F2F0;
@@ -513,8 +513,8 @@ $padding: 5px;
   color: $color !important;
 }
 .el-tree-node__content{
-  height: 28px !important;
-  line-height: 28px !important;
+  height: 26px !important;
+  line-height: 26px !important;
   &:hover{
     background-color: $hoverBgColor !important;
   }
@@ -551,22 +551,22 @@ $padding: 5px;
 }
 
 // 标签页
-.el-tabs{
-  height: 100% !important;
-
-  .el-tabs__header{
-    height: 32px !important;
-    margin: 0 !important;
-  }
-
-  .el-tabs__content{
-    height: calc(100% - 32px) !important;
-
-    .el-tab-pane{
-      height: 100% !important;
-    }
-  }
-}
+//.el-tabs{
+//  height: 100% !important;
+//
+//  .el-tabs__header{
+//    height: 32px !important;
+//    margin: 0 !important;
+//  }
+//
+//  .el-tabs__content{
+//    height: calc(100% - 32px) !important;
+//
+//    .el-tab-pane{
+//      height: 100% !important;
+//    }
+//  }
+//}
 .el-tabs__item.is-active{
   color: $activeColor !important;
   font-weight: bold !important;
@@ -584,8 +584,11 @@ $padding: 5px;
 .el-tabs__active-bar{
   height: 0 !important;
 }
-.el-tabs__nav-wrap::after{
-  background-color: #F0F2F0 !important;
+.el-tabs__nav-wrap{
+  border-bottom: 1px solid #DCDFE6;
+  &::after{
+    background-color: transparent !important;
+  }
 }
 .el-tabs__new-tab{
   color: $activeColor !important;
@@ -602,5 +605,10 @@ $padding: 5px;
   }
 }
 
+// ace-editor xcode 皮肤的左侧边样式
+.ace-xcode .ace_gutter{
+  background: #eef2f3 !important;
+  color: $color !important;
+}
 
 </style>

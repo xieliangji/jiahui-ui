@@ -1,6 +1,6 @@
 <template>
   <div id="jmeter-tree">
-    <el-tree :data="treeData" :props="treeProps" :key="treeKey" empty-text=" " ref="testPlanTree" node-key="id" :current-node-key="$store.state.currentTestElement.id" highlight-current accordion>
+    <el-tree default-expand-all :data="treeData" :props="treeProps" :key="treeKey" empty-text=" " ref="testPlanTree" node-key="id" :current-node-key="$store.state.currentTestElement.id" highlight-current accordion :expand-on-click-node="false" @node-click="handleNodeClick">
       <div slot-scope="{node, data}" :style="{opacity: (node.level === 1 || (node.level !== 1 && node.parent.data.enabled)) && data.enabled ? '1':'.5'}">
         <img class="tree-node-icon" src="../../assets/tree-icon/applications-science-3.png" v-if="data.category === categories.TestPlan">
         <img class="tree-node-icon" src="../../assets/tree-icon/system-run-5.png" v-if="data.category === categories.ThreadGroup">
@@ -14,7 +14,7 @@
         <img class="tree-node-icon" src="../../assets/tree-icon/preferences-system-4.png" v-if="data.category === categories.ConfigElement">
         <img class="tree-node-icon" src="../../assets/tree-icon/appointment-new-3.png" v-if="data.category === categories.Timer">
         <img class="tree-node-icon" src="../../assets/tree-icon/document-preview.png" v-if="data.category === categories.Assertion">
-        <span>{{node.label}}</span>
+        <span> {{node.label}}</span>
       </div>
     </el-tree>
   </div>
@@ -22,6 +22,27 @@
 
 <script>
 import {JC} from "@/views/jmeter/js/JmeterTestElement";
+import { ThreadGroup} from "@/views/jmeter/js/ThreadGroup";
+import {
+  AuthManager,
+  BoltConnectionElement,
+  CacheManager,
+  CookieManager,
+  CSVDataSet,
+  DNSCacheManage,
+  FtpConfig,
+  HeaderManager,
+  HttpDefaults,
+  JavaConfig,
+  JDBCDataSource,
+  KeystoreConfig,
+  TCPConfig,
+  Arguments,
+  SimpleConfig,
+  LoginConfig,
+  CounterConfig, RandomVariableConfig
+} from "@/views/jmeter/js/ConfigElement";
+import {IfController} from "@/views/jmeter/js/Controller";
 
 export default {
   name: "SugarJmeterTree",
@@ -36,11 +57,33 @@ export default {
     }
   },
   methods: {
-
+    handleNodeClick(data){
+      this.$store.commit('setCurrentTestElement', data)
+    }
   },
   created() {
     this.$store.commit('initTestPlan')
     this.treeData[0] = this.$store.state.testPlan
+    this.treeData[0].children.push(new ThreadGroup())
+    this.treeData[0].children.push(new HeaderManager())
+    this.treeData[0].children.push(new CSVDataSet())
+    this.treeData[0].children.push(new CookieManager())
+    this.treeData[0].children.push(new CacheManager())
+    this.treeData[0].children.push(new HttpDefaults())
+    this.treeData[0].children.push(new BoltConnectionElement())
+    this.treeData[0].children.push(new DNSCacheManage())
+    this.treeData[0].children.push(new FtpConfig())
+    this.treeData[0].children.push(new AuthManager())
+    this.treeData[0].children.push(new JDBCDataSource())
+    this.treeData[0].children.push(new JavaConfig())
+    this.treeData[0].children.push(new TCPConfig())
+    this.treeData[0].children.push(new KeystoreConfig())
+    this.treeData[0].children.push(new Arguments())
+    this.treeData[0].children.push(new SimpleConfig())
+    this.treeData[0].children.push(new LoginConfig())
+    this.treeData[0].children.push(new CounterConfig())
+    this.treeData[0].children.push(new RandomVariableConfig())
+    this.treeData[0].children.push(new IfController())
   },
   computed: {
     categories(){

@@ -398,6 +398,59 @@ export function Argument(){
     this.desc = ''
 }
 
+
+export function Header(){
+    this.id = performance.now().toString()
+    this.name = ''
+    this.value = ''
+}
+
+
+export function Cookie(){
+    this.id = performance.now().toString()
+    this.name = ''
+    this.value = ''
+    this.domain = ''
+    this.path = ''
+    this.secure = false
+    this.expires = 0
+    this.pathSpecified = true
+    this.domainSpecified = true
+}
+
+
+export function HttpArgument(){
+    Argument.call(this)
+    this.alwaysEncode = false
+    this.useEquals = true
+    this.contentType = 'text/plain'
+}
+
+
+export function DnsServer(){
+    this.id = performance.now().toString()
+    this.name = ''
+}
+
+
+export function DnsHost(){
+    this.id = performance.now().toString()
+    this.host = ''
+    this.nameOrIp = ''
+}
+
+
+export function Authorization(){
+    this.id = performance.now().toString()
+    this.url = ''
+    this.username = ''
+    this.password = ''
+    this.domain = ''
+    this.realm = ''
+    this.mechanism = 'BASIC'
+}
+
+
 export function AbstractTestElement(element){
     this.id = performance.now().toString()
     this.category = element.category
@@ -408,4 +461,48 @@ export function AbstractTestElement(element){
     this.enabled = true
     this.comments = ''
     this.children = []
+}
+
+
+export function AbstractHttp(element){
+    AbstractTestElement.call(this, element)
+    this.protocol = '' // string 协议
+    this.domain = '' // string 域名
+    this.path = '' // string 路径
+    this.port = '' // string 端口号
+    this.contentEncoding = '' // string 内容编码
+    this.postBodyRaw = false // bool 请求参数是否原生
+    this.arguments = [] // element 请求参数
+    this.implementation = ''  // string 客户端实现
+    this.connectTimeout = '30000' // string 连接超时
+    this.responseTimeout = '30000' // string 响应超时
+    this.imageParser = false // bool 从html文件获取所有内含的资源
+    this.concurrentDwn = false // bool 并行下载
+    this.concurrentPool = 6  // string 数量
+    this.embeddedUrlRe = ''  // string 匹配网址
+    this.embeddedUrlExcludeRe = '' // string 网址必须不匹配
+    this.ipSourceType = 0  // int 源地址类型
+    this.ipSource = '' // string 源地址
+    this.proxyScheme = '' // string 代理scheme
+    this.proxyHost = '' // string 代理服务器ip
+    this.proxyPort = '' // string 代理服务器端口号
+    this.proxyUser = '' // string 代理服务器用户名
+    this.proxyPass = '' // string 代理服务器密码
+    this.md5 = false // bool 是否保存响应为md5哈希
+}
+
+
+export function AbstractTcp(element){
+    AbstractTestElement.call(this, element)
+    this.classname = '' // string
+    this.server = '' // string
+    this.port = '' //string
+    this.cTimeout = '' // string
+    this.timeout = '' // string
+    this.reUseConnection = true // bool 重用连接
+    this.closeConnection = false // bool 关闭连接
+    this.noDelay = false // bool 设置无延迟
+    this.soLinger = '' // string
+    this.eolByte = '' // string 行尾字节值
+    this.request = '' // string  要发送的文本
 }

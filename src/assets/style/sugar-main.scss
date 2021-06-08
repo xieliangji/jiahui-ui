@@ -1,4 +1,5 @@
 $lineHeight: 32px;
+$borderColor: #DCDFE6;
 
 html, body{
   height: 100%;
@@ -55,6 +56,11 @@ html, body{
 }
 
 
+// 普通边框
+.sugar-normal-border{
+  border: 1px solid #DCDFE6; padding: 20px; border-radius: 2px;
+}
+
 /*******************************
 
 el-XXX 全局样式覆盖
@@ -97,4 +103,28 @@ el-XXX 全局样式覆盖
 .sugar-dialog-body{
   max-height: 800px;
   overflow: auto;
+}
+
+// 全局带文字边框样式
+.sugar-top-border{
+  border-top: 1px solid $borderColor;
+  padding-bottom: 30px;
+}
+
+.sugar-border-text{
+  position: relative;
+  top: -10px;
+  left: 5px;
+  background: #eef2f3;
+  width: fit-content;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+// 全局过渡样式
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to{
+  opacity: 0;
 }
