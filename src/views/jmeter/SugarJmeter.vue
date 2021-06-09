@@ -46,6 +46,18 @@
         <controller-transaction :key="23" v-if="currentElement.type === JT.TransactionController" :element="currentElement"></controller-transaction>
         <controller-loop :key="24" v-if="currentElement.type === JT.LoopController" :element="currentElement">ss</controller-loop>
         <controller-while :key="25" v-if="currentElement.type === JT.WhileController" :element="currentElement"></controller-while>
+        <controller-foreach :key="26" v-if="currentElement.type === JT.ForeachController" :element="currentElement"></controller-foreach>
+        <controller-include :key="27" v-if="currentElement.type === JT.IncludeController" :element="currentElement"></controller-include>
+        <controller-runtime :key="28" v-if="currentElement.type === JT.RunTime" :element="currentElement"></controller-runtime>
+        <controller-critical :key="29" v-if="currentElement.type === JT.CriticalSectionController" :element="currentElement"></controller-critical>
+        <controller-generic :key="30" v-if="currentElement.type === JT.OnceOnlyController" :element="currentElement"></controller-generic>
+        <controller-generic :key="31" v-if="currentElement.type === JT.GenericController" :element="currentElement"></controller-generic>
+        <controller-random :key="32" v-if="currentElement.type === JT.RandomController" :element="currentElement"></controller-random>
+        <controller-generic :key="33" v-if="currentElement.type === JT.RandomOrderController" :element="currentElement"></controller-generic>
+        <controller-throughput :key="34" v-if="currentElement.type === JT.ThroughputController" :element="currentElement"></controller-throughput>
+        <controller-switch :key="35" v-if="currentElement.type === JT.SwitchController" :element="currentElement"></controller-switch>
+        <controller-interleave :key="36" v-if="currentElement.type === JT.InterleaveControl" :element="currentElement"></controller-interleave>
+
 
       </transition>
     </div>
@@ -80,9 +92,27 @@ import ControllerIf from "@/views/jmeter/ControllerIf";
 import ControllerTransaction from "@/views/jmeter/ControllerTransaction";
 import ControllerLoop from "@/views/jmeter/ControllerLoop";
 import ControllerWhile from "@/views/jmeter/ControllerWhile";
+import ControllerForeach from "@/views/jmeter/ControllerForeach";
+import ControllerInclude from "@/views/jmeter/ControllerInclude";
+import ControllerRuntime from "@/views/jmeter/ControllerRuntime";
+import ControllerCritical from "@/views/jmeter/ControllerCritical";
+import ControllerGeneric from "@/views/jmeter/ControllerGeneric";
+import ControllerRandom from "@/views/jmeter/ControllerRandom";
+import ControllerThroughput from "@/views/jmeter/ControllerThroughput";
+import ControllerSwitch from "@/views/jmeter/ControllerSwitch";
+import ControllerInterleave from "@/views/jmeter/ControllerInterleave";
 export default {
   name: "SugarJmeter",
   components: {
+    ControllerInterleave,
+    ControllerSwitch,
+    ControllerThroughput,
+    ControllerRandom,
+    ControllerGeneric,
+    ControllerCritical,
+    ControllerRuntime,
+    ControllerInclude,
+    ControllerForeach,
     ControllerWhile,
     ControllerLoop,
     ControllerTransaction,

@@ -42,7 +42,23 @@ import {
   LoginConfig,
   CounterConfig, RandomVariableConfig
 } from "@/views/jmeter/js/ConfigElement";
-import {IfController, LoopController, TransactionController, WhileController} from "@/views/jmeter/js/Controller";
+import {
+  CriticalSectionController,
+  ForeachController,
+  GenericController,
+  IfController,
+  IncludeController,
+  InterleaveControl,
+  LoopController,
+  OnceOnlyController,
+  RandomController,
+  RandomOrderController,
+  RunTime,
+  SwitchController,
+  ThroughputController,
+  TransactionController,
+  WhileController
+} from "@/views/jmeter/js/Controller";
 
 export default {
   name: "SugarJmeterTree",
@@ -64,6 +80,8 @@ export default {
   created() {
     this.$store.commit('initTestPlan')
     this.treeData[0] = this.$store.state.testPlan
+    let c = this.treeData[0].children
+
     this.treeData[0].children.push(new ThreadGroup())
     this.treeData[0].children.push(new HeaderManager())
     this.treeData[0].children.push(new CSVDataSet())
@@ -87,6 +105,17 @@ export default {
     this.treeData[0].children.push(new TransactionController())
     this.treeData[0].children.push(new LoopController())
     this.treeData[0].children.push(new WhileController())
+    this.treeData[0].children.push(new ForeachController())
+    this.treeData[0].children.push(new IncludeController())
+    c.push(new RunTime())
+    c.push(new CriticalSectionController())
+    c.push(new InterleaveControl())
+    c.push(new OnceOnlyController())
+    c.push(new GenericController())
+    c.push(new RandomController())
+    c.push(new RandomOrderController())
+    c.push(new ThroughputController())
+    c.push(new SwitchController())
   },
   computed: {
     categories(){
