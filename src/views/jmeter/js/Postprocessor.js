@@ -73,3 +73,51 @@ export function JSR223PostProcessor(){
 export function JDBCPostProcessor(){
     AbstractJDBC.call(this, TestElements.JDBCPostProcessor)
 }
+
+
+export function XPath2Extractor(){
+    AbstractTestElement.call(this, TestElements.XPath2Extractor)
+    this.scope = 'parent'
+    this.variable = ''
+    this.refName = ''
+    this.xpathQuery = ''
+    this.matchNumber = '0'
+    this.default = ''
+    this.namespaces = ''
+    this.fragment = false
+}
+
+
+export function XPathExtractor(){
+    AbstractTestElement.call(this, TestElements.XPathExtractor)
+    this.scope = 'parent'
+    this.variable = ''
+    this.tolerant = false
+    this.quiet = true
+    this.reportErrors = false
+    this.showWarnings = false
+    this.fragment = false
+    this.namespace = false
+    this.validate = false
+    this.whitespace = false
+    this.downloadDtds = false
+    this.refName = ''
+    this.xpathQuery = ''
+    this.matchNumber = '-1'
+    this.default = ''
+}
+
+
+export function ResultAction(){
+    AbstractTestElement.call(this, TestElements.ResultAction)
+    this.action = 0
+}
+
+
+export function DebugPostProcessor(){
+    AbstractTestElement.call(this, TestElements.DebugPostProcessor)
+    this.displayJMeterProperties = false
+    this.displayJMeterVariables = true
+    this.displaySamplerProperties = true
+    this.displaySystemProperties = false
+}

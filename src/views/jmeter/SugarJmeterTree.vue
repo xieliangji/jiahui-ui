@@ -74,11 +74,11 @@ import {
   UserParameters
 } from "@/views/jmeter/js/Preprocessor";
 import {
-  BoundaryExtractor,
+  BoundaryExtractor, DebugPostProcessor,
   HtmlExtractor, JDBCPostProcessor,
   JMESPathExtractor,
   JSONPostProcessor, JSR223PostProcessor,
-  RegexExtractor
+  RegexExtractor, ResultAction, XPath2Extractor, XPathExtractor
 } from "@/views/jmeter/js/Postprocessor";
 
 export default {
@@ -159,6 +159,10 @@ export default {
     c.push(new BoundaryExtractor())
     c.push(new JSR223PostProcessor())
     c.push(new JDBCPostProcessor())
+    c.push(new XPath2Extractor())
+    c.push(new XPathExtractor())
+    c.push(new ResultAction())
+    c.push(new DebugPostProcessor())
   },
   computed: {
     categories(){

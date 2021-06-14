@@ -78,7 +78,10 @@
         <postprocessor-boundary :key="keyId" v-if="currentElement.type === JT.BoundaryExtractor" :element="currentElement"></postprocessor-boundary>
         <element-jsr223 :key="keyId" v-if="currentElement.type === JT.JSR223PostProcessor" :element="currentElement"></element-jsr223>
         <element-jdbc :key="keyId" v-if="currentElement.type === JT.JDBCPostProcessor" :element="currentElement"></element-jdbc>
-
+        <postprocessor-xpath2 :key="keyId" v-if="currentElement.type === JT.XPath2Extractor" :element="currentElement"></postprocessor-xpath2>
+        <postprocessor-xpath :key="keyId" v-if="currentElement.type === JT.XPathExtractor" :element="currentElement"></postprocessor-xpath>
+        <postprocessor-result-action :key="keyId" v-if="currentElement.type === JT.ResultAction" :element="currentElement"></postprocessor-result-action>
+        <postprocessor-debug :key="keyId" v-if="currentElement.type === JT.DebugPostProcessor" :element="currentElement"></postprocessor-debug>
 
 
       </transition>
@@ -141,9 +144,17 @@ import PostprocessorJmes from "@/views/jmeter/PostprocessorJmes";
 import PostprocessorJson from "@/views/jmeter/PostprocessorJson";
 import PostprocessorRegex from "@/views/jmeter/PostprocessorRegex";
 import PostprocessorBoundary from "@/views/jmeter/PostprocessorBoundary";
+import PostprocessorXpath2 from "@/views/jmeter/PostprocessorXpath2";
+import PostprocessorXpath from "@/views/jmeter/PostprocessorXpath";
+import PostprocessorResultAction from "@/views/jmeter/PostprocessorResultAction";
+import PostprocessorDebug from "@/views/jmeter/PostprocessorDebug";
 export default {
   name: "SugarJmeter",
   components: {
+    PostprocessorDebug,
+    PostprocessorResultAction,
+    PostprocessorXpath,
+    PostprocessorXpath2,
     PostprocessorBoundary,
     PostprocessorRegex,
     PostprocessorJson,
