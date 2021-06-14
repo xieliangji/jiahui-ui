@@ -305,6 +305,7 @@ $padding: 5px;
 // 单选按钮、复选框
 .el-radio{
   margin-right: 20px !important;
+  line-height: $lineHeight !important;
 }
 .el-radio__label, .el-checkbox__label{
   padding-left: 5px !important;
@@ -320,7 +321,9 @@ $padding: 5px;
 .el-radio__label:hover, .el-checkbox__label:hover,.el-radio__inner:hover, .el-checkbox__inner:hover{
   border-color: $activeColor !important;
 }
-
+.el-radio-button__inner, .el-radio-group{
+  line-height: $lineHeight !important;
+}
 // 表格
 .el-table td, .el-table th, .el-table .cell {
   padding: 0 !important;
@@ -422,7 +425,9 @@ $padding: 5px;
     margin-left: 5px !important;
   }
 }
-
+.el-menu.el-menu--horizontal{
+  border-bottom: none !important;
+}
 .el-menu--horizontal>.el-submenu.is-active .el-submenu__title, .el-menu--horizontal>.el-menu-item.is-active{
   border-bottom: 1px solid $activeColor !important;
   color: $activeColor !important;
@@ -514,17 +519,18 @@ $padding: 5px;
 }
 .el-tree-node__content{
   height: 26px !important;
-  line-height: 26px !important;
+  line-height: 26px !important;  font-size: 13px;
+
   &:hover{
     background-color: $hoverBgColor !important;
   }
 }
 .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{
-  background-color: #eef2f3 !important;
-  font-weight: bold !important;
+  background-color: #bdc3c7 !important;
+  //color: #2ebf91 !important;
 }
 .el-tree-node__content>.el-tree-node__expand-icon{
-  padding: 4px !important;
+  padding: 2px !important;
   color: $color !important;
 }
 .el-tree-node__expand-icon.is-leaf{

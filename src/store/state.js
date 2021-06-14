@@ -5,4 +5,5 @@ export default {
 
     testPlan: undefined,
     currentTestElement: undefined,
+    testElementId: 0
 }

@@ -186,10 +186,12 @@ $bodyHeight: calc(100vh - 100px);
   display: flex;
   flex-flow: row nowrap;
   border-bottom: 1px solid #DCDFE6;
-  background: {
-    image: url("../assets/header.jpg");
-    size: cover;
-  };
+  box-sizing: border-box;
+  //background: {
+  //  image: url("../assets/header.jpg");
+  //  size: cover;
+  //};
+  background-color: #eef2f3;
 
   #sugar-logo{
     width: 90px;

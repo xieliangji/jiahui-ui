@@ -11,52 +11,74 @@
         <div class="sugar-jmeter-opt">停止运行</div>
         <div class="sugar-jmeter-opt" @click="isShowFuncHelper = true">函数助手</div>
       </div>
+      <div style="width: 2px; background: linear-gradient(45deg, #bdc3c7 50%, #FFFFFF 0); background-size: 2px 2px;"></div>
       <div id="tree-data">
         <sugar-jmeter-tree></sugar-jmeter-tree>
       </div>
-      <div style="width: 5px; background: linear-gradient(45deg, #bdc3c7 50%, #FFFFFF 0); background-size: 2px 2px;"></div>
+      <div style="width: 6px; background: linear-gradient(45deg, #bdc3c7 50%, #FFFFFF 0); background-size: 2px 2px;"></div>
     </div>
     <div id="sugar-jmeter-element" v-if="currentElement !== undefined">
       <transition name="fade">
-        <test-plan :key="0" v-if="currentElement.type === JT.TestPlan" :element="currentElement"></test-plan>
+        <test-plan :key="keyId" v-if="currentElement.type === JT.TestPlan" :element="currentElement"></test-plan>
+        <thread-group :key="keyId" v-if="currentElement.type === JT.ThreadGroup" :element="currentElement"></thread-group>
+        <thread-group :key="keyId" v-if="currentElement.type === JT.SetupThreadGroup" :element="currentElement"></thread-group>
+        <thread-group :key="keyId" v-if="currentElement.type === JT.PostThreadGroup" :element="currentElement"></thread-group>
+        <config-element-csv :key="keyId" v-if="currentElement.type === JT.CSVDataSet" :element="currentElement"></config-element-csv>
+        <config-element-header :key="keyId" v-if="currentElement.type === JT.HeaderManager" :element="currentElement"></config-element-header>
+        <config-element-cookie :key="keyId" v-if="currentElement.type === JT.CookieManager" :element="currentElement"></config-element-cookie>
+        <config-element-cache :key="keyId" v-if="currentElement.type === JT.CacheManager" :element="currentElement"></config-element-cache>
+        <element-http :key="keyId" v-if="currentElement.type === JT.HttpDefaults" :element="currentElement"></element-http>
+        <config-element-bolt :key="keyId" v-if="currentElement.type === JT.BoltConnectionElement" :element="currentElement"></config-element-bolt>
+        <config-element-dns :key="keyId" v-if="currentElement.type === JT.DNSCacheManager" :element="currentElement"></config-element-dns>
+        <config-element-ftp :key="keyId" v-if="currentElement.type === JT.FtpConfig" :element="currentElement"></config-element-ftp>
+        <config-element-auth :key="keyId" v-if="currentElement.type === JT.AuthManager" :element="currentElement"></config-element-auth>
+        <config-element-jdbc :key="keyId" v-if="currentElement.type === JT.JDBCDataSource" :element="currentElement"></config-element-jdbc>
+        <config-element-java :key="keyId" v-if="currentElement.type === JT.JavaConfig" :element="currentElement"></config-element-java>
+        <element-tcp :key="keyId" v-if="currentElement.type === JT.TCPConfig" :element="currentElement"></element-tcp>
+        <config-element-key :key="keyId" v-if="currentElement.type === JT.KeystoreConfig" :element="currentElement"></config-element-key>
+        <config-element-arguments :key="keyId" v-if="currentElement.type === JT.Arguments" :element="currentElement"></config-element-arguments>
+        <config-element-simple :key="keyId" v-if="currentElement.type === JT.SimpleConfig" :element="currentElement"></config-element-simple>
+        <config-element-login :key="keyId" v-if="currentElement.type === JT.LoginConfig" :element="currentElement"></config-element-login>
+        <config-element-counter :key="keyId" v-if="currentElement.type === JT.CounterConfig" :element="currentElement"></config-element-counter>
+        <config-element-random :key="keyId" v-if="currentElement.type === JT.RandomVariableConfig" :element="currentElement"></config-element-random>
+        <controller-if :key="keyId" v-if="currentElement.type === JT.IfController" :element="currentElement"></controller-if>
+        <controller-transaction :key="keyId" v-if="currentElement.type === JT.TransactionController" :element="currentElement"></controller-transaction>
+        <controller-loop :key="keyId" v-if="currentElement.type === JT.LoopController" :element="currentElement">ss</controller-loop>
+        <controller-while :key="keyId" v-if="currentElement.type === JT.WhileController" :element="currentElement"></controller-while>
+        <controller-foreach :key="keyId" v-if="currentElement.type === JT.ForeachController" :element="currentElement"></controller-foreach>
+        <controller-include :key="keyId" v-if="currentElement.type === JT.IncludeController" :element="currentElement"></controller-include>
+        <controller-runtime :key="keyId" v-if="currentElement.type === JT.RunTime" :element="currentElement"></controller-runtime>
+        <controller-critical :key="keyId" v-if="currentElement.type === JT.CriticalSectionController" :element="currentElement"></controller-critical>
+        <controller-generic :key="keyId" v-if="currentElement.type === JT.OnceOnlyController" :element="currentElement"></controller-generic>
+        <controller-generic :key="keyId" v-if="currentElement.type === JT.GenericController" :element="currentElement"></controller-generic>
+        <controller-random :key="keyId" v-if="currentElement.type === JT.RandomController" :element="currentElement"></controller-random>
+        <controller-generic :key="keyId" v-if="currentElement.type === JT.RandomOrderController" :element="currentElement"></controller-generic>
+        <controller-throughput :key="keyId" v-if="currentElement.type === JT.ThroughputController" :element="currentElement"></controller-throughput>
+        <controller-switch :key="keyId" v-if="currentElement.type === JT.SwitchController" :element="currentElement"></controller-switch>
+        <controller-interleave :key="keyId" v-if="currentElement.type === JT.InterleaveControl" :element="currentElement"></controller-interleave>
+        <timer-constant :key="keyId" v-if="currentElement.type === JT.ConstantTimer" :element="currentElement"></timer-constant>
+        <timer-uniform :key="keyId" v-if="currentElement.type === JT.UniformRandomTimer" :element="currentElement"></timer-uniform>
+        <element-jsr223 :key="keyId" v-if="currentElement.type === JT.JSR223Timer" :element="currentElement"></element-jsr223>
+        <timer-precise :key="keyId" v-if="currentElement.type === JT.PreciseThroughputTimer" :element="currentElement"></timer-precise>
+        <timer-sync :key="keyId" v-if="currentElement.type === JT.SyncTimer" :element="currentElement"></timer-sync>
+        <timer-poisson :key="keyId" v-if="currentElement.type === JT.PoissonRandomTimer" :element="currentElement"></timer-poisson>
+        <timer-poisson :key="keyId" v-if="currentElement.type === JT.GaussianRandomTimer" :element="currentElement"></timer-poisson>
+        <timer-constant-throughput :key="keyId" v-if="currentElement.type === JT.ConstantThroughputTimer" :element="currentElement"></timer-constant-throughput>
+        <element-jsr223 :key="keyId" v-if="currentElement.type === JT.JSR223PreProcessor" :element="currentElement"></element-jsr223>
+        <preprocessor-user-parameters :key="keyId" v-if="currentElement.type === JT.UserParameters" :element="currentElement"></preprocessor-user-parameters>
+        <preprocessor-anchor :key="keyId" v-if="currentElement.type === JT.AnchorModifier" :element="currentElement"></preprocessor-anchor>
+        <preprocessor-url :key="keyId" v-if="currentElement.type === JT.URLRewritingModifier" :element="currentElement"></preprocessor-url>
+        <element-jdbc :key="keyId" v-if="currentElement.type === JT.JDBCPreProcessor" :element="currentElement"></element-jdbc>
+        <preprocessor-sample-timeout :key="keyId" v-if="currentElement.type === JT.SampleTimeout" :element="currentElement"></preprocessor-sample-timeout>
+        <preprocessor-regex :key="keyId" v-if="currentElement.type === JT.RegExUserParameters" :element="currentElement"></preprocessor-regex>
+        <postprocessor-html :key="keyId" v-if="currentElement.type === JT.HtmlExtractor" :element="currentElement"></postprocessor-html>
+        <postprocessor-jmes :key="keyId" v-if="currentElement.type === JT.JMESPathExtractor" :element="currentElement"></postprocessor-jmes>
+        <postprocessor-json :key="keyId" v-if="currentElement.type === JT.JSONPostProcessor" :element="currentElement"></postprocessor-json>
+        <postprocessor-regex :key="keyId" v-if="currentElement.type === JT.RegexExtractor" :element="currentElement"></postprocessor-regex>
+        <postprocessor-boundary :key="keyId" v-if="currentElement.type === JT.BoundaryExtractor" :element="currentElement"></postprocessor-boundary>
+        <element-jsr223 :key="keyId" v-if="currentElement.type === JT.JSR223PostProcessor" :element="currentElement"></element-jsr223>
+        <element-jdbc :key="keyId" v-if="currentElement.type === JT.JDBCPostProcessor" :element="currentElement"></element-jdbc>
 
-        <thread-group :key="1" v-if="currentElement.type === JT.ThreadGroup" :element="currentElement"></thread-group>
-        <thread-group :key="2" v-if="currentElement.type === JT.SetupThreadGroup" :element="currentElement"></thread-group>
-        <thread-group :key="3" v-if="currentElement.type === JT.PostThreadGroup" :element="currentElement"></thread-group>
-
-        <config-element-csv :Key="4" v-if="currentElement.type === JT.CSVDataSet" :element="currentElement"></config-element-csv>
-        <config-element-header :key="5" v-if="currentElement.type === JT.HeaderManager" :element="currentElement"></config-element-header>
-        <config-element-cookie :key="6" v-if="currentElement.type === JT.CookieManager" :element="currentElement"></config-element-cookie>
-        <config-element-cache :key="7" v-if="currentElement.type === JT.CacheManager" :element="currentElement"></config-element-cache>
-        <element-http :key="8" v-if="currentElement.type === JT.HttpDefaults" :element="currentElement"></element-http>
-        <config-element-bolt :key="9" v-if="currentElement.type === JT.BoltConnectionElement" :element="currentElement"></config-element-bolt>
-        <config-element-dns :key="10" v-if="currentElement.type === JT.DNSCacheManager" :element="currentElement"></config-element-dns>
-        <config-element-ftp :key="11" v-if="currentElement.type === JT.FtpConfig" :element="currentElement"></config-element-ftp>
-        <config-element-auth :key="12" v-if="currentElement.type === JT.AuthManager" :element="currentElement"></config-element-auth>
-        <config-element-jdbc :key="13" v-if="currentElement.type === JT.JDBCDataSource" :element="currentElement"></config-element-jdbc>
-        <config-element-java :key="14" v-if="currentElement.type === JT.JavaConfig" :element="currentElement"></config-element-java>
-        <element-tcp :key="15" v-if="currentElement.type === JT.TCPConfig" :element="currentElement"></element-tcp>
-        <config-element-key :key="16" v-if="currentElement.type === JT.KeystoreConfig" :element="currentElement"></config-element-key>
-        <config-element-arguments :key="17" v-if="currentElement.type === JT.Arguments" :element="currentElement"></config-element-arguments>
-        <config-element-simple :key="18" v-if="currentElement.type === JT.SimpleConfig" :element="currentElement"></config-element-simple>
-        <config-element-login :key="19" v-if="currentElement.type === JT.LoginConfig" :element="currentElement"></config-element-login>
-        <config-element-counter :key="20" v-if="currentElement.type === JT.CounterConfig" :element="currentElement"></config-element-counter>
-        <config-element-random :key="21" v-if="currentElement.type === JT.RandomVariableConfig" :element="currentElement"></config-element-random>
-        <controller-if :key="22" v-if="currentElement.type === JT.IfController" :element="currentElement"></controller-if>
-        <controller-transaction :key="23" v-if="currentElement.type === JT.TransactionController" :element="currentElement"></controller-transaction>
-        <controller-loop :key="24" v-if="currentElement.type === JT.LoopController" :element="currentElement">ss</controller-loop>
-        <controller-while :key="25" v-if="currentElement.type === JT.WhileController" :element="currentElement"></controller-while>
-        <controller-foreach :key="26" v-if="currentElement.type === JT.ForeachController" :element="currentElement"></controller-foreach>
-        <controller-include :key="27" v-if="currentElement.type === JT.IncludeController" :element="currentElement"></controller-include>
-        <controller-runtime :key="28" v-if="currentElement.type === JT.RunTime" :element="currentElement"></controller-runtime>
-        <controller-critical :key="29" v-if="currentElement.type === JT.CriticalSectionController" :element="currentElement"></controller-critical>
-        <controller-generic :key="30" v-if="currentElement.type === JT.OnceOnlyController" :element="currentElement"></controller-generic>
-        <controller-generic :key="31" v-if="currentElement.type === JT.GenericController" :element="currentElement"></controller-generic>
-        <controller-random :key="32" v-if="currentElement.type === JT.RandomController" :element="currentElement"></controller-random>
-        <controller-generic :key="33" v-if="currentElement.type === JT.RandomOrderController" :element="currentElement"></controller-generic>
-        <controller-throughput :key="34" v-if="currentElement.type === JT.ThroughputController" :element="currentElement"></controller-throughput>
-        <controller-switch :key="35" v-if="currentElement.type === JT.SwitchController" :element="currentElement"></controller-switch>
-        <controller-interleave :key="36" v-if="currentElement.type === JT.InterleaveControl" :element="currentElement"></controller-interleave>
 
 
       </transition>
@@ -101,9 +123,45 @@ import ControllerRandom from "@/views/jmeter/ControllerRandom";
 import ControllerThroughput from "@/views/jmeter/ControllerThroughput";
 import ControllerSwitch from "@/views/jmeter/ControllerSwitch";
 import ControllerInterleave from "@/views/jmeter/ControllerInterleave";
+import TimerConstant from "@/views/jmeter/TimerConstant";
+import TimerUniform from "@/views/jmeter/TimerUniform";
+import ElementJsr223 from "@/views/jmeter/ElementJsr223";
+import TimerPrecise from "@/views/jmeter/TimerPrecise";
+import TimerSync from "@/views/jmeter/TimerSync";
+import TimerPoisson from "@/views/jmeter/TimerPoisson";
+import TimerConstantThroughput from "@/views/jmeter/TimerConstantThroughput";
+import PreprocessorUserParameters from "@/views/jmeter/PreprocessorUserParameters";
+import PreprocessorAnchor from "@/views/jmeter/PreprocessorAnchor";
+import PreprocessorUrl from "@/views/jmeter/PreprocessorUrl";
+import ElementJdbc from "@/views/jmeter/ElementJdbc";
+import PreprocessorSampleTimeout from "@/views/jmeter/PreprocessorSampleTimeout";
+import PreprocessorRegex from "@/views/jmeter/PreprocessorRegex";
+import PostprocessorHtml from "@/views/jmeter/PostprocessorHtml";
+import PostprocessorJmes from "@/views/jmeter/PostprocessorJmes";
+import PostprocessorJson from "@/views/jmeter/PostprocessorJson";
+import PostprocessorRegex from "@/views/jmeter/PostprocessorRegex";
+import PostprocessorBoundary from "@/views/jmeter/PostprocessorBoundary";
 export default {
   name: "SugarJmeter",
   components: {
+    PostprocessorBoundary,
+    PostprocessorRegex,
+    PostprocessorJson,
+    PostprocessorJmes,
+    PostprocessorHtml,
+    PreprocessorRegex,
+    PreprocessorSampleTimeout,
+    ElementJdbc,
+    PreprocessorUrl,
+    PreprocessorAnchor,
+    PreprocessorUserParameters,
+    TimerConstantThroughput,
+    TimerPoisson,
+    TimerSync,
+    TimerPrecise,
+    ElementJsr223,
+    TimerUniform,
+    TimerConstant,
     ControllerInterleave,
     ControllerSwitch,
     ControllerThroughput,
@@ -145,6 +203,9 @@ export default {
     },
     currentElement(){
       return this.$store.state.currentTestElement
+    },
+    keyId(){
+      return this.$store.state.currentTestElement.id
     }
   }
 }
@@ -181,32 +242,41 @@ $bodyHeight: calc(100% - 40px);
       height: 100%;
       width: 26px;
       box-sizing: border-box;
-      border-right: 1px solid #bdc3c7;
       background-color: #eef2f3;
 
       .sugar-jmeter-opt{
         writing-mode: vertical-lr;
-        background-color: #DCDFE6;
-        height: 80px;
+        //background-color: #DCDFE6;
+        //background: linear-gradient(to bottom, #eef2f3, #8e9eab);
+        background: #DCDFE6;
+        height: 75px;
         text-align: center;
         cursor: pointer;
         user-select: none;
-        font-weight: bold;
+        font-size: 13px;
+        //font-weight: bold;
         //border-bottom: 1px solid #859398;
         //border-right: 1px solid #859398;
         //border-left: 1px solid #859398;
         color: #274046;
         width: 100%;
         padding: 0 1px;
+        transition: background .25s;
+
 
         &:hover{
-          background-color: #eef2f3;
+          //background-color: #eef2f3;
+          //background: linear-gradient(to bottom, #8e9eab, #eef2f3);
+          background: #eef7f2;
           box-shadow: 0 0 1px 0 #536976;
-          color: #0083B0;
+          //color: #0083B0;
         }
 
         &:active{
-          background-color: #F0F2F0;
+          //background-color: #F0F2F0;
+          //background: linear-gradient(to bottom, #eef2f3, #8e9eab, #eef2f3);
+          background: #eef2f3;
+
         }
       }
     }

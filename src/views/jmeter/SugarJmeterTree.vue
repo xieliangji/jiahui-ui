@@ -59,6 +59,27 @@ import {
   TransactionController,
   WhileController
 } from "@/views/jmeter/js/Controller";
+import {
+  ConstantThroughputTimer, ConstantTimer, GaussianRandomTimer,
+  JSR223Timer,
+  PoissonRandomTimer,
+  PreciseThroughputTimer,
+  SyncTimer, UniformRandomTimer
+} from "@/views/jmeter/js/Timer";
+import {
+  AnchorModifier,
+  JDBCPreProcessor,
+  JSR223PreProcessor, RegExUserParameter, SampleTimeout,
+  URLRewritingModifier,
+  UserParameters
+} from "@/views/jmeter/js/Preprocessor";
+import {
+  BoundaryExtractor,
+  HtmlExtractor, JDBCPostProcessor,
+  JMESPathExtractor,
+  JSONPostProcessor, JSR223PostProcessor,
+  RegexExtractor
+} from "@/views/jmeter/js/Postprocessor";
 
 export default {
   name: "SugarJmeterTree",
@@ -116,6 +137,28 @@ export default {
     c.push(new RandomOrderController())
     c.push(new ThroughputController())
     c.push(new SwitchController())
+    c.push(new ConstantTimer())
+    c.push(new UniformRandomTimer())
+    c.push(new PreciseThroughputTimer())
+    c.push(new ConstantThroughputTimer())
+    c.push(new JSR223Timer())
+    c.push(new SyncTimer())
+    c.push(new PoissonRandomTimer())
+    c.push(new GaussianRandomTimer())
+    c.push(new JSR223PreProcessor())
+    c.push(new UserParameters())
+    c.push(new AnchorModifier())
+    c.push(new URLRewritingModifier())
+    c.push(new JDBCPreProcessor())
+    c.push(new SampleTimeout())
+    c.push(new RegExUserParameter())
+    c.push(new HtmlExtractor())
+    c.push(new JMESPathExtractor())
+    c.push(new JSONPostProcessor())
+    c.push(new RegexExtractor())
+    c.push(new BoundaryExtractor())
+    c.push(new JSR223PostProcessor())
+    c.push(new JDBCPostProcessor())
   },
   computed: {
     categories(){
@@ -128,8 +171,8 @@ export default {
 <style scoped lang="scss">
 
 .tree-node-icon{
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   position: relative;
   top: 2px;
 }

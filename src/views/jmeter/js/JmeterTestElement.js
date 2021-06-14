@@ -1,3 +1,5 @@
+import Store from '../../../store/index'
+
 export const JC = {
     TestPlan: 'TESTPLAN',
     ThreadGroup: 'THREADGROUP',
@@ -391,7 +393,7 @@ export const TestElements = {
 }
 
 export function Argument(){
-    this.id = performance.now().toString()
+    this.id = Store.getters.testElementId()
     this.name = ''
     this.value = ''
     this.metadata = ''
@@ -400,14 +402,14 @@ export function Argument(){
 
 
 export function Header(){
-    this.id = performance.now().toString()
+    this.id = Store.getters.testElementId()
     this.name = ''
     this.value = ''
 }
 
 
 export function Cookie(){
-    this.id = performance.now().toString()
+    this.id = Store.getters.testElementId()
     this.name = ''
     this.value = ''
     this.domain = ''
@@ -428,20 +430,20 @@ export function HttpArgument(){
 
 
 export function DnsServer(){
-    this.id = performance.now().toString()
+    this.id = Store.getters.testElementId()
     this.name = ''
 }
 
 
 export function DnsHost(){
-    this.id = performance.now().toString()
+    this.id = Store.getters.testElementId()
     this.host = ''
     this.nameOrIp = ''
 }
 
 
 export function Authorization(){
-    this.id = performance.now().toString()
+    this.id = Store.getters.testElementId()
     this.url = ''
     this.username = ''
     this.password = ''
@@ -452,7 +454,7 @@ export function Authorization(){
 
 
 export function AbstractTestElement(element){
-    this.id = performance.now().toString()
+    this.id = Store.getters.testElementId()
     this.category = element.category
     this.type = element.type
     this.testname = element.label
@@ -505,4 +507,29 @@ export function AbstractTcp(element){
     this.soLinger = '' // string
     this.eolByte = '' // string 行尾字节值
     this.request = '' // string  要发送的文本
+}
+
+
+export function AbstractJSR223(element){
+    AbstractTestElement.call(this, element)
+    this.scriptLanguage = 'groovy'
+    this.parameters = ''
+    this.filename = ''
+    this.cacheKey = true
+    this.script = ''
+}
+
+
+export function AbstractJDBC(element){
+    AbstractTestElement.call(this, element)
+    this.dataSource = ''
+    this.queryType = 'Select Statement'
+    this.query = ''
+    this.queryArguments = ''
+    this.queryArgumentsTypes = ''
+    this.variableNames = ''
+    this.resultVariable = ''
+    this.queryTimeout = ''
+    this.resultSetMaxRows = ''
+    this.resultSetHandler = 'Store as String'
 }
