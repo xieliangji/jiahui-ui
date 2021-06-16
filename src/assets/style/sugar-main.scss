@@ -81,6 +81,13 @@ el-XXX 全局样式覆盖
   width: 100%;
   text-align: center;
 }
+// 全局表左右下边框
+.sugar-table-3borders{
+  border-left: 1px solid #DCDFE6;
+  border-right: 1px solid #DCDFE6;
+  border-bottom: 1px solid #DCDFE6;
+}
+
 
 // 全局对话框标题样式
 .sugar-dialog-header{

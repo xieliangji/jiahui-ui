@@ -1,6 +1,6 @@
 <template>
   <div id="jmeter-tree">
-    <el-tree default-expand-all :data="treeData" :props="treeProps" :key="treeKey" empty-text=" " ref="testPlanTree" node-key="id" :current-node-key="$store.state.currentTestElement.id" highlight-current accordion :expand-on-click-node="false" @node-click="handleNodeClick">
+    <el-tree default-expand-all :data="treeData" :props="treeProps" :key="treeKey" empty-text=" " ref="testPlanTree" @node-contextmenu="handleNodeContextClick" node-key="id" :current-node-key="$store.state.currentTestElement.id" highlight-current draggable :allow-drag="handleAllowDrag" :allow-drop="handleAllowDrop" :expand-on-click-node="false" @node-click="handleNodeClick">
       <div slot-scope="{node, data}" :style="{opacity: (node.level === 1 || (node.level !== 1 && node.parent.data.enabled)) && data.enabled ? '1':'.5'}">
         <img class="tree-node-icon" src="../../assets/tree-icon/applications-science-3.png" v-if="data.category === categories.TestPlan">
         <img class="tree-node-icon" src="../../assets/tree-icon/system-run-5.png" v-if="data.category === categories.ThreadGroup">
@@ -17,85 +17,201 @@
         <span> {{node.label}}</span>
       </div>
     </el-tree>
+
+    <div v-if="showContextMenu" id="jmeterTreeContextMenu">
+      <at-menu mode="vertical" @on-select.once="handleContextSelect">
+        <template v-for="level0Item in menu">
+          <at-submenu :key="level0Item.name" v-if="level0Item.children !== undefined">
+            <template slot="title">{{level0Item.label}}</template>
+            <template v-for="level1Item in level0Item.children">
+              <at-submenu :key="level1Item.name" v-if="level1Item.children !== undefined">
+                <template slot="title">{{level1Item.label}}</template>
+                <at-menu-item v-for="level2Item in level1Item.children" :key="level2Item.name" :name="level2Item.name">{{level2Item.label}}</at-menu-item>
+              </at-submenu>
+              <at-menu-item v-if="level1Item.children === undefined" :key="level1Item.name" :name="level1Item.name">{{level1Item.label}}</at-menu-item>
+            </template>
+          </at-submenu>
+          <at-menu-item v-if="level0Item.children === undefined" :key="level0Item.name" :name="level0Item.name">{{level0Item.label}}</at-menu-item>
+        </template>
+      </at-menu>
+    </div>
   </div>
 </template>
 
 <script>
 import {JC} from "@/views/jmeter/js/JmeterTestElement";
 import { ThreadGroup} from "@/views/jmeter/js/ThreadGroup";
-import {
-  AuthManager,
-  BoltConnectionElement,
-  CacheManager,
-  CookieManager,
-  CSVDataSet,
-  DNSCacheManage,
-  FtpConfig,
-  HeaderManager,
-  HttpDefaults,
-  JavaConfig,
-  JDBCDataSource,
-  KeystoreConfig,
-  TCPConfig,
-  Arguments,
-  SimpleConfig,
-  LoginConfig,
-  CounterConfig, RandomVariableConfig
-} from "@/views/jmeter/js/ConfigElement";
-import {
-  CriticalSectionController,
-  ForeachController,
-  GenericController,
-  IfController,
-  IncludeController,
-  InterleaveControl,
-  LoopController,
-  OnceOnlyController,
-  RandomController,
-  RandomOrderController,
-  RunTime,
-  SwitchController,
-  ThroughputController,
-  TransactionController,
-  WhileController
-} from "@/views/jmeter/js/Controller";
-import {
-  ConstantThroughputTimer, ConstantTimer, GaussianRandomTimer,
-  JSR223Timer,
-  PoissonRandomTimer,
-  PreciseThroughputTimer,
-  SyncTimer, UniformRandomTimer
-} from "@/views/jmeter/js/Timer";
-import {
-  AnchorModifier,
-  JDBCPreProcessor,
-  JSR223PreProcessor, RegExUserParameter, SampleTimeout,
-  URLRewritingModifier,
-  UserParameters
-} from "@/views/jmeter/js/Preprocessor";
-import {
-  BoundaryExtractor, DebugPostProcessor,
-  HtmlExtractor, JDBCPostProcessor,
-  JMESPathExtractor,
-  JSONPostProcessor, JSR223PostProcessor,
-  RegexExtractor, ResultAction, XPath2Extractor, XPathExtractor
-} from "@/views/jmeter/js/Postprocessor";
+import { AuthManager, BoltConnectionElement, CacheManager, CookieManager, CSVDataSet, DNSCacheManage, FtpConfig, HeaderManager, HttpDefaults, JavaConfig, JDBCDataSource, KeystoreConfig, TCPConfig, Arguments, SimpleConfig, LoginConfig, CounterConfig, RandomVariableConfig } from "@/views/jmeter/js/ConfigElement";
+import { CriticalSectionController, ForeachController, GenericController, IfController, IncludeController, InterleaveControl, LoopController, OnceOnlyController, RandomController, RandomOrderController, RunTime, SwitchController, ThroughputController, TransactionController, WhileController } from "@/views/jmeter/js/Controller";
+import { ConstantThroughputTimer, ConstantTimer, GaussianRandomTimer, JSR223Timer, PoissonRandomTimer, PreciseThroughputTimer, SyncTimer, UniformRandomTimer } from "@/views/jmeter/js/Timer";
+import { AnchorModifier, JDBCPreProcessor, JSR223PreProcessor, RegExUserParameter, SampleTimeout, URLRewritingModifier, UserParameters } from "@/views/jmeter/js/Preprocessor";
+import { BoundaryExtractor, DebugPostProcessor, HtmlExtractor, JDBCPostProcessor, JMESPathExtractor, JSONPostProcessor, JSR223PostProcessor, RegexExtractor, ResultAction, XPath2Extractor, XPathExtractor } from "@/views/jmeter/js/Postprocessor";
+import { CompareAssertion, DurationAssertion, HTMLAssertion, JMESPathAssertion, JSONPathAssertion, JSR223Assertion, MD5Assertion, ResponseAssertion, SizeAssertion, XMLAssertion, XMLSchemaAssertion, XPath2Assertion, XPathAssertion } from "@/views/jmeter/js/Assertion";
+import { AjpSampler, BoltSampler, DebugSampler, FTPSampler, HttpTestSample, JDBCSampler, JSR223Sampler, TCPSampler, TestAction } from "@/views/jmeter/js/Sampler";
+import {getMenuData} from "@/views/jmeter/js/JmeterTreeContextMenuData";
 
 export default {
   name: "SugarJmeterTree",
   data(){
     return {
-      treeKey: performance.now().toString(),
+      treeKey: 19890512,
       treeData: [],
       treeProps: {
         children: 'children',
         label: 'testname',
-      }
+      },
+      showContextMenu: false,
     }
   },
   methods: {
+    // 单击测试计划树节点 - 设置为当前的选中节点
     handleNodeClick(data){
       this.$store.commit('setCurrentTestElement', data)
+    },
+
+    // 右击元素显示对应的右键菜单
+    handleNodeContextClick(event, data){
+      this.showContextMenu = true
+      this.$store.commit('setCurrentTestElement', data)
+      this.$refs.testPlanTree.setCurrentKey(data.id)
+
+      this.$nextTick(() => {
+        let ctxMenu = document.getElementById('jmeterTreeContextMenu')
+        let menuX = event.clientX
+        let menuY = event.clientY
+        ctxMenu.style.position = 'fixed'
+        ctxMenu.style.top = menuY + 'px'
+        ctxMenu.style.left = menuX + 'px'
+        ctxMenu.style.zIndex = '2021'
+        document.onclick = (e) => {
+          if(e.clientX < menuX || e.clientX > menuX + ctxMenu.offsetWidth || e.clientY < menuY || e.clientY > menuY + ctxMenu.offsetHeight){
+            this.showContextMenu = false
+          }
+          document.removeEventListener('onclick', undefined);
+        }
+      })
+    },
+
+    // 从指定菜单列表中搜索指定名字的菜单项对象
+    searchItemObject(itemName, itemArray){
+      let target = undefined
+      for(let index = 0; index < itemArray.length; index++){
+        let currentItemObject = itemArray[index]
+        if(currentItemObject.name === itemName){
+          target = currentItemObject
+          break
+        }
+        if(currentItemObject.children !== undefined){
+          target = this.searchItemObject(itemName, currentItemObject.children)
+        }
+        if(target !== undefined){
+          break
+        }
+      }
+      return target
+    },
+
+    // 选中右键菜单，处理其对应的逻辑
+    handleContextSelect(itemName){
+      this.showContextMenu = false
+
+      let itemObject = this.searchItemObject(itemName, this.menu)
+      console.log('点击的测试计划右键菜单项：' + itemName)
+      console.log(itemObject)
+      // 此时点击菜单为复制、剪切、粘贴、删除、禁用、启用、切换等
+      let currentElement = this.$store.state.currentTestElement
+      if(itemObject.elementConstructor === undefined){
+        if(itemName === 'copy'){
+          // 复制
+        } else if(itemName === 'cut'){
+          // 剪切
+        } else if(itemName === 'paste'){
+          // 粘贴
+        } else if(itemName === 'delete'){
+          // 删除
+          this.$confirm('是否删除当前测试计划元素？', '', {type: 'warning', confirmButtonText: '是', cancelButtonText: '否'}).then(() => {
+            // 确认删除
+            let currentParent = this.$refs.testPlanTree.getNode(this.$store.state.currentTestElement).parent.data
+            let currentIndex = currentParent.children.indexOf(this.$store.state.currentTestElement)
+            if(currentIndex >= 0){
+              currentParent.children.splice(currentIndex, 1)
+              this.$store.commit('setCurrentTestElement', this.treeData[0])
+              this.$refs.testPlanTree.setCurrentKey(this.$store.state.currentTestElement.id)
+            }
+          }).catch(() => {
+            console.log('取消删除测试计划树节点')
+          })
+        } else if(itemName === 'disable'){
+          currentElement.enabled = false
+        } else if(itemName === 'enable'){
+          currentElement.enabled = true
+        } else if(itemName === 'switch'){
+          currentElement.enabled = !currentElement.enabled
+        }
+      } else {
+        // 添加、插入上级、改变逻辑控制器
+        let ElementConstructor = itemObject.elementConstructor
+        let element = new ElementConstructor()
+
+        if(itemName.startsWith('insert')){
+          // 插入上级
+
+        } else if(itemName.startsWith('change')){
+          // 改变逻辑控制器
+
+        } else {
+          // 添加子元素
+          this.$store.state.currentTestElement.children.push(element)
+          this.$store.commit('setCurrentTestElement', element)
+        }
+      }
+
+      this.treeKey = this.treeKey - 1
+      this.$nextTick(() => this.$refs.testPlanTree.setCurrentKey(this.$store.state.currentTestElement.id))
+    },
+
+    // 可允许被拖动的树节点 - 测试计划元素节点不可拖动
+    handleAllowDrag(node){
+      return node.data.category !== JC.TestPlan
+    },
+
+    // 当前拖动节点与目标下方节点是否构成可拖动并下放关系
+    handleAllowDrop(draggingNode, dropNode, type){
+      let dragCategory = draggingNode.data.category
+      let dropCategory = dropNode.data.category
+      let dropParentCategory = dropNode.parent.data.category
+
+      if(type === 'inner'){
+        if(dropCategory === JC.TestPlan && (dragCategory === JC.Controller || dragCategory === JC.Sampler)){
+          return false
+        }
+        if((dropCategory === JC.ThreadGroup || dropCategory === JC.Controller) && dragCategory === JC.ThreadGroup){
+          return false
+        }
+        if(dropCategory === JC.Sampler && (dragCategory === JC.ThreadGroup || dragCategory === JC.Controller)){
+          return false
+        }
+        if(dropCategory === JC.ConfigElement || dropCategory === JC.Preprocessor || dropCategory === JC.Postprocessor || dropCategory === JC.Assertion || dropCategory === JC.Timer || dropCategory === JC.Listener){
+          return false
+        }
+      } else {
+        if(dropCategory === JC.TestPlan){
+          return false
+        } else if(dropCategory === JC.ThreadGroup){
+          if(dragCategory === JC.Controller || dragCategory === JC.Sampler){
+            return false
+          }
+        } else if(dropCategory === JC.ConfigElement || dropCategory === JC.Preprocessor || dropCategory === JC.Postprocessor || dropCategory === JC.Assertion || dropCategory === JC.Timer){
+          if(dropParentCategory === JC.TestPlan && (dragCategory === JC.Controller || dragCategory === JC.Sampler)){
+            return false
+          }
+        } else if(dropCategory === JC.Sampler || dropCategory === JC.Controller){
+          if(dragCategory === JC.ThreadGroup){
+            return false
+          }
+        }
+      }
+      return true
     }
   },
   created() {
@@ -163,11 +279,37 @@ export default {
     c.push(new XPathExtractor())
     c.push(new ResultAction())
     c.push(new DebugPostProcessor())
+    c.push(new ResponseAssertion())
+    c.push(new JSONPathAssertion())
+    c.push(new SizeAssertion())
+    c.push(new JSR223Assertion())
+    c.push(new XPath2Assertion())
+    c.push(new HTMLAssertion())
+    c.push(new JMESPathAssertion())
+    c.push(new MD5Assertion())
+    c.push(new XMLSchemaAssertion())
+    c.push(new XMLAssertion())
+    c.push(new XPathAssertion())
+    c.push(new DurationAssertion())
+    c.push(new CompareAssertion())
+    c.push(new HttpTestSample())
+    c.push(new JSR223Sampler())
+    c.push(new JDBCSampler())
+    c.push(new TCPSampler())
+    c.push(new AjpSampler())
+    c.push(new TestAction())
+    c.push(new DebugSampler())
+    c.push(new BoltSampler())
+    c.push(new FTPSampler())
   },
+
   computed: {
     categories(){
       return JC
-    }
+    },
+    menu(){
+      return getMenuData(this.$store.state.currentTestElement.category)
+    },
   }
 }
 </script>

@@ -1,4 +1,10 @@
-import {AbstractHttp, AbstractTcp, AbstractTestElement, TestElements} from "@/views/jmeter/js/JmeterTestElement";
+import {
+    AbstractFTP,
+    AbstractHttp,
+    AbstractTcp,
+    AbstractTestElement,
+    TestElements
+} from "@/views/jmeter/js/JmeterTestElement";
 
 export function CSVDataSet(){
     AbstractTestElement.call(this, TestElements.CSVDataSet)
@@ -61,15 +67,7 @@ export function DNSCacheManage(){
 
 
 export function FtpConfig(){
-    AbstractTestElement.call(this, TestElements.FtpConfig)
-    this.server = ''
-    this.port = ''
-    this.filename = ''
-    this.localFilename = ''
-    this.inputData = ''
-    this.binaryMode = false
-    this.saveResponse = false
-    this.upload = false
+    AbstractFTP.call(this, TestElements.FtpConfig)
 }
 
 

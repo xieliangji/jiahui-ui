@@ -37,7 +37,9 @@
       </div>
     </div>
     <div id="sugar-body">
-      <component :is="menuPage[activeNavItem]"></component>
+      <transition name="fade">
+        <component :is="menuPage[activeNavItem]" :key="componentKey"></component>
+      </transition>
     </div>
     <div id="sugar-footer">
       {{ `Copyright Reserved By Sugar © 2020 ~ ${new Date().getFullYear()}` }}
@@ -105,6 +107,7 @@ export default {
     }
 
     return {
+      componentKey: 1,
       menuIndex: {
         home: "home",
         test: {createTest: "createTest", listTest: "listTest"},
@@ -143,6 +146,7 @@ export default {
   methods: {
     handleMenuSelect(index){
       this.activeNavItem = index
+      this.componentKey = this.componentKey + 1
     },
 
     handleDropdownSelect(command){
@@ -161,10 +165,6 @@ export default {
   },
   mounted() {
     this.$store.commit("setSugarAccount", {id: 1, username: '管理员'})
-    document.oncontextmenu = function (ev){
-      console.log(ev)
-      return true
-    }
   }
 }
 </script>

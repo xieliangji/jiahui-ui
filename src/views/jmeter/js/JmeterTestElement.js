@@ -452,6 +452,26 @@ export function Authorization(){
     this.mechanism = 'BASIC'
 }
 
+export function TestString(){
+    this.id = Store.getters.testElementId()
+    this.string = ''
+}
+
+
+export function Substitution(){
+    this.id = Store.getters.testElementId()
+    this.regex = ''
+    this.substitute = ''
+}
+
+
+export function HttpFile(){
+    this.id = Store.getters.testElementId()
+    this.path = ''
+    this.paramName = ''
+    this.mimetype = ''
+}
+
 
 export function AbstractTestElement(element){
     this.id = Store.getters.testElementId()
@@ -466,7 +486,7 @@ export function AbstractTestElement(element){
 }
 
 
-export function AbstractHttp(element){
+export function AbstractAjp(element){
     AbstractTestElement.call(this, element)
     this.protocol = '' // string 协议
     this.domain = '' // string 域名
@@ -475,14 +495,22 @@ export function AbstractHttp(element){
     this.contentEncoding = '' // string 内容编码
     this.postBodyRaw = false // bool 请求参数是否原生
     this.arguments = [] // element 请求参数
-    this.implementation = ''  // string 客户端实现
-    this.connectTimeout = '30000' // string 连接超时
-    this.responseTimeout = '30000' // string 响应超时
+
     this.imageParser = false // bool 从html文件获取所有内含的资源
     this.concurrentDwn = false // bool 并行下载
     this.concurrentPool = 6  // string 数量
     this.embeddedUrlRe = ''  // string 匹配网址
     this.embeddedUrlExcludeRe = '' // string 网址必须不匹配
+
+    this.md5 = false // bool 是否保存响应为md5哈希
+}
+
+
+export function AbstractHttp(element){
+    AbstractAjp.call(this, element)
+    this.implementation = ''  // string 客户端实现
+    this.connectTimeout = '30000' // string 连接超时
+    this.responseTimeout = '30000' // string 响应超时
     this.ipSourceType = 0  // int 源地址类型
     this.ipSource = '' // string 源地址
     this.proxyScheme = '' // string 代理scheme
@@ -490,7 +518,6 @@ export function AbstractHttp(element){
     this.proxyPort = '' // string 代理服务器端口号
     this.proxyUser = '' // string 代理服务器用户名
     this.proxyPass = '' // string 代理服务器密码
-    this.md5 = false // bool 是否保存响应为md5哈希
 }
 
 
@@ -532,4 +559,17 @@ export function AbstractJDBC(element){
     this.queryTimeout = ''
     this.resultSetMaxRows = ''
     this.resultSetHandler = 'Store as String'
+}
+
+
+export function AbstractFTP(element){
+    AbstractTestElement.call(this, element)
+    this.server = ''
+    this.port = ''
+    this.filename = ''
+    this.localFilename = ''
+    this.inputData = ''
+    this.binaryMode = false
+    this.saveResponse = false
+    this.upload = false
 }

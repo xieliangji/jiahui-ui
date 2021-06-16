@@ -31,42 +31,25 @@
         </div>
       </div>
     </div>
-    <div class="sugar-normal-line">
-      <el-checkbox v-model="element.fragment">Return Entire XPath Fragment Instead of Text Content</el-checkbox>
-    </div>
-    <div class="sugar-normal-line sugar-label-input">
-      <div class="label">引用名称</div>
-      <div class="input">
-        <el-input v-model="element.refName"></el-input>
+    <div class="sugar-top-border">
+      <div class="sugar-border-text">XML断言（XML Assertion)</div>
+      <div class="sugar-normal-line">
+        <el-checkbox v-model="element.negate">倒置断言（若XPath表达式匹配则为失败）</el-checkbox>
+        <el-button type="primary" style="margin-left: 200px;" @click="handleXPathCheck">验证</el-button>
+      </div>
+      <div style="height: 600px;">
+        <jmeter-editor language="plain_text" :script="element.xpath" :read-only="false" @scriptUpdate="handleXPathUpdate"></jmeter-editor>
       </div>
     </div>
-    <div class="sugar-normal-line sugar-label-input">
-      <div class="label">XPath Query</div>
-      <div class="input">
-        <el-input v-model="element.xpathQuery"></el-input>
-      </div>
-    </div>
-    <div class="sugar-normal-line sugar-label-input">
-      <div class="label">匹配数字（0代表随机）</div>
-      <div class="input">
-        <el-input v-model="element.matchNumber"></el-input>
-      </div>
-    </div>
-    <div class="sugar-normal-line sugar-label-input">
-      <div class="label">默认值</div>
-      <div class="input">
-        <el-input v-model="element.default"></el-input>
-      </div>
-    </div>
-
   </sugar-jmeter-element>
 </template>
 
 <script>
 import SugarJmeterElement from "@/components/SugarJmeterElement";
+import JmeterEditor from "@/components/JmeterEditor";
 export default {
-  name: "PostprocessorXpath",
-  components: {SugarJmeterElement},
+  name: "AssertionXpath",
+  components: {JmeterEditor, SugarJmeterElement},
   props: {
     element: Object
   },
@@ -79,15 +62,25 @@ export default {
     handleVariableFocus(){
       this.element.scope = 'variable'
     },
-    handleNamespacesUpdate(namespaces){
-      this.element.namespaces = namespaces
+
+    handleXPathUpdate(xpath){
+      this.element.xpath = xpath
+    },
+
+    handleXPathCheck(){
+      try{
+        let evaluator = new XPathEvaluator()
+        evaluator.createExpression(this.element.xpath)
+        this.$message({message: 'xpath表达式正确', type: "success", duration: 2000})
+      } catch (e){
+        console.log(e)
+        this.$message({message: `非法xpath表达式 ${e.message}`, type: "error", duration: 2000})
+      }
     }
   }
 }
 </script>
 
 <style scoped>
-.label{
-  width: 148px !important;
-}
+
 </style>

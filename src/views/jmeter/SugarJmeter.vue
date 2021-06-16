@@ -30,7 +30,7 @@
         <element-http :key="keyId" v-if="currentElement.type === JT.HttpDefaults" :element="currentElement"></element-http>
         <config-element-bolt :key="keyId" v-if="currentElement.type === JT.BoltConnectionElement" :element="currentElement"></config-element-bolt>
         <config-element-dns :key="keyId" v-if="currentElement.type === JT.DNSCacheManager" :element="currentElement"></config-element-dns>
-        <config-element-ftp :key="keyId" v-if="currentElement.type === JT.FtpConfig" :element="currentElement"></config-element-ftp>
+        <element-ftp :key="keyId" v-if="currentElement.type === JT.FtpConfig" :element="currentElement"></element-ftp>
         <config-element-auth :key="keyId" v-if="currentElement.type === JT.AuthManager" :element="currentElement"></config-element-auth>
         <config-element-jdbc :key="keyId" v-if="currentElement.type === JT.JDBCDataSource" :element="currentElement"></config-element-jdbc>
         <config-element-java :key="keyId" v-if="currentElement.type === JT.JavaConfig" :element="currentElement"></config-element-java>
@@ -82,6 +82,29 @@
         <postprocessor-xpath :key="keyId" v-if="currentElement.type === JT.XPathExtractor" :element="currentElement"></postprocessor-xpath>
         <postprocessor-result-action :key="keyId" v-if="currentElement.type === JT.ResultAction" :element="currentElement"></postprocessor-result-action>
         <postprocessor-debug :key="keyId" v-if="currentElement.type === JT.DebugPostProcessor" :element="currentElement"></postprocessor-debug>
+        <assertion-response :key="keyId" v-if="currentElement.type === JT.ResponseAssertion" :element="currentElement"></assertion-response>
+        <assertion-json :key="keyId" v-if="currentElement.type === JT.JSONPathAssertion" :element="currentElement"></assertion-json>
+        <assertion-size :key="keyId" v-if="currentElement.type === JT.SizeAssertion" :element="currentElement"></assertion-size>
+        <element-jsr223 :key="keyId" v-if="currentElement.type === JT.JSR223Assertion" :element="currentElement"></element-jsr223>
+        <assertion-xpath2 :key="keyId" v-if="currentElement.type === JT.XPath2Assertion" :element="currentElement"></assertion-xpath2>
+        <assertion-html :key="keyId" v-if="currentElement.type === JT.HTMLAssertion" :element="currentElement"></assertion-html>
+        <assertion-json :key="keyId" v-if="currentElement.type === JT.JMESPathAssertion" :element="currentElement"></assertion-json>
+        <assertion-md5 :key="keyId" v-if="currentElement.type === JT.MD5HexAssertion" :element="currentElement"></assertion-md5>
+        <assertion-xml-schema :key="keyId" v-if="currentElement.type === JT.XMLSchemaAssertion" :element="currentElement"></assertion-xml-schema>
+        <assertion-xml :key="keyId" v-if="currentElement.type === JT.XMLAssertion" :element="currentElement"></assertion-xml>
+        <assertion-xpath :key="keyId" v-if="currentElement.type === JT.XPathAssertion" :element="currentElement"></assertion-xpath>
+        <assertion-duration :key="keyId" v-if="currentElement.type === JT.DurationAssertion" :element="currentElement"></assertion-duration>
+        <assertion-compare :key="keyId" v-if="currentElement.type === JT.CompareAssertion" :element="currentElement"></assertion-compare>
+        <element-http :key="keyId" v-if="currentElement.type === JT.HttpTestSample" :element="currentElement"></element-http>
+        <element-jsr223 :key="keyId" v-if="currentElement.type === JT.JSR223Sampler" :element="currentElement"></element-jsr223>
+        <element-jdbc :key="keyId" v-if="currentElement.type === JT.JDBCSampler" :element="currentElement"></element-jdbc>
+        <element-tcp :key="keyId" v-if="currentElement.type === JT.TCPSampler" :element="currentElement"></element-tcp>
+        <element-http :key="keyId" v-if="currentElement.type === JT.AjpSampler" :element="currentElement"></element-http>
+        <sampler-test-action :key="keyId" v-if="currentElement.type === JT.TestAction" :element="currentElement"></sampler-test-action>
+        <sampler-debug :key="keyId" v-if="currentElement.type === JT.DebugSampler" :element="currentElement"></sampler-debug>
+        <sampler-bolt :key="keyId" v-if="currentElement.type === JT.BoltSampler" :element="currentElement"></sampler-bolt>
+        <element-ftp :key="keyId" v-if="currentElement.type === JT.FTPSampler" :element="currentElement"></element-ftp>
+
 
 
       </transition>
@@ -102,7 +125,6 @@ import ConfigElementCache from "@/views/jmeter/ConfigElementCache";
 import ElementHttp from "@/views/jmeter/ElementHttp";
 import ConfigElementBolt from "@/views/jmeter/ConfigElementBolt";
 import ConfigElementDns from "@/views/jmeter/ConfigElementDns";
-import ConfigElementFtp from "@/views/jmeter/ConfigElementFtp";
 import ConfigElementAuth from "@/views/jmeter/ConfigElementAuth";
 import ConfigElementJdbc from "@/views/jmeter/ConfigElementJdbc";
 import ConfigElementJava from "@/views/jmeter/ConfigElementJava";
@@ -148,9 +170,39 @@ import PostprocessorXpath2 from "@/views/jmeter/PostprocessorXpath2";
 import PostprocessorXpath from "@/views/jmeter/PostprocessorXpath";
 import PostprocessorResultAction from "@/views/jmeter/PostprocessorResultAction";
 import PostprocessorDebug from "@/views/jmeter/PostprocessorDebug";
+import AssertionResponse from "@/views/jmeter/AssertionResponse";
+import AssertionJson from "@/views/jmeter/AssertionJson";
+import AssertionSize from "@/views/jmeter/AssertionSize";
+import AssertionXpath2 from "@/views/jmeter/AssertionXpath2";
+import AssertionHtml from "@/views/jmeter/AssertionHtml";
+import AssertionMd5 from "@/views/jmeter/AssertionMd5";
+import AssertionXmlSchema from "@/views/jmeter/AssertionXmlSchema";
+import AssertionXml from "@/views/jmeter/AssertionXml";
+import AssertionXpath from "@/views/jmeter/AssertionXpath";
+import AssertionDuration from "@/views/jmeter/AssertionDuration";
+import AssertionCompare from "@/views/jmeter/AssertionCompare";
+import SamplerTestAction from "@/views/jmeter/SamplerTestAction";
+import SamplerDebug from "@/views/jmeter/SamplerDebug";
+import SamplerBolt from "@/views/jmeter/SamplerBolt";
+import ElementFtp from "@/views/jmeter/ElementFtp";
 export default {
   name: "SugarJmeter",
   components: {
+    ElementFtp,
+    SamplerBolt,
+    SamplerDebug,
+    SamplerTestAction,
+    AssertionCompare,
+    AssertionDuration,
+    AssertionXpath,
+    AssertionXml,
+    AssertionXmlSchema,
+    AssertionMd5,
+    AssertionHtml,
+    AssertionXpath2,
+    AssertionSize,
+    AssertionJson,
+    AssertionResponse,
     PostprocessorDebug,
     PostprocessorResultAction,
     PostprocessorXpath,
@@ -196,7 +248,6 @@ export default {
     ConfigElementJava,
     ConfigElementJdbc,
     ConfigElementAuth,
-    ConfigElementFtp,
     ConfigElementDns,
     ConfigElementBolt,
     ElementHttp,

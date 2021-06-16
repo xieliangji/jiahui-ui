@@ -334,6 +334,9 @@ $padding: 5px;
   .el-input__inner {
     border: none !important;
     background-color: transparent !important;
+    &:focus{
+      background-color: #FFF2E2 !important;
+    }
   }
 }
 .el-table th{

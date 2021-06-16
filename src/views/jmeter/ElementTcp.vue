@@ -42,7 +42,6 @@
         </div>
       </div>
     </div>
-
     <div style="text-align: center;" class="sugar-normal-border">
       <div class="sugar-normal-line sugar-flex-row">
         <div style="flex-grow: 1;">
@@ -72,8 +71,7 @@
         </div>
       </div>
     </div>
-
-    <div class="sugar-flex-row sugar-normal-border" style="margin-top: 20px;">
+    <div class="sugar-flex-row sugar-normal-border" style="margin: 20px 0;">
       <div class="sugar-flex-col tcp-request-label">
         <div>要发送的文本</div>
       </div>
@@ -81,20 +79,18 @@
         <jmeter-editor language="plain_text" :read-only="false" :script="element.request" @scriptUpdate="handleRequestUpdate"></jmeter-editor>
       </div>
     </div>
-    <div v-if="element.username !== undefined && element.password !== undefined">
-      <div class="sugar-top-border">
-        <div class="sugar-border-text">登陆配置</div>
-        <div class="sugar-normal-line sugar-label-input">
-          <div class="label" style="width: 60px;">用户名</div>
-          <div class="input">
-            <el-input v-model="element.username"></el-input>
-          </div>
+    <div class="sugar-top-border" v-if="element.username !== undefined && element.password !== undefined">
+      <div class="sugar-border-text">登陆配置</div>
+      <div class="sugar-normal-line sugar-label-input">
+        <div class="label" style="width: 60px;">用户名</div>
+        <div class="input">
+          <el-input v-model="element.username"></el-input>
         </div>
-        <div class="sugar-normal-line sugar-label-input">
-          <div class="label" style="width: 60px;">密码</div>
-          <div class="input">
-            <el-input v-model="element.password" type="password"></el-input>
-          </div>
+      </div>
+      <div class="sugar-normal-line sugar-label-input">
+        <div class="label" style="width: 60px;">密码</div>
+        <div class="input">
+          <el-input v-model="element.password" type="password"></el-input>
         </div>
       </div>
     </div>
