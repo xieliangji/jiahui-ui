@@ -3,8 +3,10 @@
     <div id="sugar-jmeter-tree">
       <transition name="fade">
         <function-helper v-if="isShowFuncHelper" @close="isShowFuncHelper = false"></function-helper>
+        <project v-if="isShowProject" @close="isShowProject = false"></project>
       </transition>
       <div id="tree-opt">
+        <div class="sugar-jmeter-opt" @click="handleProjectClick">项目</div>
         <div class="sugar-jmeter-opt">保存计划</div>
         <div class="sugar-jmeter-opt">打开本地</div>
         <div class="sugar-jmeter-opt">启动运行</div>
@@ -104,9 +106,6 @@
         <sampler-debug :key="keyId" v-if="currentElement.type === JT.DebugSampler" :element="currentElement"></sampler-debug>
         <sampler-bolt :key="keyId" v-if="currentElement.type === JT.BoltSampler" :element="currentElement"></sampler-bolt>
         <element-ftp :key="keyId" v-if="currentElement.type === JT.FTPSampler" :element="currentElement"></element-ftp>
-
-
-
       </transition>
     </div>
   </div>
@@ -185,9 +184,11 @@ import SamplerTestAction from "@/views/jmeter/SamplerTestAction";
 import SamplerDebug from "@/views/jmeter/SamplerDebug";
 import SamplerBolt from "@/views/jmeter/SamplerBolt";
 import ElementFtp from "@/views/jmeter/ElementFtp";
+import Project from "@/views/project/Project";
 export default {
   name: "SugarJmeter",
   components: {
+    Project,
     ElementFtp,
     SamplerBolt,
     SamplerDebug,
@@ -256,7 +257,18 @@ export default {
     ConfigElementHeader, ConfigElementCsv, ThreadGroup, TestPlan, SugarJmeterTree, FunctionHelper},
   data(){
     return {
+      isShowProject: false,
       isShowFuncHelper: false,
+
+    }
+  },
+  methods: {
+    handleProjectClick(){
+      this.isShowProject = true
+    },
+
+    handleProjectClose(){
+      this.isShowProject = false
     }
   },
   computed: {

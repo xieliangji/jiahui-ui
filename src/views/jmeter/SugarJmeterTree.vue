@@ -40,14 +40,6 @@
 
 <script>
 import {JC} from "@/views/jmeter/js/JmeterTestElement";
-import { ThreadGroup} from "@/views/jmeter/js/ThreadGroup";
-import { AuthManager, BoltConnectionElement, CacheManager, CookieManager, CSVDataSet, DNSCacheManage, FtpConfig, HeaderManager, HttpDefaults, JavaConfig, JDBCDataSource, KeystoreConfig, TCPConfig, Arguments, SimpleConfig, LoginConfig, CounterConfig, RandomVariableConfig } from "@/views/jmeter/js/ConfigElement";
-import { CriticalSectionController, ForeachController, GenericController, IfController, IncludeController, InterleaveControl, LoopController, OnceOnlyController, RandomController, RandomOrderController, RunTime, SwitchController, ThroughputController, TransactionController, WhileController } from "@/views/jmeter/js/Controller";
-import { ConstantThroughputTimer, ConstantTimer, GaussianRandomTimer, JSR223Timer, PoissonRandomTimer, PreciseThroughputTimer, SyncTimer, UniformRandomTimer } from "@/views/jmeter/js/Timer";
-import { AnchorModifier, JDBCPreProcessor, JSR223PreProcessor, RegExUserParameter, SampleTimeout, URLRewritingModifier, UserParameters } from "@/views/jmeter/js/Preprocessor";
-import { BoundaryExtractor, DebugPostProcessor, HtmlExtractor, JDBCPostProcessor, JMESPathExtractor, JSONPostProcessor, JSR223PostProcessor, RegexExtractor, ResultAction, XPath2Extractor, XPathExtractor } from "@/views/jmeter/js/Postprocessor";
-import { CompareAssertion, DurationAssertion, HTMLAssertion, JMESPathAssertion, JSONPathAssertion, JSR223Assertion, MD5Assertion, ResponseAssertion, SizeAssertion, XMLAssertion, XMLSchemaAssertion, XPath2Assertion, XPathAssertion } from "@/views/jmeter/js/Assertion";
-import { AjpSampler, BoltSampler, DebugSampler, FTPSampler, HttpTestSample, JDBCSampler, JSR223Sampler, TCPSampler, TestAction } from "@/views/jmeter/js/Sampler";
 import {getMenuData} from "@/views/jmeter/js/JmeterTreeContextMenuData";
 
 export default {
@@ -61,12 +53,18 @@ export default {
         label: 'testname',
       },
       showContextMenu: false,
+      nodeClipboard: undefined,
     }
   },
   methods: {
     // 单击测试计划树节点 - 设置为当前的选中节点
     handleNodeClick(data){
       this.$store.commit('setCurrentTestElement', data)
+
+      let ctxMenu = document.getElementById('jmeterTreeContextMenu')
+      if(ctxMenu !== undefined){
+        this.showContextMenu = false
+      }
     },
 
     // 右击元素显示对应的右键菜单
@@ -114,19 +112,50 @@ export default {
     // 选中右键菜单，处理其对应的逻辑
     handleContextSelect(itemName){
       this.showContextMenu = false
-
       let itemObject = this.searchItemObject(itemName, this.menu)
-      console.log('点击的测试计划右键菜单项：' + itemName)
-      console.log(itemObject)
+
       // 此时点击菜单为复制、剪切、粘贴、删除、禁用、启用、切换等
       let currentElement = this.$store.state.currentTestElement
       if(itemObject.elementConstructor === undefined){
         if(itemName === 'copy'){
           // 复制
+          this.nodeClipboard = JSON.stringify(this.$store.state.currentTestElement)
         } else if(itemName === 'cut'){
           // 剪切
+          this.nodeClipboard = JSON.stringify(this.$store.state.currentTestElement)
+          let cutNodeParent = this.$refs.testPlanTree.getNode(this.$store.state.currentTestElement).parent.data
+          let currentIndex = cutNodeParent.children.indexOf(this.$store.state.currentTestElement)
+          cutNodeParent.children.splice(currentIndex, 1)
+          this.$store.commit('setCurrentTestElement', this.treeData[0])
+          this.$refs.testPlanTree.setCurrentKey(this.$store.state.currentTestElement.id)
         } else if(itemName === 'paste'){
           // 粘贴
+          if(this.nodeClipboard !== undefined){
+            let pasteNode = JSON.parse(this.nodeClipboard)
+            let pasteCategory = pasteNode.category
+            let currentCategory = this.$store.state.currentTestElement.category
+
+            if(currentCategory === JC.ConfigElement || currentCategory === JC.Timer || currentCategory === JC.Preprocessor || currentCategory === JC.Postprocessor || currentCategory === JC.Listener){
+              return
+            }
+
+            if(currentCategory === JC.TestPlan && (pasteCategory === JC.Controller || pasteCategory === JC.Sampler)){
+              return
+            }
+
+            if(pasteCategory === JC.ThreadGroup && currentCategory !== JC.TestPlan){
+              return
+            }
+
+            if(currentCategory === JC.Sampler && (pasteCategory === JC.Controller || pasteCategory === JC.Sampler)){
+              return
+            }
+
+            pasteNode.id = this.$store.getters.testElementId()
+            this.$store.state.currentTestElement.children.push(pasteNode)
+            this.treeKey = this.treeKey - 1
+            this.$nextTick(() => this.$refs.testPlanTree.setCurrentKey(pasteNode.id))
+          }
         } else if(itemName === 'delete'){
           // 删除
           this.$confirm('是否删除当前测试计划元素？', '', {type: 'warning', confirmButtonText: '是', cancelButtonText: '否'}).then(() => {
@@ -148,17 +177,28 @@ export default {
         } else if(itemName === 'switch'){
           currentElement.enabled = !currentElement.enabled
         }
-      } else {
-        // 添加、插入上级、改变逻辑控制器
+      } else { // 添加、插入上级、改变逻辑控制器
         let ElementConstructor = itemObject.elementConstructor
         let element = new ElementConstructor()
 
         if(itemName.startsWith('insert')){
           // 插入上级
-
+          let currentParent = this.$refs.testPlanTree.getNode(this.$store.state.currentTestElement).parent.data
+          let futureParent = new ElementConstructor()
+          let currentIndex = currentParent.children.indexOf(this.$store.state.currentTestElement)
+          futureParent.children.push(this.$store.state.currentTestElement)
+          currentParent.children[currentIndex] = futureParent
+          this.$store.commit('setCurrentTestElement', futureParent)
+          this.$refs.testPlanTree.setCurrentKey(this.$store.state.currentTestElement.id)
         } else if(itemName.startsWith('change')){
           // 改变逻辑控制器
-
+          let currentParent = this.$refs.testPlanTree.getNode(this.$store.state.currentTestElement).parent.data
+          let currentIndex = currentParent.children.indexOf(this.$store.state.currentTestElement)
+          let newElement = new ElementConstructor()
+          currentParent.children[currentIndex] = newElement
+          newElement.children = this.$store.state.currentTestElement.children
+          this.$store.commit('setCurrentTestElement', newElement)
+          this.$refs.testPlanTree.setCurrentKey(this.$store.state.currentTestElement.id)
         } else {
           // 添加子元素
           this.$store.state.currentTestElement.children.push(element)
@@ -217,90 +257,6 @@ export default {
   created() {
     this.$store.commit('initTestPlan')
     this.treeData[0] = this.$store.state.testPlan
-    let c = this.treeData[0].children
-
-    this.treeData[0].children.push(new ThreadGroup())
-    this.treeData[0].children.push(new HeaderManager())
-    this.treeData[0].children.push(new CSVDataSet())
-    this.treeData[0].children.push(new CookieManager())
-    this.treeData[0].children.push(new CacheManager())
-    this.treeData[0].children.push(new HttpDefaults())
-    this.treeData[0].children.push(new BoltConnectionElement())
-    this.treeData[0].children.push(new DNSCacheManage())
-    this.treeData[0].children.push(new FtpConfig())
-    this.treeData[0].children.push(new AuthManager())
-    this.treeData[0].children.push(new JDBCDataSource())
-    this.treeData[0].children.push(new JavaConfig())
-    this.treeData[0].children.push(new TCPConfig())
-    this.treeData[0].children.push(new KeystoreConfig())
-    this.treeData[0].children.push(new Arguments())
-    this.treeData[0].children.push(new SimpleConfig())
-    this.treeData[0].children.push(new LoginConfig())
-    this.treeData[0].children.push(new CounterConfig())
-    this.treeData[0].children.push(new RandomVariableConfig())
-    this.treeData[0].children.push(new IfController())
-    this.treeData[0].children.push(new TransactionController())
-    this.treeData[0].children.push(new LoopController())
-    this.treeData[0].children.push(new WhileController())
-    this.treeData[0].children.push(new ForeachController())
-    this.treeData[0].children.push(new IncludeController())
-    c.push(new RunTime())
-    c.push(new CriticalSectionController())
-    c.push(new InterleaveControl())
-    c.push(new OnceOnlyController())
-    c.push(new GenericController())
-    c.push(new RandomController())
-    c.push(new RandomOrderController())
-    c.push(new ThroughputController())
-    c.push(new SwitchController())
-    c.push(new ConstantTimer())
-    c.push(new UniformRandomTimer())
-    c.push(new PreciseThroughputTimer())
-    c.push(new ConstantThroughputTimer())
-    c.push(new JSR223Timer())
-    c.push(new SyncTimer())
-    c.push(new PoissonRandomTimer())
-    c.push(new GaussianRandomTimer())
-    c.push(new JSR223PreProcessor())
-    c.push(new UserParameters())
-    c.push(new AnchorModifier())
-    c.push(new URLRewritingModifier())
-    c.push(new JDBCPreProcessor())
-    c.push(new SampleTimeout())
-    c.push(new RegExUserParameter())
-    c.push(new HtmlExtractor())
-    c.push(new JMESPathExtractor())
-    c.push(new JSONPostProcessor())
-    c.push(new RegexExtractor())
-    c.push(new BoundaryExtractor())
-    c.push(new JSR223PostProcessor())
-    c.push(new JDBCPostProcessor())
-    c.push(new XPath2Extractor())
-    c.push(new XPathExtractor())
-    c.push(new ResultAction())
-    c.push(new DebugPostProcessor())
-    c.push(new ResponseAssertion())
-    c.push(new JSONPathAssertion())
-    c.push(new SizeAssertion())
-    c.push(new JSR223Assertion())
-    c.push(new XPath2Assertion())
-    c.push(new HTMLAssertion())
-    c.push(new JMESPathAssertion())
-    c.push(new MD5Assertion())
-    c.push(new XMLSchemaAssertion())
-    c.push(new XMLAssertion())
-    c.push(new XPathAssertion())
-    c.push(new DurationAssertion())
-    c.push(new CompareAssertion())
-    c.push(new HttpTestSample())
-    c.push(new JSR223Sampler())
-    c.push(new JDBCSampler())
-    c.push(new TCPSampler())
-    c.push(new AjpSampler())
-    c.push(new TestAction())
-    c.push(new DebugSampler())
-    c.push(new BoltSampler())
-    c.push(new FTPSampler())
   },
 
   computed: {

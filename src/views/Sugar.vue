@@ -4,16 +4,10 @@
       <div id="sugar-logo"></div>
       <div id="sugar-nav">
         <el-menu :default-active="activeNavItem" mode="horizontal" style="background: transparent;" @select="handleMenuSelect">
-          <el-menu-item :index="menuIndex.home">首页</el-menu-item>
           <el-submenu index="test">
             <template slot="title">测试</template>
             <el-menu-item :index="menuIndex.test.createTest">新建测试计划</el-menu-item>
             <el-menu-item :disabled="!isLogin" :index="menuIndex.test.listTest">测试计划列表</el-menu-item>
-          </el-submenu>
-          <el-submenu index="project" :disabled="!isLogin">
-            <template slot="title">项目</template>
-            <el-menu-item :index="menuIndex.project.createProject">新建项目</el-menu-item>
-            <el-menu-item :index="menuIndex.project.listProject">项目列表</el-menu-item>
           </el-submenu>
           <el-submenu index="config" :disabled="!isLogin">
             <template slot="title">配置</template>
@@ -76,13 +70,10 @@
 </template>
 
 <script>
-import Home from "@/views/Home";
-import ProjectCreate from "@/views/project/ProjectCreate";
-import ProjectList from "@/views/project/ProjectList";
 import SugarJmeter from "@/views/jmeter/SugarJmeter";
 export default {
   name: "Sugar",
-  components: {SugarJmeter, ProjectList, ProjectCreate, Home},
+  components: {SugarJmeter},
   data(){
     let checkName = (rule, value, callback) => {
       let regex = new RegExp('[_A-Za-z0-9\u4e00-\u9fa5]{1,20}')
@@ -115,9 +106,6 @@ export default {
         config: {configJMeter: "configJMeter"}
       },
       menuPage: {
-        "home": Home,
-        "createProject": ProjectCreate,
-        "listProject": ProjectList,
         "createTest": SugarJmeter,
       },
       dropdownCommand: {
@@ -126,7 +114,7 @@ export default {
         info: "info",
         logout: "logout"
       },
-      activeNavItem: "home",
+      activeNavItem: "createTest",
       selectDropdownCommand: undefined,
       sugarAccount: {
         id: undefined,
@@ -152,6 +140,8 @@ export default {
     handleDropdownSelect(command){
       this.selectDropdownCommand = command
     },
+
+
     handleAccountDialogClose(){
       this.selectDropdownCommand = undefined
       this.$refs.accountFrom.resetFields()
@@ -170,7 +160,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
 $headerHeight: 60px;
 $footerHeight: 40px;
 $bodyHeight: calc(100vh - 100px);
@@ -257,8 +246,5 @@ $bodyHeight: calc(100vh - 100px);
   text-align: center;
   border-top: 1px solid #DCDFE6;
 }
-
-
-
 
 </style>

@@ -620,4 +620,19 @@ $padding: 5px;
   color: $color !important;
 }
 
+
+// el-drawer样式
+.el-drawer__wrapper{
+  //top: 50px !important;
+  bottom: 2px !important;
+}
+
+.el-drawer__header {
+  color: $color !important;
+  display: flex;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: $lineHeight !important;
+  height: $lineHeight !important;
+}
 </style>

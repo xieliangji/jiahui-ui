@@ -17,8 +17,7 @@ import {
     URLRewritingModifier,
     UserParameters
 } from "@/views/jmeter/js/Preprocessor";
-import {PostThreadGroup, SetupThreadGroup} from "@/views/jmeter/js/ThreadGroup";
-import ThreadGroup from "@/views/jmeter/ThreadGroup";
+import {PostThreadGroup, SetupThreadGroup, ThreadGroup} from "@/views/jmeter/js/ThreadGroup";
 import {
     CompareAssertion,
     DurationAssertion,
