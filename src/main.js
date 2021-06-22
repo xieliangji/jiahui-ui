@@ -9,9 +9,11 @@ import 'element-ui/lib/theme-chalk/index.css'
 import AT from 'at-ui'
 import 'at-ui-style'
 import {JL} from './views/jmeter/js/JmeterTestElement'
+import Axios from 'axios'
 
 Vue.config.productionTip = false
 Vue.prototype.$JL = JL
+Vue.prototype.$axios = Axios
 
 Vue.use(El)
 Vue.use(AT)

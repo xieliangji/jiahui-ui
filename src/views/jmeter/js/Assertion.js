@@ -94,7 +94,6 @@ export function XPathAssertion(){
     this.quiet = true
     this.reportErrors = false
     this.showWarnings = false
-    this.fragment = false
     this.namespace = false
     this.validate = false
     this.whitespace = false

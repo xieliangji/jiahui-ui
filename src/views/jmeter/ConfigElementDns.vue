@@ -30,16 +30,16 @@
     <div class="sugar-top-border">
       <div class="sugar-border-text">静态主机列表</div>
       <el-table :style="{background: element.isCustomResolver ? '': 'rgba(0,0,0,.1)'}" :data="element.hosts" ref="hostTable" highlight-current-row height="300px" empty-text=" " row-key="id" @row-click="handleHostClick">
-        <el-table-column prop="host">
+        <el-table-column prop="name">
           <div slot="header" class="sugar-table-header">主机</div>
           <template slot-scope="scope">
-            <el-input v-model="scope.row.host" :readonly="!element.isCustomResolver"></el-input>
+            <el-input v-model="scope.row.name" :readonly="!element.isCustomResolver"></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="nameOrIp">
+        <el-table-column prop="address">
           <div slot="header" class="sugar-table-header">主机名或IP地址</div>
           <template slot-scope="scope">
-            <el-input v-model="scope.row.nameOrId" :readonly="!element.isCustomResolver"></el-input>
+            <el-input v-model="scope.row.address" :readonly="!element.isCustomResolver"></el-input>
           </template>
         </el-table-column>
       </el-table>

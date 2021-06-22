@@ -31,7 +31,7 @@ export default {
         return this.showSugarDrawer
       },
       set(value){
-        value
+        return value
       }
     }
   }

@@ -80,5 +80,4 @@ export function FTPSampler(){
 
 export function GraphQL(){
     AbstractHttp.call(this, TestElements.GraphQLHTTPSampler)
-
 }

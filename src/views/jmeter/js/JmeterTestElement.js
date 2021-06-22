@@ -139,8 +139,6 @@ export const JT = {
     PoissonRandomTimer: "PoissonRandomTimer",
     GaussianRandomTimer: "GaussianRandomTimer",
     BeanShellTimer: "BeanShellTimer",
-
-
 }
 
 
@@ -437,8 +435,8 @@ export function DnsServer(){
 
 export function DnsHost(){
     this.id = Store.getters.testElementId()
-    this.host = ''
-    this.nameOrIp = ''
+    this.name = ''
+    this.address = ''
 }
 
 

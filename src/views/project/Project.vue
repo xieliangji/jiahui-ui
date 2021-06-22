@@ -128,7 +128,7 @@ export default {
     }
   },
   methods: {
-    handleProjectCreatorClose(){
+    handleCreatorClose(){
       this.isShowCreator = false
     },
 
