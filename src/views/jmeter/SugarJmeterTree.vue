@@ -266,12 +266,17 @@ export default {
         this.$store.commit("initTestPlan")
       }
       treeData[0] = this.$store.state.testPlan
+      if(this.$refs.testPlanTree !== undefined){
+        this.$refs.testPlanTree.setCurrentKey(this.$store.state.currentTestElement.id)
+      }
+      this.$nextTick(() => this.$refs.testPlanTree.setCurrentKey(this.$store.state.currentTestElement.id))
       return treeData
     },
 
     categories(){
       return JC
     },
+
     menu(){
       return getMenuData(this.$store.state.currentTestElement.category)
     },
