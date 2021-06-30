@@ -289,6 +289,7 @@ export default {
   .sugar-project-header{
     height: 32px;
     line-height: 32px;
+    background: transparent !important;
   }
   .sugar-project-content{
     height: calc(100% - 32px);

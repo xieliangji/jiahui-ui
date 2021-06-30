@@ -36,27 +36,36 @@
           </div>
           <div class="sugar-normal-line" style="margin-top: 20px;">
             <el-button type="primary" style="margin-left: 5px;" @click="handleQuery">查询</el-button>
-            <el-button type="primary" style="margin-left: 5px;" @click="handleCreate">新建测试计划</el-button>
+            <el-button type="success" style="margin-left: 5px;" @click="handleCreate">新建测试计划</el-button>
           </div>
         </div>
 
         <div class="manager-content-table">
           <div class="content-table-list">
             <el-table :data="plans.planList" ref="planTable" row-key="id" highlight-current-row :height="planTableHeight" empty-text="没有测试计划" @row-click="handlePlanClick">
-              <el-table-column prop="id">
+              <el-table-column prop="id" width="80px">
                 <div slot="header" class="sugar-table-header">编号</div>
               </el-table-column>
-              <el-table-column prop="name">
+              <el-table-column prop="name" width="300px">
                 <div slot="header" class="sugar-table-header">测试计划名称</div>
               </el-table-column>
-              <el-table-column prop="projectName">
+              <el-table-column prop="projectName" width="300px">
                 <div slot="header" class="sugar-table-header">所属项目名称</div>
               </el-table-column>
-              <el-table-column prop="creatorName">
+              <el-table-column prop="creatorName" width="200px">
                 <div slot="header" class="sugar-table-header">创建人</div>
               </el-table-column>
-              <el-table-column prop="updaterName">
+              <el-table-column prop="updaterName" width="200px">
                 <div slot="header" class="sugar-table-header">更新人</div>
+              </el-table-column>
+              <el-table-column fixed="right">
+                <div slot="header" class="sugar-table-header">操作</div>
+                <template slot-scope="scope">
+                  <div v-if="scope" style="text-align: center;">
+                    <el-button type="primary">编辑</el-button>
+                    <el-button type="primary" style="color: #ff6d6f !important;">删除</el-button>
+                  </div>
+                </template>
               </el-table-column>
             </el-table>
           </div>
@@ -93,7 +102,7 @@ export default {
         pageSize: '',
         pageNum: '',
         total: '',
-        planList: [{id: 1}]
+        planList: [{id: 1}, {id: 3}]
       },
       currentPlan: undefined,
     }
@@ -105,7 +114,10 @@ export default {
     },
 
     handleCreate(){
-
+      this.$confirm("当前编辑测试计划会被覆盖，请确认已保存，是否创建新测试计划？", "注意", {confirmButtonClass: "是", cancelButtonText: "否"}).then(() => {
+        this.$store.commit("initTestPlan")
+        this.$emit('close')
+      }).catch(() => {})
 
     },
 
@@ -120,6 +132,7 @@ export default {
 
 .test-plan-manager{
   height: 100%;
+  background-color: #eef2f3;
 
   // 页面头部样式
   .test-plan-manager-header {
@@ -182,16 +195,31 @@ export default {
 .content-table-list{
   &::v-deep .el-table {
     border: 1px solid #DCDFE6 !important;
-
+    background: transparent !important;
+    .current-row{
+      background: #eef7f2 !important;
+    }
     tr{
       border-bottom: 1px solid #DCDFE6 !important;
+      background: transparent !important;
+      height: 36px !important;
+      line-height: 36px !important;
 
       td, th{
+        background: transparent !important;
         border: none !important;
         border-bottom: 1px solid #DCDFE6 !important;
         padding: 0 5px !important;
       }
     }
+  }
+
+  &::v-deep .el-button{
+    padding: 0 5px !important;
+    height: 20px !important;
+    line-height: 20px !important;
+    font-size: 10px !important;
+    margin-left: 5px !important;
   }
 
 

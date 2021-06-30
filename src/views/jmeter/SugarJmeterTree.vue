@@ -47,7 +47,7 @@ export default {
   data(){
     return {
       treeKey: 19890512,
-      treeData: [],
+      // treeData: [],
       treeProps: {
         children: 'children',
         label: 'testname',
@@ -255,11 +255,20 @@ export default {
     }
   },
   created() {
-    this.$store.commit('initTestPlan')
-    this.treeData[0] = this.$store.state.testPlan
+    // this.$store.commit('initTestPlan')
+    // this.treeData[0] = this.$store.state.testPlan
   },
 
   computed: {
+    treeData(){
+      let treeData = []
+      if(this.$store.state.testPlan === undefined){
+        this.$store.commit("initTestPlan")
+      }
+      treeData[0] = this.$store.state.testPlan
+      return treeData
+    },
+
     categories(){
       return JC
     },

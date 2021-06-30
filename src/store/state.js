@@ -1,4 +1,5 @@
-const serviceIp = "192.168.17.234"
+// const serviceIp = "192.168.17.234"
+const serviceIp = "localhost"
 const servicePort = 8512
 const serviceDomain = `http://${serviceIp}:${servicePort}`
 const serviceWebSocketDomain = `ws://${serviceIp}:${servicePort}`
