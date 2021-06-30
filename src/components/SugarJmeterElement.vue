@@ -5,13 +5,13 @@
       <div class="sugar-label-input sugar-normal-line">
         <div class="label">名称</div>
         <div class="input">
-          <el-input v-model="jmeterElement.testname"></el-input>
+          <Input v-model="jmeterElement.testname"></Input>
         </div>
       </div>
       <div class="jmeter-element-comment sugar-flex-row">
         <div class="label">注释</div>
         <div class="input">
-          <el-input type="textarea" resize="none" :autosize="{minRows: 2, maxRows: 10}" v-model="jmeterElement.comments"></el-input>
+          <Input type="textarea" :autosize="{minRows: 2, maxRows: 10}" v-model="jmeterElement.comments"></Input>
         </div>
       </div>
     </div>

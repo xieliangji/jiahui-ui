@@ -1,7 +1,7 @@
 <template>
-  <sugar-dialog height="630px" width="800px" @close="$emit('close')">
+  <sugar-dialog height="640px" width="800px" @close="$emit('close')">
     <div slot="title">函数助手</div>
-    <div>
+    <div id="sugarFunc">
       <div id="funcSelect" class="sugar-layout-wrap">
         <div style="width: 250px;">
           <el-select v-model="functionName" no-data-text=" " placeholder=" " @change="handleCurrentFunctionNameChange">
@@ -140,10 +140,17 @@ export default {
 
 <style scoped lang="scss">
 
+#sugarFunc{
+  &::v-deep .el-input__inner{
+    height: 32px !important;
+  }
+}
+
 #funcSelect{
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
+
 }
 
 .function-table{

@@ -3,7 +3,6 @@ import {TestPlan} from "@/views/jmeter/js/TestPlan";
 export default {
     setSugarAccount: (state, payload) => {
         state.sugarAccount = payload
-        state.isLogin = true
     },
 
     /**
@@ -22,5 +21,14 @@ export default {
      */
     setCurrentTestElement: (state, jmeterTestElement) => {
         state.currentTestElement = jmeterTestElement
+    },
+
+    /**
+     * 设置执行测试计划的 executorId
+     * @param state
+     * @param executorId
+     */
+    setExecutorId: (state, executorId) => {
+        state.executorId = executorId
     }
 }

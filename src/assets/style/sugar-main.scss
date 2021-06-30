@@ -34,6 +34,17 @@ html, body{
   line-height: 32px;
   height: 32px;
   margin-bottom: 10px;
+  .el-input {
+    .el-input__inner {
+      height: 32px !important;
+    }
+  }
+}
+
+.sugar-normal-input{
+  .el-input .el-input__inner{
+    height: 32px !important;
+  }
 }
 
 // 通用标签、输入框组合
@@ -52,6 +63,12 @@ html, body{
   .input{
     display: inline-block;
     flex-grow: 1;
+  }
+
+  .el-input {
+    .el-input__inner {
+      height: 32px !important;
+    }
   }
 }
 
@@ -105,11 +122,28 @@ el-XXX 全局样式覆盖
     }
   }
 
+  .header-content{
+    flex-grow: 1;
+  }
+
+  .header-close{
+    width: 18px;
+    text-align: center;
+    color: #ff6d6f;
+    cursor: pointer;
+    background-color: #F0F2F0;
+    border-radius: 2px;
+    &::after{
+      content: "x";
+      text-align: center;
+    }
+  }
 }
 
 .sugar-dialog-body{
   max-height: 800px;
   overflow: auto;
+  background-color: #eef2f3;
 }
 
 // 全局带文字边框样式
@@ -130,7 +164,7 @@ el-XXX 全局样式覆盖
 
 // 全局过渡样式
 .fade-enter-active, .fade-leave-active {
-  transition: opacity .25s;
+  transition: opacity .5s;
 }
 .fade-enter, .fade-leave-to{
   opacity: 0;

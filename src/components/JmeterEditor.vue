@@ -1,7 +1,7 @@
 <template>
   <div id="sugarJmeterEditor">
     <editor v-model="editorValue" @init="initEditor" :lang="language" style="height: 100%; width: 100%;" theme="xcode"
-            :options="{enableBasicAutocompletion: true, enableSnippets: true, readOnly: readOnly, showPrintMargin: false, highlightActiveLine: false, fontSize: '14px'}">
+            :options="{enableBasicAutocompletion: true, enableSnippets: true, readOnly: readOnly, showPrintMargin: false, highlightActiveLine: false, fontSize: '14px', wrap: 'free'}">
     </editor>
   </div>
 </template>

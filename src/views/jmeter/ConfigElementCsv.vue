@@ -3,7 +3,7 @@
     <div class="sugar-label-input sugar-normal-line">
       <div class="label">文件名</div>
       <div class="input" @dblclick="handleCsvUpload">
-        <el-input v-model="element.filename" readonly placeholder="双击上传csv文件"></el-input>
+        <Input v-model="element.filename" readonly placeholder="双击上传csv文件"></Input>
         <input id="csvFile" type="file" style="display: none" accept=".csv" @change="handleCsvChange"/>
       </div>
     </div>
@@ -21,7 +21,7 @@
     <div class="sugar-label-input sugar-normal-line">
       <div class="label">变量名称（西文逗号分隔）</div>
       <div class="input">
-        <el-input v-model="element.variableNames"></el-input>
+        <Input v-model="element.variableNames"></Input>
       </div>
     </div>
     <div class="sugar-label-input sugar-normal-line">
@@ -36,7 +36,7 @@
     <div class="sugar-label-input sugar-normal-line">
       <div class="label">分隔符（用'\t'代替制表符）</div>
       <div class="input">
-        <el-input v-model="element.delimiter"></el-input>
+        <Input v-model="element.delimiter"></Input>
       </div>
     </div>
     <div class="sugar-label-input sugar-normal-line">

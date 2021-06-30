@@ -268,9 +268,14 @@ $padding: 5px;
     border-color: #bdc3c7 !important;
   }
 }
-.el-input__inner {
-  height: $lineHeight !important;
-}
+
+//.el-input{
+//  .el-input__inner {
+//    height: $lineHeight !important;
+//  }
+//}
+
+
 
 // 选择器
 .el-select{
@@ -334,6 +339,7 @@ $padding: 5px;
   .el-input__inner {
     border: none !important;
     background-color: transparent !important;
+    height: $lineHeight !important;
     &:focus{
       background-color: #FFF2E2 !important;
     }
@@ -462,7 +468,7 @@ $padding: 5px;
   margin-top: 100px !important;
 }
 .el-dialog__body{
-  padding: 10px !important;
+  padding: 0 !important;
   color: $color !important;
 }
 .el-dialog__header{
@@ -470,12 +476,12 @@ $padding: 5px;
   padding: 0 !important;
   color: $color !important;
   font-size: 12px !important;
-  border-bottom: 1px solid $hoverBorderColor !important;
+  border-bottom: 1px solid #eef2f3 !important;
 }
 .el-dialog__headerbtn{
   top: 0 !important;
   right: 0 !important;
-  line-height: 28px !important;
+  line-height: 26px !important;
   width: 28px !important;
   font-size: 14px !important;
   background-color: rgba(0,0,0,.2) !important;
@@ -487,7 +493,8 @@ $padding: 5px;
   color: #ff6d6f !important;
 }
 .el-dialog__footer{
-  padding: 10px 10px 10px !important;
+  padding: 0 !important;
+  background-color: #eef2f3;
 }
 
 // 右键菜单
@@ -622,8 +629,21 @@ $padding: 5px;
 
 
 // el-drawer样式
+.el-tabs{
+  height: 100% !important;
+
+  .el-tabs__header{
+    box-sizing: border-box !important;
+    height: 32px !important;
+  }
+
+  .el-tabs__content{
+    height: calc(100% - 50px) !important;
+    overflow: auto;
+  }
+}
+
 .el-drawer__wrapper{
-  //top: 50px !important;
   bottom: 2px !important;
 }
 
@@ -634,5 +654,20 @@ $padding: 5px;
   padding: 0 !important;
   line-height: $lineHeight !important;
   height: $lineHeight !important;
+}
+.el-drawer__body{
+  height: 100% !important;
+}
+// tool-tip
+.el-tooltip__popper.is-light{
+  border-color: #DCDFE6 !important;
+}
+.el-tooltip__popper{
+  padding: 5px !important;
+  font-size: 10px !important;
+}
+.el-tooltip__popper.is-light[x-placement^=top] .popper__arrow{
+  //border-color: #536976 !important;
+  border-top-color: #DCDFE6 !important;
 }
 </style>

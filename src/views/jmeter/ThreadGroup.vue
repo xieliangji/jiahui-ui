@@ -15,13 +15,13 @@
       <div class="sugar-label-input sugar-normal-line">
         <div class="label">线程数</div>
         <div class="input">
-          <el-input v-model="element.numThreads"></el-input>
+          <Input v-model="element.numThreads"></Input>
         </div>
       </div>
       <div class="sugar-label-input sugar-normal-line">
         <div class="label">Ramp-Up时间（秒）</div>
         <div class="input">
-          <el-input v-model="element.rampTime"></el-input>
+          <Input v-model="element.rampTime"></Input>
         </div>
       </div>
       <div class="sugar-flex-row sugar-normal-line">
@@ -30,7 +30,7 @@
           <el-checkbox v-model="element.continueForever">永远</el-checkbox>
         </div>
         <div style="flex-grow: 1;">
-          <el-input v-model="element.loops"></el-input>
+          <Input v-model="element.loops"></Input>
         </div>
       </div>
       <div class="sugar-normal-line">
@@ -45,13 +45,13 @@
       <div class="sugar-label-input sugar-normal-line">
         <div class="label">持续时间（秒）</div>
         <div class="input">
-          <el-input v-model="element.duration" :disabled="!element.scheduler"></el-input>
+          <Input v-model="element.duration" :disabled="!element.scheduler"></Input>
         </div>
       </div>
       <div class="sugar-label-input sugar-normal-line">
         <div class="label">启动延迟（秒）</div>
         <div class="input">
-          <el-input v-model="element.delay" :disabled="!element.scheduler"></el-input>
+          <Input v-model="element.delay" :disabled="!element.scheduler"></Input>
         </div>
       </div>
     </div>

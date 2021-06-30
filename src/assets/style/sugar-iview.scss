@@ -1,0 +1,26 @@
+/**
+  输入框
+ */
+.ivu-input{
+  border-radius: 2px !important;
+  padding: 0 5px !important;
+  line-height: 32px !important;
+  color: #536976 !important;
+  &:hover, &:focus{border-color: #bdc3c7 !important; box-shadow: none !important;}
+  font-size: 14px !important;
+}
+
+/**
+  表单标签
+ */
+.ivu-form .ivu-form-item-label{
+  padding: 10px 5px 10px 0 !important;
+}
+
+/**
+  卡片
+ */
+.ivu-card{
+  border-color: #DCDFE6 !important;
+  font-size: 16px !important;
+}

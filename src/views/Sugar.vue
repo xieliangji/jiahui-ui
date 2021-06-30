@@ -3,17 +3,6 @@
     <div id="sugar-header">
       <div id="sugar-logo"></div>
       <div id="sugar-nav">
-        <el-menu :default-active="activeNavItem" mode="horizontal" style="background: transparent;" @select="handleMenuSelect">
-          <el-submenu index="test">
-            <template slot="title">测试</template>
-            <el-menu-item :index="menuIndex.test.createTest">新建测试计划</el-menu-item>
-            <el-menu-item :disabled="!isLogin" :index="menuIndex.test.listTest">测试计划列表</el-menu-item>
-          </el-submenu>
-          <el-submenu index="config" :disabled="!isLogin">
-            <template slot="title">配置</template>
-            <el-menu-item :index="menuIndex.config.configJMeter">配置JMeter</el-menu-item>
-          </el-submenu>
-        </el-menu>
       </div>
       <div id="sugar-user">
         <div id="sugar-user__avatar"></div>
@@ -21,8 +10,8 @@
           <el-dropdown @command="handleDropdownSelect">
             <div>{{ !isLogin ? '未登录': $store.state.sugarAccount.username }}</div>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item v-if="isLogin" :command="dropdownCommand.register">注册</el-dropdown-item>
-              <el-dropdown-item v-if="isLogin" :command="dropdownCommand.login">登录</el-dropdown-item>
+              <el-dropdown-item v-if="!isLogin" :command="dropdownCommand.register">注册</el-dropdown-item>
+              <el-dropdown-item v-if="!isLogin" :command="dropdownCommand.login">登录</el-dropdown-item>
               <el-dropdown-item v-if="isLogin" :command="dropdownCommand.info">个人信息</el-dropdown-item>
               <el-dropdown-item v-if="isLogin" :command="dropdownCommand.logout">注销</el-dropdown-item>
             </el-dropdown-menu>
@@ -39,31 +28,58 @@
       {{ `Copyright Reserved By Sugar © 2020 ~ ${new Date().getFullYear()}` }}
     </div>
 
-    <el-dialog width="600px" :visible="selectDropdownCommand === dropdownCommand.register || selectDropdownCommand === dropdownCommand.login" @close="handleAccountDialogClose">
+    <el-dialog width="600px" :visible="selectDropdownCommand === dropdownCommand.register || selectDropdownCommand === dropdownCommand.login" :close-on-click-modal="false" :close-on-press-escape="false" @close="handleAccountDialogClose">
       <template slot="title">
         <div class="sugar-dialog-header">
           <div class="logo"></div>
-          <div class="title">{{ selectDropdownCommand === dropdownCommand.register ? "注册":"登录" }}</div>
+<!--          <div class="title">{{ selectDropdownCommand === dropdownCommand.register ? " ":" " }}</div>-->
         </div>
       </template>
-      <div class="sugar-dialog-body">
-        <el-form :model="sugarAccount" label-width="80px" ref="accountFrom" :rules="accountRule">
-          <el-form-item v-if="selectDropdownCommand === dropdownCommand.register" prop="username" label="用户名">
-            <el-input v-model="sugarAccount.username"></el-input>
-          </el-form-item>
-          <el-form-item prop="email" label="邮箱">
-            <el-input v-model="sugarAccount.email"></el-input>
-          </el-form-item>
-          <el-form-item prop="password" label="密码">
-            <el-input v-model="sugarAccount.password" type="password"></el-input>
-          </el-form-item>
-          <el-form-item v-if="selectDropdownCommand === dropdownCommand.register" prop="repeatPassword" label="确认密码">
-            <el-input v-model="sugarAccount.repeatPassword" type="password"></el-input>
-          </el-form-item>
-        </el-form>
+      <div class="sugar-dialog-body sugar-layout-wrap">
+        <i-form style="margin: 20px 10px 0;" :model="sugarAccount" :label-width="80" ref="accountFrom" :rules="accountRule">
+          <form-item v-if="selectDropdownCommand === dropdownCommand.register" label="用户名" prop="username">
+            <Input v-model="sugarAccount.username" placeholder="请输入用户名"></Input>
+          </form-item>
+          <form-item label="邮箱" prop="email">
+            <Input v-model="sugarAccount.email" placeholder="请输入邮箱"></Input>
+          </form-item>
+          <form-item label="密码" prop="password">
+            <Input v-model="sugarAccount.password" type="password" placeholder="请输入密码"></Input>
+          </form-item>
+          <form-item v-if="selectDropdownCommand === dropdownCommand.register" label="确认密码" prop="repeatPassword">
+            <Input v-model="sugarAccount.repeatPassword" type="password" placeholder="请输入确认密码"></Input>
+          </form-item>
+        </i-form>
       </div>
-      <div slot="footer">
-        <el-button type="primary">{{ selectDropdownCommand === dropdownCommand.register ? "注册":"登录" }}</el-button>
+      <div slot="footer" class="sugar-layout-wrap">
+        <el-button style="margin-right: 10px;" type="primary" @click="handleAccountRequest">{{ selectDropdownCommand === dropdownCommand.register ? "注册":"登录" }}</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog width="600px" :visible="selectDropdownCommand === dropdownCommand.info" @close="handleUpdateCancel">
+      <template slot="title">
+        <div class="sugar-dialog-header">
+          <div class="logo"></div>
+<!--          <div class="title">个人信息</div>-->
+        </div>
+      </template>
+      <div class="sugar-dialog-body sugar-layout-wrap">
+        <i-form :model="sugarAccount" :label-width="80" ref="infoForm" :rules="accountRule">
+          <form-item prop="username" label="用户名" @dblclick.native="handleUpdating">
+            <Input v-model="sugarAccount.username" :readonly="!isInfoEdit"></Input>
+          </form-item>
+          <form-item prop="email" label="邮箱">
+            <Input v-model="sugarAccount.email" disabled></Input>
+          </form-item>
+          <form-item prop="createTime" label="注册时间">
+            <Input v-model="sugarAccount.createTime" disabled></Input>
+          </form-item>
+          <form-item prop="updateTime" label="更新时间">
+            <Input v-model="sugarAccount.updateTime" disabled></Input>
+          </form-item>
+        </i-form>
+      </div>
+      <div slot="footer" v-if="isInfoEdit" class="sugar-layout-wrap">
+        <el-button type="primary" @click="handleUpdateSave">保存</el-button>
       </div>
     </el-dialog>
   </div>
@@ -93,7 +109,7 @@ export default {
     }
     let checkRepeatPassword = (rule, value, callback) => {
       if(value === '') return callback('确认密码不能为空')
-      if(value !== this.account.password) return callback(new Error('确认密码、密码必须一致'))
+      if(value !== this.sugarAccount.password) return callback(new Error('确认密码、密码必须一致'))
       callback()
     }
 
@@ -121,8 +137,11 @@ export default {
         username: '',
         email: '',
         password: '',
-        repeatPassword: ''
+        repeatPassword: '',
+        createTime: undefined,
+        updateTime: undefined
       },
+      isInfoEdit: false,
       accountRule: {
         username: [{required: true, validator: checkName, trigger: 'blur'}],
         email: [{required: true, validator: checkEmail, trigger: 'blur'}],
@@ -139,22 +158,73 @@ export default {
 
     handleDropdownSelect(command){
       this.selectDropdownCommand = command
+      if(command === this.dropdownCommand.logout){
+        this.$store.commit("setSugarAccount", undefined)
+      }
     },
 
 
     handleAccountDialogClose(){
       this.selectDropdownCommand = undefined
       this.$refs.accountFrom.resetFields()
+    },
+
+    handleAccountRequest(){
+      if(this.selectDropdownCommand === this.dropdownCommand.register){
+        // 注册
+        this.$confirm("确定要注册？", "", {confirmButtonText: "确定", cancelButtonText: "取消"}).then(() => {
+          let requestData = this.sugarAccount
+          this.$axios.post(this.$store.state.restApi.sugarAccountSingUp, requestData).then(response => {
+            if(response.data.code === 0){
+              this.$message({message: "注册成功", type: "success", duration: 3000})
+              this.selectDropdownCommand = undefined
+            } else {
+              this.$message({message: response.data.message, type: "error", duration: 3000})
+            }
+          }).catch(err => {
+            this.$message({message: err, type: "error", duration: 3000})
+          })
+        }).catch(() => {})
+      } else if(this.selectDropdownCommand === this.dropdownCommand.login){
+        // 登录
+        let requestData = this.sugarAccount
+        this.$axios.post(this.$store.state.restApi.sugarAccountSignIn, requestData).then(response => {
+          if(response.data.code === 0){
+            this.$message({message: "登录成功！", type: "success", duration: 3000})
+            this.sugarAccount = JSON.parse(JSON.stringify(response.data.payload))
+            this.$store.commit("setSugarAccount", response.data.payload)
+            this.selectDropdownCommand = undefined
+          } else {
+            this.$message({message: response.data.message, type: "error", duration: 3000})
+          }
+        }).catch(err => {
+          this.$message({message: err, type: "error", duration: 3000})
+        })
+      } else {
+        // 不处理
+        return
+      }
+    },
+
+    handleUpdating(){
+      console.log("updating")
+      this.isInfoEdit = true
+    },
+
+    handleUpdateSave(){
+
+    },
+
+    handleUpdateCancel(){
+      this.selectDropdownCommand = undefined
+      this.isInfoEdit = false
+      this.sugarAccount = JSON.parse(JSON.stringify(this.$store.state.sugarAccount))
     }
   },
   computed: {
     isLogin(){
-      // return false
       return this.$store.state.sugarAccount !== undefined
     }
-  },
-  mounted() {
-    this.$store.commit("setSugarAccount", {id: 1, username: '管理员'})
   }
 }
 </script>

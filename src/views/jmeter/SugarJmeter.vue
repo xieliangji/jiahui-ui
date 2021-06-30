@@ -1,23 +1,24 @@
 <template>
   <div id="sugar-jmeter">
+    <transition name="fade">
+      <function-helper v-if="isShowFuncHelper" @close="handleClose('function')"></function-helper>
+      <project v-if="isShowProject" @close="handleClose('project')"></project>
+      <test-plan-manager v-if="isShowPlan" @close="handleClose('plan')"></test-plan-manager>
+    </transition>
     <div id="sugar-jmeter-tree">
-      <transition name="fade">
-        <function-helper v-if="isShowFuncHelper" @close="isShowFuncHelper = false"></function-helper>
-        <project v-if="isShowProject" @close="isShowProject = false"></project>
-      </transition>
       <div id="tree-opt">
-        <div class="sugar-jmeter-opt" @click="handleProjectClick">项目</div>
-        <div class="sugar-jmeter-opt">保存计划</div>
-        <div class="sugar-jmeter-opt">打开本地</div>
-        <div class="sugar-jmeter-opt">启动运行</div>
-        <div class="sugar-jmeter-opt">停止运行</div>
-        <div class="sugar-jmeter-opt" @click="isShowFuncHelper = true">函数助手</div>
+        <div class="sugar-jmeter-opt" v-if="isLogin" @click="handleShow('project')">管理项目</div>
+        <div class="sugar-jmeter-opt" v-if="isLogin" @click="handleShow('plan')">管理计划</div>
+        <div class="sugar-jmeter-opt" v-if="!isExecuting" @click="handleSetupExecuting">启动执行</div>
+        <div class="sugar-jmeter-opt" v-if="this.sampleEvents.length > 0" @click="handleShow('sampleResult')">取样结果</div>
+        <div class="sugar-jmeter-opt" v-if="isExecuting" @click="handleStopExecuting">停止执行</div>
+        <div class="sugar-jmeter-opt" v-if="isLogin">定时任务</div>
+        <div class="sugar-jmeter-opt" v-if="isLogin">测试报告</div>
+        <div class="sugar-jmeter-opt" @click="handleShow('function')">函数助手</div>
       </div>
-      <div style="width: 2px; background: linear-gradient(45deg, #bdc3c7 50%, #FFFFFF 0); background-size: 2px 2px;"></div>
-      <div id="tree-data">
-        <sugar-jmeter-tree></sugar-jmeter-tree>
-      </div>
-      <div style="width: 6px; background: linear-gradient(45deg, #bdc3c7 50%, #FFFFFF 0); background-size: 2px 2px;"></div>
+      <div class="sugar-opt-boundary"></div>
+      <div id="tree-data"><sugar-jmeter-tree></sugar-jmeter-tree></div>
+      <div class="sugar-tree-boundary"></div>
     </div>
     <div id="sugar-jmeter-element" v-if="currentElement !== undefined">
       <transition name="fade">
@@ -108,6 +109,8 @@
         <element-ftp :key="keyId" v-if="currentElement.type === JT.FTPSampler" :element="currentElement"></element-ftp>
       </transition>
     </div>
+
+    <sugar-jmeter-result @clear="handleSampleResultClear" v-if="isShowSampleEvent" :jmeter-sample-events="sampleEvents" @close="handleClose('sampleResult')"></sugar-jmeter-result>
   </div>
 </template>
 
@@ -185,9 +188,14 @@ import SamplerDebug from "@/views/jmeter/SamplerDebug";
 import SamplerBolt from "@/views/jmeter/SamplerBolt";
 import ElementFtp from "@/views/jmeter/ElementFtp";
 import Project from "@/views/project/Project";
+import {Loading} from "element-ui";
+import SugarJmeterResult from "@/views/jmeter/SugarJmeterResult";
+import TestPlanManager from "@/views/testplan/TestPlanManager";
 export default {
   name: "SugarJmeter",
   components: {
+    TestPlanManager,
+    SugarJmeterResult,
     Project,
     ElementFtp,
     SamplerBolt,
@@ -257,29 +265,126 @@ export default {
     ConfigElementHeader, ConfigElementCsv, ThreadGroup, TestPlan, SugarJmeterTree, FunctionHelper},
   data(){
     return {
-      isShowProject: false,
-      isShowFuncHelper: false,
+      isShowProject: false, // 控制项目管理页面的显式、隐藏
+      isShowFuncHelper: false, // 控制函数助手弹出对话框的显式、隐藏
+      isShowPlan: false, // 控制测试计划管理页面的显式、隐藏
 
+      isExecuting: false, // 标识测试计划是否正在执行
+      executingLoading: undefined, // 加载状态
+
+      sampleEvents: [], // 取样结果列表
+      isShowSampleEvent: false, // 控制取样结果页面的显式、隐藏
     }
   },
   methods: {
-    handleProjectClick(){
-      this.isShowProject = true
+    // 处理左边控制事件
+    handleShow(name){
+      switch (name){
+        case 'project': this.isShowProject = true; break
+        case 'function': this.isShowFuncHelper = true; break
+        case 'plan': this.isShowPlan = true; break
+        case 'sampleResult': this.isShowSampleEvent = true; break
+      }
+    },
+    handleClose(name){
+      switch (name){
+        case 'project': this.isShowProject = false; break
+        case 'function': this.isShowFuncHelper = false; break
+        case 'plan': this.isShowPlan = false; break
+        case 'sampleResult': this.isShowSampleEvent = false; break
+      }
     },
 
-    handleProjectClose(){
-      this.isShowProject = false
-    }
+    /**
+     *  WebSocket 实时获取当前执行已完成的取样结果
+     */
+    handleWebSocket(executorId){
+      let sampleEventWS = new WebSocket(`${this.$store.state.restApi.sugarJMeterSampleEventWS}/${executorId}`)
+      sampleEventWS.onopen = webSocketEvent => {
+        console.log(`SampleResult WebSocket ${webSocketEvent.type}`)
+        this.handleShow('sampleResult')
+      }
+      sampleEventWS.onmessage = webSocketEvent => {
+        this.sampleEvents.push(JSON.parse(webSocketEvent.data))
+      }
+      sampleEventWS.onerror = webSocketEvent => {
+        this.$message({message: webSocketEvent.data, type: "error", duration: 3000})
+      }
+      sampleEventWS.onclose = wse => {
+        console.log(`SampleResult WebSocket ${wse.type}`)
+      }
+    },
+
+    // 处理测试计划执行
+    handleSetupExecuting(){
+      if(this.$store.state.executorId === undefined){
+        let executorId = Math.random().toString(36).slice(-8) + performance.now().toString(16).slice(-4)
+        this.$store.commit('setExecutorId', executorId)
+      }
+      // 当用户已登录时，会用用户ID作为执行测试计划器标识
+      if(this.$store.state.sugarAccount !== undefined){
+        this.$store.commit('setExecutorId', this.$store.state.sugarAccount.id)
+      }
+
+      let executorId = this.$store.state.executorId
+      this.handleWebSocket(executorId)
+
+      let testPlanList = [this.$store.state.testPlan]
+      let executePayload = {executorId: executorId, testPlanList: testPlanList}
+      this.isExecuting = true
+      this.executingLoading = Loading.service({target: '#tree-data', text: "测试计划执行中", background: 'rgba(0,0,0,.2)'})
+      this.$axios.post(this.$store.state.restApi.sugarJMeterExecuteTestPlan, executePayload).then(response => {
+        this.$nextTick(() => this.executingLoading.close())
+        if(response.data.code === 0){
+          //
+          console.log(response.data.payload)
+        } else {
+          this.$message({message: response.data.message, type: "error", duration: 3000})
+        }
+        this.isExecuting = false
+      }).catch(err => {
+        this.$message({message: err, type: "error", duration: 3000})
+        this.$nextTick(() => this.executingLoading.close())
+        this.isExecuting = false
+      })
+    },
+
+    handleStopExecuting(){
+      this.$confirm("是否停止当前测试计划执行？", "", {confirmButtonText: "是", cancelButtonText: "否"}).then(() => {
+        this.$axios.get(`${this.$store.state.restApi.sugarJMeterExecuteTestPlanStop}?executorId=${this.$store.state.executorId}`).then(resposne => {
+          if(resposne.data.code === 0){
+            this.$message({message: resposne.data.payload, type: "success", duration: 3000})
+            this.executingLoading.close()
+          } else {
+            this.$message({message: resposne.data.message, type: 'error', duration: 3000})
+          }
+        }).catch(err => {
+          this.$message({message: err, type: "error", duration: 3000})
+        })
+      }).catch(() => {})
+    },
+
+    handleSampleResultClear(){
+      this.sampleEvents = []
+    },
+
+
   },
   computed: {
     JT(){
       return JT
     },
+
     currentElement(){
       return this.$store.state.currentTestElement
     },
+
     keyId(){
       return this.$store.state.currentTestElement.id
+    },
+
+    isLogin(){
+      return this.$store.state.sugarAccount !== undefined
     }
   }
 }
@@ -306,7 +411,6 @@ $bodyHeight: calc(100% - 40px);
     height: 100%;
     overflow-x: auto;
     overflow-y: hidden;
-    //border-right: 1px solid #DCDFE6;
     display: flex;
     flex-flow: row nowrap;
     resize: horizontal;
@@ -316,39 +420,29 @@ $bodyHeight: calc(100% - 40px);
       height: 100%;
       width: 26px;
       box-sizing: border-box;
-      background-color: #eef2f3;
+      background-color: #3c3f41;
+      overflow-y: auto;
 
       .sugar-jmeter-opt{
         writing-mode: vertical-lr;
-        //background-color: #DCDFE6;
-        //background: linear-gradient(to bottom, #eef2f3, #8e9eab);
-        background: #DCDFE6;
+        background: #F0F2F0;
         height: 75px;
         text-align: center;
         cursor: pointer;
         user-select: none;
         font-size: 13px;
-        //font-weight: bold;
-        //border-bottom: 1px solid #859398;
-        //border-right: 1px solid #859398;
-        //border-left: 1px solid #859398;
         color: #274046;
         width: 100%;
         padding: 0 1px;
         transition: background .25s;
-
+        border-bottom: 1px solid #bdc3c7;
 
         &:hover{
-          //background-color: #eef2f3;
-          //background: linear-gradient(to bottom, #8e9eab, #eef2f3);
-          background: #eef7f2;
+          background: #bdc3c7;
           box-shadow: 0 0 1px 0 #536976;
-          //color: #0083B0;
         }
 
         &:active{
-          //background-color: #F0F2F0;
-          //background: linear-gradient(to bottom, #eef2f3, #8e9eab, #eef2f3);
           background: #eef2f3;
 
         }
@@ -363,13 +457,23 @@ $bodyHeight: calc(100% - 40px);
   }
 
   #sugar-jmeter-element{
-    //min-width: 1600px;
     height: 100%;
     flex-grow: 1;
     overflow: auto;
     background-color: #eef2f3;
   }
+}
 
+.sugar-opt-boundary{
+  width: 2px;
+  background: linear-gradient(45deg, #bdc3c7 50%, #FFFFFF 0);
+  background-size: 2px 2px;
+}
+
+.sugar-tree-boundary{
+  width: 6px;
+  background: linear-gradient(45deg, #bdc3c7 50%, #FFFFFF 0);
+  background-size: 2px 2px;
 }
 
 </style>
