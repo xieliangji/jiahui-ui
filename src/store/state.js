@@ -21,6 +21,9 @@ export default {
         sugarJMeterExecuteTestPlanStop: serviceDomain.concat("/sugar-jmeter/execute-test-plan-stop"),
         sugarJMeterSampleEventWS: serviceWebSocketDomain.concat("/sample-event-websocket"),
 
+        sugarJMXSave: serviceDomain.concat("/sugar-jmx/save"),
+        sugarJMXQuery: serviceDomain.concat("/sugar-jmx/query"),
+
         sugarAccountSingUp: serviceDomain.concat("/sugar-account/signUp"),
         sugarAccountSignIn: serviceDomain.concat("/sugar-account/signIn"),
         sugarAccountList: serviceDomain.concat("/sugar-account/all"),

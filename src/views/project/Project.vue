@@ -321,7 +321,7 @@ export default {
 
   .project-header-close{
     width: 32px;
-    background-color: #eef2f3;
+    background-color: #bdc3c7;
     color: #ff6d6f;
     cursor: pointer;
   }

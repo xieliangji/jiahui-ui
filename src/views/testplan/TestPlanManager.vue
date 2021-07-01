@@ -1,5 +1,5 @@
 <template>
-  <el-drawer visible :size="1200" :close-on-press-escape="false" :close-on-click-modal="false" :wrapper-closable="false" :with-header="false">
+  <el-drawer visible :size="1340" :close-on-press-escape="false" :close-on-click-modal="false" :wrapper-closable="false" :with-header="false">
     <div id="sugarTestPlanManager" class="test-plan-manager">
       <div class="test-plan-manager-header">
         <div class="manager-header-logo"></div>
@@ -33,52 +33,55 @@
                 <Input v-model="planQuery.updaterName" placeholder="按所更新用户名精确查询" @keydown.enter="handleQuery"></Input>
               </div>
             </div>
+            <div>
+              <el-button type="primary" @click="handleQuery">查询</el-button>
+              <el-button type="primary" @click="handleCreate">新建测试计划</el-button>
+              <el-button type="primary" @click="handleOpen">打开测试计划</el-button>
+            </div>
           </div>
-          <div class="sugar-normal-line" style="margin-top: 20px;">
-            <el-button type="primary" style="margin-left: 5px;" @click="handleQuery">查询</el-button>
-            <el-button type="success" style="margin-left: 5px;" @click="handleCreate">新建测试计划</el-button>
-          </div>
-        </div>
 
+        </div>
         <div class="manager-content-table">
           <div class="content-table-list">
-            <el-table :data="plans.planList" ref="planTable" row-key="id" highlight-current-row :height="planTableHeight" empty-text="没有测试计划" @row-click="handlePlanClick">
-              <el-table-column prop="id" width="80px">
-                <div slot="header" class="sugar-table-header">编号</div>
+            <el-table :data="plans.planList" ref="planTable" row-key="id" highlight-current-row height="100%" empty-text="没有测试计划" @row-click="handlePlanClick">
+              <el-table-column prop="id" width="60px">
+                <div slot="header" :style="headerCellStyle">#</div>
               </el-table-column>
-              <el-table-column prop="name" width="300px">
-                <div slot="header" class="sugar-table-header">测试计划名称</div>
+              <el-table-column prop="name">
+                <div slot="header" :style="headerCellStyle">测试计划名称</div>
               </el-table-column>
-              <el-table-column prop="projectName" width="300px">
-                <div slot="header" class="sugar-table-header">所属项目名称</div>
+              <el-table-column prop="projectName">
+                <div slot="header" :style="headerCellStyle">所属项目</div>
               </el-table-column>
-              <el-table-column prop="creatorName" width="200px">
-                <div slot="header" class="sugar-table-header">创建人</div>
+              <el-table-column prop="creatorName" width="150px">
+                <div slot="header" :style="headerCellStyle">创建人</div>
               </el-table-column>
-              <el-table-column prop="updaterName" width="200px">
-                <div slot="header" class="sugar-table-header">更新人</div>
+              <el-table-column prop="updaterName" width="150px">
+                <div slot="header" :style="headerCellStyle">更新人</div>
               </el-table-column>
-              <el-table-column fixed="right">
-                <div slot="header" class="sugar-table-header">操作</div>
+              <el-table-column prop="createTime" width="160px">
+                <div slot="header" :style="headerCellStyle">创建时间</div>
+              </el-table-column>
+              <el-table-column prop="updateTime" width="160px">
+                <div slot="header" :style="headerCellStyle">更新时间</div>
+              </el-table-column>
+              <el-table-column fixed="right" width="100px">
+                <div slot="header" class="sugar-table-header" :style="headerCellStyle">操作</div>
                 <template slot-scope="scope">
                   <div v-if="scope" style="text-align: center;">
-                    <el-button type="primary">编辑</el-button>
-                    <el-button type="primary" style="color: #ff6d6f !important;">删除</el-button>
+                    <el-button type="primary" @click="handleEdit">编辑</el-button>
+                    <el-button type="primary" style="color: #ff6d6f !important;" @click="handleDelete">删除</el-button>
                   </div>
                 </template>
               </el-table-column>
             </el-table>
           </div>
           <div class="content-table-pagination">
-
+            <el-pagination layout="total,sizes,prev,pager,next" :pager-count="5" :total="plans.total" :page-sizes="[10,15,20]" :page-size="planQuery.pageSize" :current-page="planQuery.pageNum" @size-change="handleQuery" @current-change="handleQuery"></el-pagination>
           </div>
         </div>
-
       </div>
-
     </div>
-
-
 
   </el-drawer>
 </template>
@@ -101,8 +104,8 @@ export default {
       plans: {
         pageSize: '',
         pageNum: '',
-        total: '',
-        planList: [{id: 1}, {id: 3}]
+        total: 200,
+        planList: []
       },
       currentPlan: undefined,
     }
@@ -121,8 +124,25 @@ export default {
 
     },
 
+    handleOpen(){
+
+    },
+
     handlePlanClick(row){
       this.currentPlan = row
+    },
+
+    handleEdit(){
+
+    },
+
+    handleDelete(){
+
+    }
+  },
+  computed: {
+    headerCellStyle(){
+      return {borderBottom: this.plans.planList.length === 0 ? '1px solid #DCDFE6':''}
     }
   }
 }
@@ -156,7 +176,7 @@ export default {
     .manager-header-close{
       width: 32px;
       color: #ff6d6f;
-      background-color: #eef2f3;
+      background-color: #bdc3c7;
       cursor: pointer;
     }
 
@@ -167,20 +187,23 @@ export default {
 
   // 页面内容样式
   .test-plan-manager-content{
-    height: calc(100% - 32px); overflow: auto;
+    height: calc(100% - 32px);
 
     .manager-content-query{
-      height: 150px;
-      border-bottom: 1px solid #DCDFE6;
+      height: 100px;
       padding: 20px 10px 0 10px;
     }
 
     .manager-content-table {
-      height: calc(100% - 150px);
+      height: calc(100% - 100px);
 
       .content-table-list{
-        height: calc(100% - 32px);
+        height: calc(100% - 40px);
+        overflow: hidden;
         padding: 10px;
+      }
+      .content-table-pagination{
+        height: 40px; line-height: 40px; text-align: right;
       }
     }
 
@@ -194,13 +217,12 @@ export default {
 
 .content-table-list{
   &::v-deep .el-table {
-    border: 1px solid #DCDFE6 !important;
+    border-bottom: 1px solid #DCDFE6 !important;
     background: transparent !important;
     .current-row{
       background: #eef7f2 !important;
     }
     tr{
-      border-bottom: 1px solid #DCDFE6 !important;
       background: transparent !important;
       height: 36px !important;
       line-height: 36px !important;
@@ -208,8 +230,7 @@ export default {
       td, th{
         background: transparent !important;
         border: none !important;
-        border-bottom: 1px solid #DCDFE6 !important;
-        padding: 0 5px !important;
+        border-top: 1px solid #DCDFE6 !important;
       }
     }
   }
@@ -221,7 +242,15 @@ export default {
     font-size: 10px !important;
     margin-left: 5px !important;
   }
+}
 
-
+.content-table-pagination{
+  &::v-deep .el-pagination__total{font-weight: bold !important;}
+  &::v-deep .el-pagination{color: #536976 !important; padding: 0!important;}
+  &::v-deep .el-input__inner{background: transparent !important; border-radius: 2px !important;
+    &:hover { border-color: #8e9eab !important;}
+  }
+  &::v-deep .btn-prev, &::v-deep .btn-next, &::v-deep li{background: transparent !important; &:hover{ color: #2ebf91 !important;}}
+  &::v-deep li.active{color: #2ebf91 !important;}
 }
 </style>

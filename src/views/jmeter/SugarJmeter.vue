@@ -4,10 +4,12 @@
       <function-helper v-if="isShowFuncHelper" @close="handleClose('function')"></function-helper>
       <project v-if="isShowProject" @close="handleClose('project')"></project>
       <test-plan-manager v-if="isShowPlan" @close="handleClose('plan')"></test-plan-manager>
+      <test-plan-save v-if="isShowPlanSave" @close="handleClose('planSave')"></test-plan-save>
     </transition>
     <div id="sugar-jmeter-tree">
       <div id="tree-opt">
         <div class="sugar-jmeter-opt" v-if="isLogin" @click="handleShow('project')">管理项目</div>
+        <div class="sugar-jmeter-opt" v-if="isLogin" @click="handleShow('planSave')">保存计划</div>
         <div class="sugar-jmeter-opt" v-if="isLogin" @click="handleShow('plan')">管理计划</div>
         <div class="sugar-jmeter-opt" v-if="!isExecuting" @click="handleSetupExecuting">启动执行</div>
         <div class="sugar-jmeter-opt" v-if="this.sampleEvents.length > 0" @click="handleShow('sampleResult')">取样结果</div>
@@ -191,9 +193,11 @@ import Project from "@/views/project/Project";
 import {Loading} from "element-ui";
 import SugarJmeterResult from "@/views/jmeter/SugarJmeterResult";
 import TestPlanManager from "@/views/testplan/TestPlanManager";
+import TestPlanSave from "@/views/testplan/TestPlanSave";
 export default {
   name: "SugarJmeter",
   components: {
+    TestPlanSave,
     TestPlanManager,
     SugarJmeterResult,
     Project,
@@ -268,6 +272,7 @@ export default {
       isShowProject: false, // 控制项目管理页面的显式、隐藏
       isShowFuncHelper: false, // 控制函数助手弹出对话框的显式、隐藏
       isShowPlan: false, // 控制测试计划管理页面的显式、隐藏
+      isShowPlanSave: false, // 控制测试计划保存页面的显式、隐藏
 
       isExecuting: false, // 标识测试计划是否正在执行
       executingLoading: undefined, // 加载状态
@@ -283,6 +288,7 @@ export default {
         case 'project': this.isShowProject = true; break
         case 'function': this.isShowFuncHelper = true; break
         case 'plan': this.isShowPlan = true; break
+        case 'planSave': this.isShowPlanSave = true; break
         case 'sampleResult': this.isShowSampleEvent = true; break
       }
     },
@@ -291,6 +297,7 @@ export default {
         case 'project': this.isShowProject = false; break
         case 'function': this.isShowFuncHelper = false; break
         case 'plan': this.isShowPlan = false; break
+        case 'planSave': this.isShowPlanSave = false; break
         case 'sampleResult': this.isShowSampleEvent = false; break
       }
     },
@@ -425,20 +432,20 @@ $bodyHeight: calc(100% - 40px);
 
       .sugar-jmeter-opt{
         writing-mode: vertical-lr;
-        background: #F0F2F0;
+        background: #2d2f30;
         height: 75px;
         text-align: center;
         cursor: pointer;
         user-select: none;
         font-size: 13px;
-        color: #274046;
+        color: #eef2f3;
         width: 100%;
         padding: 0 1px;
-        transition: background .25s;
-        border-bottom: 1px solid #bdc3c7;
+        transition: background .5s;
+        font-weight: bold;
 
         &:hover{
-          background: #bdc3c7;
+          background: #2ebf91;
           box-shadow: 0 0 1px 0 #536976;
         }
 
