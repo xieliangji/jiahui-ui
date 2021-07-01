@@ -8,15 +8,15 @@
     </transition>
     <div id="sugar-jmeter-tree">
       <div id="tree-opt">
-        <div class="sugar-jmeter-opt" v-if="isLogin" @click="handleShow('project')">管理项目</div>
-        <div class="sugar-jmeter-opt" v-if="isLogin" @click="handleShow('planSave')">保存计划</div>
-        <div class="sugar-jmeter-opt" v-if="isLogin" @click="handleShow('plan')">管理计划</div>
+        <div class="sugar-jmeter-opt" :style="{background: isShowProject ? '#2ebf91':''}" v-if="isLogin" @click="handleShow('project')">管理项目</div>
+        <div class="sugar-jmeter-opt" :style="{background: isShowPlanSave ? '#2ebf91':''}" v-if="isLogin" @click="handleShow('planSave')">保存计划</div>
+        <div class="sugar-jmeter-opt" :style="{background: isShowPlan ? '#2ebf91':''}" v-if="isLogin" @click="handleShow('plan')">管理计划</div>
         <div class="sugar-jmeter-opt" v-if="!isExecuting" @click="handleSetupExecuting">启动执行</div>
-        <div class="sugar-jmeter-opt" v-if="this.sampleEvents.length > 0" @click="handleShow('sampleResult')">取样结果</div>
+        <div class="sugar-jmeter-opt" :style="{background: isShowSampleEvent || (isExecuting && sampleEvents.length > 0) ? '#2ebf91':''}" v-if="this.sampleEvents.length > 0" @click="handleShow('sampleResult')">取样结果</div>
         <div class="sugar-jmeter-opt" v-if="isExecuting" @click="handleStopExecuting">停止执行</div>
-        <div class="sugar-jmeter-opt" v-if="isLogin">定时任务</div>
-        <div class="sugar-jmeter-opt" v-if="isLogin">测试报告</div>
-        <div class="sugar-jmeter-opt" @click="handleShow('function')">函数助手</div>
+        <div class="sugar-jmeter-opt" :style="{background: isShowProject ? '#2ebf91':''}" v-if="isLogin">定时任务</div>
+        <div class="sugar-jmeter-opt" :style="{background: isShowProject ? '#2ebf91':''}" v-if="isLogin">测试报告</div>
+        <div class="sugar-jmeter-opt" :style="{background: isShowFuncHelper ? '#2ebf91':''}" @click="handleShow('function')">函数助手</div>
       </div>
       <div class="sugar-opt-boundary"></div>
       <div id="tree-data"><sugar-jmeter-tree></sugar-jmeter-tree></div>

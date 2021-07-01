@@ -1,5 +1,5 @@
 <template>
-  <el-drawer visible :size="1340" :close-on-press-escape="false" :close-on-click-modal="false" :wrapper-closable="false" :with-header="false">
+  <el-drawer visible :size="1350" :close-on-press-escape="false" :close-on-click-modal="false" :wrapper-closable="false" :with-header="false">
     <div id="sugarTestPlanManager" class="test-plan-manager">
       <div class="test-plan-manager-header">
         <div class="manager-header-logo"></div>
@@ -43,30 +43,30 @@
         </div>
         <div class="manager-content-table">
           <div class="content-table-list">
-            <el-table :data="plans.planList" ref="planTable" row-key="id" highlight-current-row height="100%" empty-text="没有测试计划" @row-click="handlePlanClick">
+            <el-table :data="plans.list" ref="planTable" row-key="id" highlight-current-row height="100%" empty-text="没有测试计划" @row-click="handlePlanClick">
               <el-table-column prop="id" width="60px">
-                <div slot="header" :style="headerCellStyle">#</div>
+                <div slot="header">#</div>
               </el-table-column>
               <el-table-column prop="name">
-                <div slot="header" :style="headerCellStyle">测试计划名称</div>
+                <div slot="header">测试计划名称</div>
               </el-table-column>
               <el-table-column prop="projectName">
-                <div slot="header" :style="headerCellStyle">所属项目</div>
+                <div slot="header">所属项目</div>
               </el-table-column>
               <el-table-column prop="creatorName" width="150px">
-                <div slot="header" :style="headerCellStyle">创建人</div>
+                <div slot="header">创建人</div>
               </el-table-column>
               <el-table-column prop="updaterName" width="150px">
-                <div slot="header" :style="headerCellStyle">更新人</div>
+                <div slot="header">更新人</div>
               </el-table-column>
               <el-table-column prop="createTime" width="160px">
-                <div slot="header" :style="headerCellStyle">创建时间</div>
+                <div slot="header">创建时间</div>
               </el-table-column>
               <el-table-column prop="updateTime" width="160px">
-                <div slot="header" :style="headerCellStyle">更新时间</div>
+                <div slot="header">更新时间</div>
               </el-table-column>
               <el-table-column fixed="right" width="100px">
-                <div slot="header" class="sugar-table-header" :style="headerCellStyle">操作</div>
+                <div slot="header" class="sugar-table-header">操作</div>
                 <template slot-scope="scope">
                   <div v-if="scope" style="text-align: center;">
                     <el-button type="primary" @click="handleEdit">编辑</el-button>
@@ -105,14 +105,22 @@ export default {
         pageSize: '',
         pageNum: '',
         total: 200,
-        planList: []
+        list: []
       },
       currentPlan: undefined,
     }
   },
   methods: {
     handleQuery(){
-
+      this.$axios.post(this.$store.state.restApi.sugarJMXQuery, this.planQuery).then(response => {
+        if(response.data.code === 0){
+          this.plans = response.data.payload
+        } else {
+          this.$message({message: response.data.message, type: "error", duration: 3000})
+        }
+      }).catch(err => {
+        this.$message({message: err, type: "error", duration: 3000})
+      })
 
     },
 
@@ -140,10 +148,8 @@ export default {
 
     }
   },
-  computed: {
-    headerCellStyle(){
-      return {borderBottom: this.plans.planList.length === 0 ? '1px solid #DCDFE6':''}
-    }
+  mounted() {
+    this.handleQuery()
   }
 }
 </script>
@@ -218,6 +224,7 @@ export default {
 .content-table-list{
   &::v-deep .el-table {
     border-bottom: 1px solid #DCDFE6 !important;
+    border-top: 1px solid #DCDFE6 !important;
     background: transparent !important;
     .current-row{
       background: #eef7f2 !important;
@@ -230,7 +237,7 @@ export default {
       td, th{
         background: transparent !important;
         border: none !important;
-        border-top: 1px solid #DCDFE6 !important;
+        border-bottom: 1px solid #DCDFE6 !important;
       }
     }
   }
