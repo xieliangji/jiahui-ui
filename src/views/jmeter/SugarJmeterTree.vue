@@ -252,11 +252,11 @@ export default {
         }
       }
       return true
+    },
+
+    incrTreeKey(){
+      this.treeKey = this.treeKey + 1
     }
-  },
-  created() {
-    // this.$store.commit('initTestPlan')
-    // this.treeData[0] = this.$store.state.testPlan
   },
 
   computed: {
@@ -269,6 +269,7 @@ export default {
       if(this.$refs.testPlanTree !== undefined){
         this.$refs.testPlanTree.setCurrentKey(this.$store.state.currentTestElement.id)
       }
+      this.incrTreeKey()
       this.$nextTick(() => this.$refs.testPlanTree.setCurrentKey(this.$store.state.currentTestElement.id))
       return treeData
     },

@@ -19,7 +19,7 @@
         </div>
         <div class="sample-result-detail">
           <jmeter-editor v-if="resultFormat === 'raw'" read-only :script="rawResult" language="javascript" @scriptUpdate="() => {}"></jmeter-editor>
-          <listener-result-tree v-if="resultFormat === 'jmeterResultTree'" :sample-events="jmeterSampleEvents"></listener-result-tree>
+          <listener-result-tree v-if="resultFormat === 'jmeterResultTree'" :sample-results="sampleResults"></listener-result-tree>
         </div>
       </div>
     </div>
@@ -33,7 +33,7 @@ export default {
   name: "SugarJmeterResult",
   components: {JmeterEditor, ListenerResultTree},
   props: {
-    jmeterSampleEvents: Array
+    sampleResults: Array
   },
   data(){
     return {
@@ -42,12 +42,7 @@ export default {
   },
   computed: {
     rawResult(){
-      let sampleEvents = []
-      let sugarSampleEvents = this.jmeterSampleEvents
-      for(let index = 0; sugarSampleEvents !== undefined && index < sugarSampleEvents.length; index++){
-        sampleEvents.push(sugarSampleEvents[index]['sampleEvent'])
-      }
-      return JSON.stringify(sampleEvents, null, 4)
+      return JSON.stringify(this.sampleResults, null, 4)
     }
   }
 }

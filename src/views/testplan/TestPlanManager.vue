@@ -53,10 +53,10 @@
               <el-table-column prop="projectName">
                 <div slot="header">所属项目</div>
               </el-table-column>
-              <el-table-column prop="creatorName" width="150px">
+              <el-table-column prop="creatorName" width="120px">
                 <div slot="header">创建人</div>
               </el-table-column>
-              <el-table-column prop="updaterName" width="150px">
+              <el-table-column prop="updaterName" width="120px">
                 <div slot="header">更新人</div>
               </el-table-column>
               <el-table-column prop="createTime" width="160px">
@@ -65,11 +65,12 @@
               <el-table-column prop="updateTime" width="160px">
                 <div slot="header">更新时间</div>
               </el-table-column>
-              <el-table-column fixed="right" width="100px">
+              <el-table-column fixed="right" width="150px">
                 <div slot="header" class="sugar-table-header">操作</div>
                 <template slot-scope="scope">
                   <div v-if="scope" style="text-align: center;">
                     <el-button type="primary" @click="handleEdit">编辑</el-button>
+                    <el-button type="primary" style="color: #2ebf91 !important;;" @click="handleExecute">执行</el-button>
                     <el-button type="primary" style="color: #ff6d6f !important;" @click="handleDelete">删除</el-button>
                   </div>
                 </template>
@@ -126,10 +127,8 @@ export default {
 
     handleCreate(){
       this.$confirm("当前编辑测试计划会被覆盖，请确认已保存，是否创建新测试计划？", "注意", {confirmButtonClass: "是", cancelButtonText: "否"}).then(() => {
-        this.$store.commit("initTestPlan")
-        this.$emit('close')
+        this.$emit('activeCreate')
       }).catch(() => {})
-
     },
 
     handleOpen(){
@@ -141,11 +140,29 @@ export default {
     },
 
     handleEdit(){
+      this.$confirm("是否编辑测试计划（当前打开的测试计划若未保存会丢失）？", "注意", {confirmButtonText: "确定", cancelButtonText: "取消"}).then(() => {
+        this.$emit('activeEdit', this.currentPlan)
+        this.$store.commit('initTestPlan')
+        this.$store.commit("setTestPlan", this.currentPlan.jmxContent[0])
+        this.$store.commit('setCurrentTestElement', this.$store.state.testPlan)
+      }).catch(() => {})
+    },
+
+    handleExecute(){
 
     },
 
     handleDelete(){
-
+      this.$confirm("是否删除当前测试计划？", "", {confirmButtonText: '是', cancelButtonText: "否"}).then(() => {
+        this.$axios.get(`${this.$store.state.restApi.sugarJMXDelete}?id=${this.currentPlan.id}`).then(response => {
+          if(response.data.code === 0){
+            this.$message({message: "删除测试计划成功", type: "success", duration: 3000})
+            this.handleQuery()
+          } else {
+            this.$message({message: response.data.message, type: "error", duration: 3000})
+          }
+        }).catch(err => {this.$message({message: err, type: "error", duration: 3000})})
+      }).catch(() => {})
     }
   },
   mounted() {

@@ -629,19 +629,7 @@ $padding: 5px;
 
 
 // el-drawer样式
-.el-tabs{
-  height: 100% !important;
 
-  .el-tabs__header{
-    box-sizing: border-box !important;
-    height: 32px !important;
-  }
-
-  .el-tabs__content{
-    height: calc(100% - 50px) !important;
-    overflow: auto;
-  }
-}
 
 .el-drawer__wrapper{
   bottom: 2px !important;

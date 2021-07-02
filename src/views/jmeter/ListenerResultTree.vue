@@ -8,8 +8,8 @@
       <div id="sampleResultTree" class="result-tree-data">
         <el-tree v-if="resultTreeData.length > 0" empty-text=" " :data="resultTreeData" :props="resultTreeProp" highlight-current node-key="id" @node-click="handleResultNodeClick">
           <div slot-scope="{node, data}" class="result-tree-node">
-            <img v-if="data.status === 'success'" src="../../assets/tree-icon/security-high-2.png">
-            <img v-if="data.status === 'fail'" src="../../assets/tree-icon/security-low-2.png">
+            <img v-if="data['successful']" src="../../assets/tree-icon/security-high-2.png">
+            <img v-if="!data['successful']" src="../../assets/tree-icon/security-low-2.png">
             <span> {{ node.label }}</span>
           </div>
         </el-tree>
@@ -19,76 +19,76 @@
     <div class="result-detail">
       <el-tabs :active-name="activeResultDetailPane">
         <el-tab-pane name="sampleResult" label="取样器结果">
-          <div v-if="currentResultPayload !== undefined" class="sample-result-wrap">
+          <div v-if="currentSampleResult !== undefined" class="sample-result-wrap">
             <div class="sugar-normal-line sugar-label-input">
               <div class="label">ThreadName</div>
-              <div class="input">{{currentResultPayload['threadName']}}</div>
+              <div class="input">{{currentSampleResult['threadName']}}</div>
             </div>
             <div class="sugar-normal-line sugar-label-input">
               <div class="label">Sample Start</div>
-              <div class="input">{{new Date(currentResultPayload['startTime']).toString()}}</div>
+              <div class="input">{{new Date(currentSampleResult['startTime']).toString()}}</div>
             </div>
             <div class="sugar-normal-line sugar-label-input">
               <div class="label">Load Time</div>
-              <div class="input">{{currentResultPayload['time']}}</div>
+              <div class="input">{{currentSampleResult['time']}}</div>
             </div>
             <div class="sugar-normal-line sugar-label-input">
               <div class="label">Connect Time</div>
-              <div class="input">{{currentResultPayload['connectTime']}}</div>
+              <div class="input">{{currentSampleResult['connectTime']}}</div>
             </div>
             <div class="sugar-normal-line sugar-label-input">
               <div class="label">Latency</div>
-              <div class="input">{{currentResultPayload['latency']}}</div>
+              <div class="input">{{currentSampleResult['latency']}}</div>
             </div>
             <div class="sugar-normal-line sugar-label-input">
               <div class="label">Size in Bytes</div>
-              <div class="input">{{currentResultPayload['bytesAsLong']}}</div>
+              <div class="input">{{currentSampleResult['bytesAsLong']}}</div>
             </div>
             <div class="sugar-normal-line sugar-label-input">
               <div class="label">Sent Bytes</div>
-              <div class="input">{{currentResultPayload['sentBytes']}}</div>
+              <div class="input">{{currentSampleResult['sentBytes']}}</div>
             </div>
             <div class="sugar-normal-line sugar-label-input">
               <div class="label">Headers Size in Bytes</div>
-              <div class="input">{{currentResultPayload['headersSize']}}</div>
+              <div class="input">{{currentSampleResult['headersSize']}}</div>
             </div>
             <div class="sugar-normal-line sugar-label-input">
               <div class="label">Body Size in Bytes</div>
-              <div class="input">{{currentResultPayload['bodySizeAsLong']}}</div>
+              <div class="input">{{currentSampleResult['bodySizeAsLong']}}</div>
             </div>
             <div class="sugar-normal-line sugar-label-input">
               <div class="label">Sample Count</div>
-              <div class="input">{{currentResultPayload['sampleCount']}}</div>
+              <div class="input">{{currentSampleResult['sampleCount']}}</div>
             </div>
             <div class="sugar-normal-line sugar-label-input">
               <div class="label">Error Count</div>
-              <div class="input">{{currentResultPayload['errorCount']}}</div>
+              <div class="input">{{currentSampleResult['errorCount']}}</div>
             </div>
             <div class="sugar-normal-line sugar-label-input">
               <div class="label">Data Type("text"|"bin")</div>
-              <div class="input">{{currentResultPayload['dataType']}}</div>
+              <div class="input">{{currentSampleResult['dataType']}}</div>
             </div>
             <div class="sugar-normal-line sugar-label-input">
               <div class="label">Response Code</div>
-              <div class="input">{{currentResultPayload['responseCode']}}</div>
+              <div class="input">{{currentSampleResult['responseCode']}}</div>
             </div>
             <div class="sugar-normal-line sugar-label-input">
               <div class="label">Response Message</div>
-              <div class="input">{{currentResultPayload['responseMessage']}}</div>
+              <div class="input">{{currentSampleResult['responseMessage']}}</div>
             </div>
             <div class="sugar-normal-line sugar-label-input"></div>
             <div class="sugar-normal-line sugar-label-input"></div>
             <div class="sugar-normal-line sugar-label-input">
-              <div class="label">{{currentResultPayload['resultType']}}</div>
+              <div class="label">{{currentSampleResult['resultType']}}</div>
               <div class="input"></div>
             </div>
             <div class="sugar-normal-line sugar-label-input">
               <div class="label">ContentType</div>
-              <div class="input">{{currentResultPayload['contentType']}}</div>
+              <div class="input">{{currentSampleResult['contentType']}}</div>
             </div>
             <div class="sugar-normal-line sugar-label-input">
               <div class="label">DataEncoding</div>
-              <div class="input">{{currentResultPayload['dataEncoding']}}</div>
+              <div class="input">{{currentSampleResult['dataEncoding']}}</div>
             </div>
           </div>
         </el-tab-pane>
@@ -96,11 +96,11 @@
         <el-tab-pane name="sampleRequest" label="请求">
           <el-tabs :active-name="activeSampleRequestPane">
             <el-tab-pane name="requestBody" label="请求体">
-              <div v-if="currentResultPayload !== undefined" class="sample-result-wrap" style="white-space: pre-wrap;">{{ currentResultPayload["samplerData"]}}</div>
+              <div v-if="currentSampleResult !== undefined" class="sample-result-wrap" style="white-space: pre-wrap;">{{ currentSampleResult["samplerData"]}}</div>
             </el-tab-pane>
 
             <el-tab-pane name="requestHeader" label="请求头">
-              <div v-if="currentResultPayload !== undefined" class="sample-result-wrap">{{ currentResultPayload["requestHeaders"]}}</div>
+              <div v-if="currentSampleResult !== undefined" class="sample-result-wrap">{{ currentSampleResult["requestHeaders"]}}</div>
             </el-tab-pane>
           </el-tabs>
         </el-tab-pane>
@@ -108,20 +108,20 @@
         <el-tab-pane name="sampleResponse" label="响应数据">
           <el-tabs :active-name="activeSampleResponsePane">
             <el-tab-pane name="responseBody" label="响应体">
-              <div v-if="currentResultPayload !== undefined">
-                <div class="sample-result-wrap" v-if="currentResultPayload['dataType'] === 'text' || currentResultPayload['dataType'] === ''">{{ currentResultPayload["responseDataAsString"]}}</div>
+              <div v-if="currentSampleResult !== undefined">
+                <div class="sample-result-wrap" v-if="currentSampleResult['dataType'] === 'text' || currentSampleResult['dataType'] === ''">{{ currentSampleResult["responseDataAsString"]}}</div>
                 <div class="sample-result-wrap" v-else>
-                  <img :src="`data:image/png;base64,${currentResultPayload['responseData']}`">
+                  <img :src="`data:image/png;base64,${currentSampleResult['responseData']}`">
                 </div>
               </div>
             </el-tab-pane>
             <el-tab-pane name="responseHeader" label="响应头">
-              <div v-if="currentResultPayload !== undefined" class="sample-result-wrap">{{ currentResultPayload["responseHeaders"]}}</div>
+              <div v-if="currentSampleResult !== undefined" class="sample-result-wrap">{{ currentSampleResult["responseHeaders"]}}</div>
             </el-tab-pane>
           </el-tabs>
         </el-tab-pane>
-        <el-tab-pane v-if="currentResultPayload !== undefined && currentResultPayload['assertionResults'].length > 0" name="sampleAssertion" label="断言结果(列表)">
-          <div v-for="assertionResult in currentResultPayload['assertionResults']" :key="assertionResult.toString()" class="sample-result-wrap" style="border-bottom: 1px solid #DCDFE6;">
+        <el-tab-pane v-if="currentSampleResult !== undefined && currentSampleResult['assertionResults'].length > 0" name="sampleAssertion" label="断言结果(列表)">
+          <div v-for="assertionResult in currentSampleResult['assertionResults']" :key="assertionResult.toString()" class="sample-result-wrap" style="border-bottom: 1px solid #DCDFE6;">
             <div class="sugar-label-input">
               <div class="label">Assertion Name</div>
               <div class="input">{{assertionResult['name']}}</div>
@@ -149,19 +149,19 @@
 export default {
   name: "ListenerResultTree",
   props: {
-    sampleEvents: Array
+    sampleResults: Array
   },
   data(){
     return {
       resultId: 0,
       resultTreeProp: {
-        children: 'children',
-        label: 'label',
+        children: 'childResults',
+        label: 'sampleLabel',
       },
 
       isSuccessOnly: false,
       isFailureOnly: false,
-      currentResultPayload: undefined,
+      currentSampleResult: undefined,
       activeResultDetailPane: '',
       activeSampleRequestPane: 'requestBody',
       activeSampleResponsePane: 'responseBody',
@@ -169,18 +169,6 @@ export default {
     }
   },
   methods: {
-    handleExtractSampleEvent(eventResult){
-      let result = {id: this.resultId++, label: '', status: '', payload: {}, children: []}
-      result.label = eventResult["sampleLabel"]
-      result.status = eventResult["successful"] ? 'success': 'fail'
-      result.payload = eventResult
-
-      let subResults = eventResult["subResults"]
-      for(let index = 0; subResults !== undefined && index < subResults.length; index++){
-        result.children.push(this.handleExtractSampleEvent(subResults[index]))
-      }
-      return result
-    },
 
     handleIsFailOnlyChange(value){
       if(value){
@@ -195,7 +183,7 @@ export default {
     },
 
     handleResultNodeClick(data){
-      this.currentResultPayload = data.payload
+      this.currentSampleResult = data
       if(this.activeResultDetailPane === ''){
         this.activeResultDetailPane = 'sampleResult'
       }
@@ -204,21 +192,19 @@ export default {
   computed: {
     resultTreeData(){
       let data = []
-      for(let index = 0; index < this.sampleEvents.length; index++){
-        let sugarSampleEvent = this.sampleEvents[index]
-        let sampleResult = sugarSampleEvent["sampleEvent"].result
-        this.$set(sampleResult, 'resultType', sugarSampleEvent['resultType'])
-        let resultItem = this.handleExtractSampleEvent(sampleResult)
+      console.log(this.sampleResults)
+      for(let index = 0; index < this.sampleResults.length; index++){
+        let sampleResult = this.sampleResults[index]
         if(this.isSuccessOnly && !this.isFailureOnly){
-          if(resultItem.status === 'success'){
-            data.push(resultItem)
+          if(sampleResult['successful']){
+            data.push(sampleResult)
           }
         } else if(this.isFailureOnly && !this.isSuccessOnly){
-          if(resultItem.status === 'fail'){
-            data.push(resultItem)
+          if(!sampleResult['successful']){
+            data.push(sampleResult)
           }
         } else {
-          data.push(resultItem)
+          data.push(sampleResult)
         }
       }
       return data
@@ -233,7 +219,7 @@ export default {
           sampleResultTreeEl.scrollTop = sampleResultTreeEl.scrollHeight
         }
         if(this.resultTreeData.length === 0){
-          this.currentResultPayload = undefined
+          this.currentSampleResult = undefined
         }
       },
       immediate: true,

@@ -14,6 +14,16 @@ export default {
         state.currentTestElement = state.testPlan
     },
 
+
+    /**
+     * 设置当前测试计划
+     * @param state
+     * @param testPlan
+     */
+    setTestPlan: (state, testPlan) => {
+      state.testPlan = testPlan
+    },
+
     /**
      * 设置当前测试计划节点元素
      * @param state
@@ -30,5 +40,8 @@ export default {
      */
     setExecutorId: (state, executorId) => {
         state.executorId = executorId
-    }
+    },
+
+
+
 }

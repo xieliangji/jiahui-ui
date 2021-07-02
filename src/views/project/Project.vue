@@ -294,6 +294,20 @@ export default {
   .sugar-project-content{
     height: calc(100% - 32px);
     overflow: auto;
+
+    &::v-deep .el-tabs{
+      height: 100% !important;
+
+      .el-tabs__header{
+        box-sizing: border-box !important;
+        height: 32px !important;
+      }
+
+      .el-tabs__content{
+        height: calc(100% - 50px) !important;
+        overflow: auto;
+      }
+    }
   }
 }
 

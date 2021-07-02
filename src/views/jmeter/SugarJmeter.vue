@@ -1,10 +1,11 @@
 <template>
   <div id="sugar-jmeter">
     <transition name="fade">
+      <sugar-jmeter-result @clear="handleSampleResultClear" v-if="isShowSampleEvent" :sample-results="sampleResults" @close="handleClose('sampleResult')"></sugar-jmeter-result>
       <function-helper v-if="isShowFuncHelper" @close="handleClose('function')"></function-helper>
       <project v-if="isShowProject" @close="handleClose('project')"></project>
-      <test-plan-manager v-if="isShowPlan" @close="handleClose('plan')"></test-plan-manager>
-      <test-plan-save v-if="isShowPlanSave" @close="handleClose('planSave')"></test-plan-save>
+      <test-plan-manager v-if="isShowPlan" @close="handleClose('plan')" @activeEdit="handleActiveEdit" @activeCreate="handleActiveCreate"></test-plan-manager>
+      <test-plan-save v-if="isShowPlanSave" :jmx-save="savePlan" @close="handleClose('planSave')" @saveEditClose="handleSaveEditClose"></test-plan-save>
     </transition>
     <div id="sugar-jmeter-tree">
       <div id="tree-opt">
@@ -12,14 +13,16 @@
         <div class="sugar-jmeter-opt" :style="{background: isShowPlanSave ? '#2ebf91':''}" v-if="isLogin" @click="handleShow('planSave')">保存计划</div>
         <div class="sugar-jmeter-opt" :style="{background: isShowPlan ? '#2ebf91':''}" v-if="isLogin" @click="handleShow('plan')">管理计划</div>
         <div class="sugar-jmeter-opt" v-if="!isExecuting" @click="handleSetupExecuting">启动执行</div>
-        <div class="sugar-jmeter-opt" :style="{background: isShowSampleEvent || (isExecuting && sampleEvents.length > 0) ? '#2ebf91':''}" v-if="this.sampleEvents.length > 0" @click="handleShow('sampleResult')">取样结果</div>
+        <div class="sugar-jmeter-opt" :style="{background: isShowSampleEvent || (isExecuting && sampleResults.length > 0) ? '#2ebf91':''}" v-if="this.sampleResults.length > 0" @click="handleShow('sampleResult')">取样结果</div>
         <div class="sugar-jmeter-opt" v-if="isExecuting" @click="handleStopExecuting">停止执行</div>
         <div class="sugar-jmeter-opt" :style="{background: isShowProject ? '#2ebf91':''}" v-if="isLogin">定时任务</div>
         <div class="sugar-jmeter-opt" :style="{background: isShowProject ? '#2ebf91':''}" v-if="isLogin">测试报告</div>
         <div class="sugar-jmeter-opt" :style="{background: isShowFuncHelper ? '#2ebf91':''}" @click="handleShow('function')">函数助手</div>
       </div>
       <div class="sugar-opt-boundary"></div>
-      <div id="tree-data"><sugar-jmeter-tree></sugar-jmeter-tree></div>
+      <div id="tree-data">
+        <sugar-jmeter-tree></sugar-jmeter-tree>
+      </div>
       <div class="sugar-tree-boundary"></div>
     </div>
     <div id="sugar-jmeter-element" v-if="currentElement !== undefined">
@@ -112,7 +115,6 @@
       </transition>
     </div>
 
-    <sugar-jmeter-result @clear="handleSampleResultClear" v-if="isShowSampleEvent" :jmeter-sample-events="sampleEvents" @close="handleClose('sampleResult')"></sugar-jmeter-result>
   </div>
 </template>
 
@@ -277,8 +279,10 @@ export default {
       isExecuting: false, // 标识测试计划是否正在执行
       executingLoading: undefined, // 加载状态
 
-      sampleEvents: [], // 取样结果列表
+      sampleResults: [], // 取样结果列表
       isShowSampleEvent: false, // 控制取样结果页面的显式、隐藏
+
+      savePlan: undefined,
     }
   },
   methods: {
@@ -288,7 +292,17 @@ export default {
         case 'project': this.isShowProject = true; break
         case 'function': this.isShowFuncHelper = true; break
         case 'plan': this.isShowPlan = true; break
-        case 'planSave': this.isShowPlanSave = true; break
+        case 'planSave': {
+          if(this.savePlan === undefined){
+            this.savePlan = {
+              name: this.$store.state.testPlan.testname,
+              projectId: '',
+              remark: '',
+              creatorId: this.$store.state.sugarAccount.id,
+            }
+          }
+          this.isShowPlanSave = true; break
+        }
         case 'sampleResult': this.isShowSampleEvent = true; break
       }
     },
@@ -297,9 +311,15 @@ export default {
         case 'project': this.isShowProject = false; break
         case 'function': this.isShowFuncHelper = false; break
         case 'plan': this.isShowPlan = false; break
-        case 'planSave': this.isShowPlanSave = false; break
+        case 'planSave':this.isShowPlanSave = false; break
         case 'sampleResult': this.isShowSampleEvent = false; break
       }
+    },
+
+    handleSaveEditClose(){
+      this.isShowPlanSave = false
+      this.$store.commit('initTestPlan')
+      this.savePlan = undefined
     },
 
     /**
@@ -312,7 +332,8 @@ export default {
         this.handleShow('sampleResult')
       }
       sampleEventWS.onmessage = webSocketEvent => {
-        this.sampleEvents.push(JSON.parse(webSocketEvent.data))
+        console.log(JSON.parse(webSocketEvent.data))
+        this.sampleResults.push(JSON.parse(webSocketEvent.data))
       }
       sampleEventWS.onerror = webSocketEvent => {
         this.$message({message: webSocketEvent.data, type: "error", duration: 3000})
@@ -372,10 +393,25 @@ export default {
     },
 
     handleSampleResultClear(){
-      this.sampleEvents = []
+      this.sampleResults = []
     },
 
+    handleActiveCreate(){
+      this.isShowPlan = false
+      this.$store.commit("initTestPlan")
+      this.savePlan = {
+        name: this.$store.state.testPlan.testname,
+        projectId: '',
+        remark: '',
+        creatorId: this.$store.state.sugarAccount.id,
+      }
+    },
 
+    handleActiveEdit(savePlan){
+      this.isShowPlan = false
+      this.savePlan = savePlan
+      this.savePlan.updaterId = this.$store.state.sugarAccount.id
+    }
   },
   computed: {
     JT(){
@@ -393,7 +429,7 @@ export default {
     isLogin(){
       return this.$store.state.sugarAccount !== undefined
     }
-  }
+  },
 }
 </script>
 

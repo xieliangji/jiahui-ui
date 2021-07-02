@@ -1,5 +1,5 @@
-// const serviceIp = "192.168.17.234"
-const serviceIp = "localhost"
+const serviceIp = "192.168.17.234"
+// const serviceIp = "localhost"
 const servicePort = 8512
 const serviceDomain = `http://${serviceIp}:${servicePort}`
 const serviceWebSocketDomain = `ws://${serviceIp}:${servicePort}`
@@ -13,7 +13,6 @@ export default {
     testElementId: 0,
     executorId: undefined,
 
-
     restApi: {
         sugarJMeterFunctions: serviceDomain.concat("/sugar-jmeter/functions"),
         sugarJMeterExecuteFunction: serviceDomain.concat("/sugar-jmeter/execute-function"),
@@ -23,6 +22,8 @@ export default {
 
         sugarJMXSave: serviceDomain.concat("/sugar-jmx/save"),
         sugarJMXQuery: serviceDomain.concat("/sugar-jmx/query"),
+        sugarJMXUpdate: serviceDomain.concat("/sugar-jmx/update"),
+        sugarJMXDelete: serviceDomain.concat("/sugar-jmx/delete"),
 
         sugarAccountSingUp: serviceDomain.concat("/sugar-account/signUp"),
         sugarAccountSignIn: serviceDomain.concat("/sugar-account/signIn"),
