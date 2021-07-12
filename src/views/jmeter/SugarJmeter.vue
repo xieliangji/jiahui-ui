@@ -6,6 +6,8 @@
       <project v-if="isShowProject" @close="handleClose('project')"></project>
       <test-plan-manager v-if="isShowPlan" @close="handleClose('plan')" @activeEdit="handleActiveEdit" @activeCreate="handleActiveCreate"></test-plan-manager>
       <test-plan-save v-if="isShowPlanSave" :jmx-save="savePlan" @close="handleClose('planSave')" @saveEditClose="handleSaveEditClose"></test-plan-save>
+      <report-manager v-if="isShowReport" @close="handleClose('report')"></report-manager>
+      <file-manager v-if="isShowFile" @close="handleClose('file')"></file-manager>
     </transition>
     <div id="sugar-jmeter-tree">
       <div id="tree-opt">
@@ -15,8 +17,9 @@
         <div class="sugar-jmeter-opt" v-if="!isExecuting" @click="handleSetupExecuting">启动执行</div>
         <div class="sugar-jmeter-opt" :style="{background: isShowSampleEvent || (isExecuting && sampleResults.length > 0) ? '#2ebf91':''}" v-if="this.sampleResults.length > 0" @click="handleShow('sampleResult')">取样结果</div>
         <div class="sugar-jmeter-opt" v-if="isExecuting" @click="handleStopExecuting">停止执行</div>
+        <div class="sugar-jmeter-opt" :style="{background: isShowProject ? '#2ebf91':''}" v-if="isLogin" @click="handleShow('report')">测试报告</div>
+        <div class="sugar-jmeter-opt" :style="{background: isShowFile ? '#2ebf91': ''}" v-if="isLogin" @click="handleShow('file')">文件管理</div>
         <div class="sugar-jmeter-opt" :style="{background: isShowProject ? '#2ebf91':''}" v-if="isLogin">定时任务</div>
-        <div class="sugar-jmeter-opt" :style="{background: isShowProject ? '#2ebf91':''}" v-if="isLogin">测试报告</div>
         <div class="sugar-jmeter-opt" :style="{background: isShowFuncHelper ? '#2ebf91':''}" @click="handleShow('function')">函数助手</div>
       </div>
       <div class="sugar-opt-boundary"></div>
@@ -196,9 +199,13 @@ import {Loading} from "element-ui";
 import SugarJmeterResult from "@/views/jmeter/SugarJmeterResult";
 import TestPlanManager from "@/views/testplan/TestPlanManager";
 import TestPlanSave from "@/views/testplan/TestPlanSave";
+import ReportManager from "@/views/report/ReportManager";
+import FileManager from "@/views/file/FileManager";
 export default {
   name: "SugarJmeter",
   components: {
+    FileManager,
+    ReportManager,
     TestPlanSave,
     TestPlanManager,
     SugarJmeterResult,
@@ -275,6 +282,8 @@ export default {
       isShowFuncHelper: false, // 控制函数助手弹出对话框的显式、隐藏
       isShowPlan: false, // 控制测试计划管理页面的显式、隐藏
       isShowPlanSave: false, // 控制测试计划保存页面的显式、隐藏
+      isShowReport: false, // 控制测试报告页面的显式、隐藏
+      isShowFile: false, // 控制文件管理页面的显式、隐藏
 
       isExecuting: false, // 标识测试计划是否正在执行
       executingLoading: undefined, // 加载状态
@@ -304,6 +313,8 @@ export default {
           this.isShowPlanSave = true; break
         }
         case 'sampleResult': this.isShowSampleEvent = true; break
+        case 'report': this.isShowReport = true; break
+        case 'file': this.isShowFile = true; break
       }
     },
     handleClose(name){
@@ -313,6 +324,8 @@ export default {
         case 'plan': this.isShowPlan = false; break
         case 'planSave':this.isShowPlanSave = false; break
         case 'sampleResult': this.isShowSampleEvent = false; break
+        case 'report': this.isShowReport = false; break
+        case 'file': this.isShowFile = false; break
       }
     },
 
@@ -332,7 +345,6 @@ export default {
         this.handleShow('sampleResult')
       }
       sampleEventWS.onmessage = webSocketEvent => {
-        console.log(JSON.parse(webSocketEvent.data))
         this.sampleResults.push(JSON.parse(webSocketEvent.data))
       }
       sampleEventWS.onerror = webSocketEvent => {

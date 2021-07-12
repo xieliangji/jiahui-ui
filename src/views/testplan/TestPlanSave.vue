@@ -14,7 +14,7 @@
         </el-form-item>
         <el-form-item prop="projectId" label="所属项目">
           <div class="sugar-normal-line">
-            <el-select v-model="jmxSave.projectId">
+            <el-select v-model="jmxSave.projectId" :disabled="jmxSave.id !== undefined">
               <el-option v-for="project in projectList" :key="project.id" :value="project.id" :label="project.name"></el-option>
             </el-select>
           </div>
@@ -73,7 +73,7 @@ export default {
     },
 
     handleSave(){
-      this.jmxSave.jmxContent = [this.$store.state.testPlan]
+      this.jmxSave.hashTree = [this.$store.state.testPlan]
       if(this.jmxSave.id !== undefined && this.jmxSave.id !== ''){
         // 当前是保存测试计划的更新
         this.$confirm("确定更新测试计划？", "", {confirmButtonText: '确定', cancelButtonText: '取消'}).then(() => {

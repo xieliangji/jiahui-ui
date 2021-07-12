@@ -143,13 +143,25 @@ export default {
       this.$confirm("是否编辑测试计划（当前打开的测试计划若未保存会丢失）？", "注意", {confirmButtonText: "确定", cancelButtonText: "取消"}).then(() => {
         this.$emit('activeEdit', this.currentPlan)
         this.$store.commit('initTestPlan')
-        this.$store.commit("setTestPlan", this.currentPlan.jmxContent[0])
+        this.$store.commit("setTestPlan", this.currentPlan.hashTree[0])
         this.$store.commit('setCurrentTestElement', this.$store.state.testPlan)
       }).catch(() => {})
     },
 
     handleExecute(){
-
+      this.$confirm("执行当前测试计划？", "", {confirmButtonText: '是', cancelButtonText: '否'}).then(() => {
+        let executeTestPlan = {id: this.currentPlan.id, accountId: this.$store.state.sugarAccount.id}
+        console.log(executeTestPlan)
+        this.$axios.post(this.$store.state.restApi.sugarJMXExecute, executeTestPlan).then(response => {
+          if(response.data.code === 0){
+            this.$message({message: "当前测试计划正在执行，稍后查看测试报告", type: "success", duration: 3000})
+          } else {
+            this.$message({message: response.data.message, type: "error", duration: 3000})
+          }
+        }).catch(err => {
+          this.$message({message: err, type: "error", duration: 3000})
+        })
+      }).catch(() => {})
     },
 
     handleDelete(){

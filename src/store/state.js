@@ -1,4 +1,5 @@
-const serviceIp = "192.168.17.234"
+// const serviceIp = "192.168.17.234"
+const serviceIp = "122.51.180.68"
 // const serviceIp = "localhost"
 const servicePort = 8512
 const serviceDomain = `http://${serviceIp}:${servicePort}`
@@ -20,10 +21,11 @@ export default {
         sugarJMeterExecuteTestPlanStop: serviceDomain.concat("/sugar-jmeter/execute-test-plan-stop"),
         sugarJMeterSampleEventWS: serviceWebSocketDomain.concat("/sample-event-websocket"),
 
-        sugarJMXSave: serviceDomain.concat("/sugar-jmx/save"),
-        sugarJMXQuery: serviceDomain.concat("/sugar-jmx/query"),
-        sugarJMXUpdate: serviceDomain.concat("/sugar-jmx/update"),
-        sugarJMXDelete: serviceDomain.concat("/sugar-jmx/delete"),
+        sugarJMXSave: serviceDomain.concat("/sugar-test-plan/save"),
+        sugarJMXQuery: serviceDomain.concat("/sugar-test-plan/query"),
+        sugarJMXUpdate: serviceDomain.concat("/sugar-test-plan/update"),
+        sugarJMXDelete: serviceDomain.concat("/sugar-test-plan/delete"),
+        sugarJMXExecute: serviceDomain.concat("/sugar-test-plan/execute"),
 
         sugarAccountSingUp: serviceDomain.concat("/sugar-account/signUp"),
         sugarAccountSignIn: serviceDomain.concat("/sugar-account/signIn"),
@@ -34,6 +36,13 @@ export default {
         sugarProjectUpdate: serviceDomain.concat("/sugar-project/update"),
         sugarProjectDelete: serviceDomain.concat("/sugar-project/delete"),
 
+        sugarReportList: serviceDomain.concat("/sugar-report/query"),
+        sugarReportDelete: serviceDomain.concat("/sugar-report/delete"),
+
+        sugarFileUpload: serviceDomain.concat("/sugar-file/upload"),
+        sugarFileQuery: serviceDomain.concat("/sugar-file/query"),
+        sugarFileDelete: serviceDomain.concat("/sugar-file/delete"),
+        sugarFileUpdate: serviceDomain.concat("/sugar-file/update"),
 
     }
 }
