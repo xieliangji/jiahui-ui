@@ -98,6 +98,13 @@ el-XXX 全局样式覆盖
   width: 100%;
   text-align: center;
 }
+.sugar-table-opt{
+  text-align: center;
+  &::v-deep .el-button{
+    height: 20px; line-height: 20px; font-size: 10px;
+  }
+}
+
 // 全局表左右下边框
 .sugar-table-3borders{
   border-left: 1px solid #DCDFE6;
@@ -145,6 +152,33 @@ el-XXX 全局样式覆盖
   overflow: auto;
   background-color: #eef2f3;
 }
+
+
+.sugar-header{
+  height: 32px; line-height: 32px;
+  display: flex; flex-flow: row nowrap;
+  text-align: center; font-size: 15px; font-weight: bold;
+  border-bottom: 1px solid #DCDFE6; border-top-right-radius: 5px;
+
+  .header-logo{
+    width: 48px;
+    background: {
+      image: url("../logo.svg");
+      size: 48px 32px;
+    };
+  }
+  .header-close{
+    width: 32px;
+    background-color: #bdc3c7;
+    color: #ff6d6f;
+    border-top-right-radius: 5px;
+    cursor: pointer;
+  }
+  .header-title{
+    flex-grow: 1;
+  }
+}
+
 
 // 全局带文字边框样式
 .sugar-top-border{

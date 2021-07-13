@@ -81,7 +81,7 @@
     </div>
 
     <transition name="fade">
-      <report-detail :report="currentReport" v-if="isShowDetail" @close="isShowDetail = false"></report-detail>
+      <report-detail :report="reportDetail" v-if="isShowDetail" @close="isShowDetail = false"></report-detail>
     </transition>
 
   </el-drawer>
@@ -100,6 +100,7 @@ export default {
       currentReport: undefined,
 
       isShowDetail: false,
+      reportDetail: undefined,
     }
   },
   methods: {
@@ -137,7 +138,16 @@ export default {
     },
 
     handleDetail(){
-      this.isShowDetail = true
+      this.$axios.get(`${this.$store.state.restApi.sugarReportFetch}?id=${this.currentReport.id}`).then(response => {
+        if(response.data.code === 0){
+          this.reportDetail = response.data.payload
+          this.isShowDetail = true
+        } else {
+          this.$message({message: response.data.message, type: "error", duration: 3000})
+        }
+      }).catch(err => {
+        this.$message({message: err, type: "error", duration: 3000})
+      })
     },
 
     handleDelete(){
