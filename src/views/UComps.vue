@@ -265,7 +265,7 @@ $padding: 5px;
   padding: 0 5px !important;
   color: $color !important;
   &:focus{
-    border-color: #bdc3c7 !important;
+    border-color: #2ebf91 !important;
   }
 }
 

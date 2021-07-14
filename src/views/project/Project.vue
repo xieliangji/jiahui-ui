@@ -11,11 +11,15 @@
         <div class="project-query">
           <div class="sugar-label-input sugar-normal-line">
             <div class="label">项目名称</div>
-            <div class="input"><Input v-model="queryProject.name" placeholder="模糊查询" @keydown.enter="handleQuery"></Input></div>
+            <div class="input">
+              <el-input v-model="queryProject.name" placeholder="模糊查询" @keydown.enter="handleQuery"></el-input>
+            </div>
           </div>
           <div class="sugar-label-input sugar-normal-line">
             <div class="label">创建人</div>
-            <div class="input"><Input v-model="queryProject.creatorName" placeholder="精确查询" @keydown.enter="handleQuery"></Input></div>
+            <div class="input">
+              <el-input v-model="queryProject.creatorName" placeholder="精确查询" @keydown.enter="handleQuery"></el-input>
+            </div>
           </div>
           <div class="sugar-label-input sugar-normal-line">
             <el-button type="primary" @click="handleQuery">查询</el-button>
@@ -25,16 +29,16 @@
 
         <div class="project-list">
           <div class="project-table">
-            <el-table :data="projects.list" height="100%" row-key="id" highlight-current-row empty-text="暂无项目" @row-click="setCurrentProject">
-              <el-table-column type="expand"></el-table-column>
+            <el-table :data="projects.list" ref="projectTable" height="100%" row-key="id" highlight-current-row empty-text="暂无项目" @row-click="setCurrentProject">
               <el-table-column prop="id" label="#" width="80px"></el-table-column>
               <el-table-column prop="name" label="项目名称"></el-table-column>
               <el-table-column prop="creatorName" label="创建人" width="200px"></el-table-column>
               <el-table-column prop="createTime" label="创建时间" width="200px"></el-table-column>
-              <el-table-column fixed="right" width="80px">
+              <el-table-column fixed="right" width="100px">
                 <div slot="header" class="sugar-table-header">操作</div>
                 <template slot-scope="scope">
                   <div v-if="scope.row !== undefined" class="sugar-table-opt">
+                    <el-button type="primary" @click="enableEdit(scope.row)"><span style="color: #2ebf91;">编辑</span></el-button>
                     <el-button type="primary" @click="handleDelete"><span style="color: #ff6d6f">删除</span></el-button>
                   </div>
                 </template>
@@ -58,139 +62,86 @@
             <div class="header-close" @click="disableCreate"><i class="iconfont icon-guanbi"></i></div>
           </div>
           <div class="add-content">
-            <i-form :model="createProject" :label-width="80" ref="createProjectForm" :rules="projectPropRule">
-              <form-item prop="name" label="项目名称">
-                <Input v-model="createProject.name" placeholder="XX项目..."></Input>
-              </form-item>
-              <form-item prop="remark" label="备注">
-                <Input type="textarea" :autosize="{minRows: 5, maxRows: 5}" v-model="createProject.remark"
-                       placeholder="该项目..."></Input>
-              </form-item>
-              <form-item label="成员">
+            <el-form :model="createProject" label-width="80px" ref="createProjectForm" :rules="projectPropRule">
+              <el-form-item prop="name" label="项目名称">
+                <el-input v-model="createProject.name" placeholder="XX项目..."></el-input>
+              </el-form-item>
+              <el-form-item prop="remark" label="备注">
+                <el-input type="textarea" :autosize="{minRows: 5, maxRows: 5}" v-model="createProject.remark"
+                       placeholder="该项目..."></el-input>
+              </el-form-item>
+              <el-form-item label="成员">
                 <el-select v-model="createProject.memberIds" multiple filterable @remove-tag="handleMemberDelete"
                            placeholder="搜索并选择项目成员（多选）" no-data-text="无可选成员" no-match-text="无相关查询结果">
                   <el-option v-for="account in accountList" :key="account.id" :value="account.id"
                              :label="`${account.username} - ${account.email}`"
                              :disabled="account.id === $store.state.sugarAccount.id"></el-option>
                 </el-select>
-              </form-item>
-              <form-item style="text-align: right">
+              </el-form-item>
+              <el-form-item style="text-align: right">
                 <el-button type="primary" @click="handleProjectSave">保存</el-button>
-              </form-item>
-            </i-form>
+              </el-form-item>
+            </el-form>
           </div>
         </div>
       </div>
+
+      <div class="project-add-wrap" v-if="activeEdit">
+        <div class="project-add">
+          <div class="sugar-header">
+            <div class="header-logo"></div>
+            <div class="header-title">编辑项目</div>
+            <div class="header-close" @click="disableEdit"><i class="iconfont icon-guanbi"></i></div>
+          </div>
+          <div class="add-content">
+            <el-form :model="editProject" label-width="80px" ref="editProjectForm" :rules="projectPropRule">
+              <el-form-item prop="name" label="项目名称">
+                <div class="sugar-label-input">
+                  <el-input v-model="editProject.name" placeholder="XX项目..."></el-input>
+                </div>
+              </el-form-item>
+              <el-form-item prop="remark" label="备注">
+                <el-input type="textarea" :autosize="{minRows: 5, maxRows: 5}" resize="none" v-model="editProject.remark"
+                          placeholder="该项目..."></el-input>
+              </el-form-item>
+              <el-form-item label="成员">
+                <el-select v-model="editProject.memberIds" :key="editSelectKey" multiple filterable @remove-tag="handleEditMemberDelete" @change="handleEditChange"
+                           placeholder="搜索并选择项目成员（多选）" no-data-text="无可选成员" no-match-text="无相关查询结果">
+                  <el-option v-for="account in accountList" :key="account.id" :value="account.id"
+                             :label="`${account.username} - ${account.email}`"
+                             :disabled="account.id === $store.state.sugarAccount.id"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item prop="creatorName" label="创建人">
+                <div class="sugar-label-input">
+                  <el-input v-model="editProject.creatorName" disabled></el-input>
+                </div>
+              </el-form-item>
+              <el-form-item prop="createTime" label="创建时间">
+                <div class="sugar-label-input">
+                  <el-input v-model="editProject.createTime" disabled></el-input>
+                </div>
+              </el-form-item>
+              <el-form-item prop="updaterName" label="更新人">
+                <div class="sugar-label-input">
+                  <el-input v-model="editProject.updaterName" disabled></el-input>
+                </div>
+              </el-form-item>
+              <el-form-item prop="updateTime" label="更新时间">
+                <div class="sugar-label-input">
+                  <el-input v-model="editProject.updateTime" disabled></el-input>
+                </div>
+              </el-form-item>
+              <el-form-item style="text-align: right">
+                <el-button type="primary" @click="handleEditSave">保存</el-button>
+              </el-form-item>
+            </el-form>
+          </div>
+        </div>
+      </div>
+
     </transition>
   </div>
-<!--  <el-drawer visible :with-header="false" :size="900" :close-on-click-modal="false" :wrapper-closable="false">-->
-<!--    <div class="sugar-project">-->
-<!--      -->
-<!--      <div class="sugar-project-content sugar-layout-wrap">-->
-<!--        <el-tabs :active-name="activePane" @tab-click="handlePaneClick">-->
-<!--          &lt;!&ndash; 项目新增 &ndash;&gt;-->
-<!--          <el-tab-pane style="height: 100%;" name="creator">-->
-<!--            <div slot="label" class="project-pane-title">项目新增</div>-->
-<!--            <div class="sugar-layout-wrap">-->
-<!--              <i-form :model="createProject" :label-width="80" ref="createProjectForm" :rules="projectPropRule">-->
-<!--                <form-item prop="name" label="项目名称">-->
-<!--                  <Input v-model="createProject.name" placeholder="XX项目..."></Input>-->
-<!--                </form-item>-->
-<!--                <form-item prop="remark" label="备注">-->
-<!--                  <Input type="textarea" :autosize="{minRows: 5, maxRows: 10}" v-model="createProject.remark" placeholder="该项目..."></Input>-->
-<!--                </form-item>-->
-<!--                <form-item label="成员">-->
-<!--                  <el-select v-model="createProject.memberIds" multiple filterable @remove-tag="handleMemberDelete" placeholder="搜索并选择项目成员（多选）" no-data-text="无可选成员" no-match-text="无相关查询结果">-->
-<!--                    <el-option v-for="account in accountList" :key="account.id" :value="account.id" :label="`${account.username} - ${account.email}`" :disabled="account.id === $store.state.sugarAccount.id"></el-option>-->
-<!--                  </el-select>-->
-<!--                </form-item>-->
-<!--                <form-item style="text-align: right">-->
-<!--                  <el-button type="primary" @click="handleProjectSave">保存</el-button>-->
-<!--                </form-item>-->
-<!--              </i-form>-->
-<!--            </div>-->
-<!--          </el-tab-pane>-->
-
-<!--          <el-tab-pane style="height: 100%;" name="lister">-->
-<!--            <div slot="label" class="project-pane-title">项目列表</div>-->
-<!--            <div style="height: calc(100% - 40px); overflow: auto;">-->
-<!--              <el-card shadow="never" :body-style="{padding: '10px'}" style="background-color: #eef2f3; color: #536976;">-->
-<!--                <div class="sugar-flex-row sugar-normal-line">-->
-<!--                  <div class="sugar-label-input" style="flex-grow: 1;">-->
-<!--                    <div class="label">项目名称</div>-->
-<!--                    <div class="input"><Input v-model="queryProject.name" placeholder="模糊查询"></Input></div>-->
-<!--                  </div>-->
-<!--                  <div class="sugar-label-input" style="flex-grow: 1;">-->
-<!--                    <div class="label">创建人</div>-->
-<!--                    <div class="input"><Input v-model="queryProject.creatorName" placeholder="精确查询"></Input></div>-->
-<!--                  </div>-->
-<!--                  <div><el-button type="primary" style="margin-left: 10px;" @click="handleQueryProject">查询</el-button></div>-->
-<!--                </div>-->
-<!--                <el-divider></el-divider>-->
-<!--              </el-card>-->
-
-<!--              <transition name="fade">-->
-<!--                <div v-if="showEdit" id="projectEdit">-->
-<!--                  <el-card v-if="showEdit">-->
-<!--                    <div class="sugar-normal-line">-->
-<!--                      <el-breadcrumb separator="/">-->
-<!--                        <el-breadcrumb-item>项目</el-breadcrumb-item>-->
-<!--                        <el-breadcrumb-item>编辑</el-breadcrumb-item>-->
-<!--                      </el-breadcrumb>-->
-<!--                    </div>-->
-<!--                    <i-form :model="editProject" ref="editProjectForm" :rules="projectPropRule" :label-width="80">-->
-<!--                      <form-item prop="name" label="项目名称">-->
-<!--                        <Input v-model="editProject.name"></Input>-->
-<!--                      </form-item>-->
-<!--                      <form-item prop="remark" label="备注">-->
-<!--                        <Input type="textarea" :autosize="{minRows: 4, maxRows: 10}" v-model="editProject.remark"></Input>-->
-<!--                      </form-item>-->
-<!--                      <form-item label="成员" prop="memberIds">-->
-<!--                        <el-select v-model="editProject.memberIds" filterable multiple @remove-tag="handleEditMemberDelete">-->
-<!--                          <el-option v-for="account in accountList" :key="account.id" :value="account.id"-->
-<!--                                     :label="`${account.username} - ${account.email}`"-->
-<!--                                     :disabled="account.id === $store.state.sugarAccount.id">-->
-<!--                          </el-option>-->
-<!--                        </el-select>-->
-<!--                      </form-item>-->
-<!--                      <form-item prop="creatorName" label="创建人">-->
-<!--                        <Input v-model="editProject.creatorName" disabled></Input>-->
-<!--                      </form-item>-->
-<!--                      <form-item prop="createTime" label="创建时间">-->
-<!--                        <Input v-model="editProject.createTime" disabled></Input>-->
-<!--                      </form-item>-->
-<!--                      <form-item prop="updateTime" label="更新时间">-->
-<!--                        <Input v-model="editProject.updateTime" disabled></Input>-->
-<!--                      </form-item>-->
-<!--                      <form-item style="text-align: right;">-->
-<!--                        <el-button type="primary" @click="handleEditCancel">取消</el-button>-->
-<!--                        <el-button type="primary" @click="handleEditSave">保存</el-button>-->
-<!--                      </form-item>-->
-<!--                    </i-form>-->
-<!--                  </el-card>-->
-<!--                </div>-->
-<!--              </transition>-->
-
-<!--              <div class="project-list">-->
-<!--                <Card v-for="project in queryProjectResult.projectList" :key="project.id" style="width: 250px; margin: 10px 19px 40px 19px; text-align: center;">-->
-<!--                  <div style="width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{project.name}}</div>-->
-<!--                  <div style="text-align: right;">-->
-<!--                    <el-tooltip content="编辑" effect="light" placement="top">-->
-<!--                      <i class="ivu-icon ivu-icon-ios-paper-outline project-opt" @click="handleProjectEdit(project)"></i>-->
-<!--                    </el-tooltip>-->
-<!--                    <el-tooltip content="删除" effect="light" placement="top">-->
-<!--                      <i class="ivu-icon ivu-icon-ios-trash-outline project-opt" @click="handleProjectDelete(project)"></i>-->
-<!--                    </el-tooltip>-->
-<!--                  </div>-->
-<!--                </Card>-->
-<!--              </div>-->
-<!--            </div>-->
-
-<!--          </el-tab-pane>-->
-<!--        </el-tabs>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </el-drawer>-->
 </template>
 
 <script>
@@ -209,8 +160,9 @@ export default {
       projects: {pageSize: 0, pageNum: 0, total: 0, list: []},
       currentProject: undefined,
 
+      activeEdit: false,
       editProject: {id: '', name: '', remark: '', creatorId: '', creatorName: '', createTime:'', updateTime:'', memberIds: []},
-      showEdit: false,
+      editSelectKey: 0,
     }
   },
 
@@ -266,6 +218,29 @@ export default {
       this.$refs.createProjectForm.resetFields()
     },
 
+    enableEdit(project){
+      this.$axios.get(`${this.$store.state.restApi.sugarProjectFetch}?id=${project.id}`).then(response => {
+        if(response.data.code === 0){
+          this.editProject = response.data.payload
+          let memberIds = []
+          for(let index = 0; index < this.editProject.members.length; index++){
+            memberIds.push(this.editProject.members[index].id)
+          }
+          this.editProject.memberIds = memberIds
+          this.activeEdit = true
+        } else {
+          this.$message({message: response.data.message, type: "error", duration: 3000})
+        }
+      }).catch(err => {
+        this.$message({message: err, type: "error", duration: 3000})
+      })
+    },
+
+    disableEdit(){
+      this.activeEdit = false
+      this.$refs.editProjectForm.resetFields()
+    },
+
     setCurrentProject(row){
       this.currentProject = row
     },
@@ -285,22 +260,8 @@ export default {
       }).catch(() => {})
     },
 
-    handleProjectEdit(project){
-      for(let attr in this.editProject){
-        this.editProject[attr] = project[attr]
-      }
-      let members = project.members
-      let memberIds = []
-      for(let index = 0; index < members.length; index++){
-        memberIds.push(members[index].id)
-      }
-      this.editProject.memberIds = memberIds
-      this.editProject.accountId = this.$store.state.sugarAccount.id
-      this.showEdit = true
-    },
-
-    handleEditCancel(){
-      this.showEdit = false
+    handleEditChange(){
+      this.editSelectKey = this.editSelectKey + 1
     },
 
     handleEditMemberDelete(tag){
@@ -311,10 +272,11 @@ export default {
 
     handleEditSave(){
       this.$confirm("确认保存编辑？", "", {confirmButtonText: "确定", cancelButtonText: "取消"}).then(() => {
+        this.editProject.accountId = this.$store.state.sugarAccount.id
         this.$axios.post(this.$store.state.restApi.sugarProjectUpdate, this.editProject).then(response => {
           if(response.data.code === 0){
             this.$message({message: "编辑成功", type: "success", duration: 3000})
-            this.showEdit = false
+            this.disableEdit()
             this.handleQuery()
           } else {
             this.$message({message: response.data.message, type: "error", duration: 3000})
@@ -441,7 +403,7 @@ export default {
       height: 40px; line-height: 40px; text-align: right; padding: 5px 0;
       &::v-deep .el-pagination__total{font-weight: bold !important;}
       &::v-deep .el-pagination{color: #536976 !important; padding: 0!important;}
-      &::v-deep .el-input__inner{background: transparent !important; border-radius: 2px !important;
+      &::v-deep .el-el-input__inner{background: transparent !important; border-radius: 2px !important;
         &:hover { border-color: #8e9eab !important;}
       }
       &::v-deep .btn-prev, &::v-deep .btn-next, &::v-deep li{background: transparent !important; &:hover{ color: #2ebf91 !important;}}
@@ -470,6 +432,18 @@ export default {
         border-bottom: 1px solid #DCDFE6 !important;
       }
     }
+  }
+}
+
+.project-edit{
+  padding: 10px 32px;
+  background-color: #FFFFFF;
+}
+
+.sugar-table-opt{
+  text-align: center;
+  &::v-deep .el-button{
+    height: 20px !important; line-height: 20px !important; font-size: 10px !important; padding: 0 5px !important;
   }
 }
 </style>

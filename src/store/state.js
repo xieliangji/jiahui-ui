@@ -1,5 +1,5 @@
-const serviceIp = "192.168.17.234"
-// const serviceIp = "122.51.180.68"
+// const serviceIp = "192.168.17.234"
+const serviceIp = "122.51.180.68"
 // const serviceIp = "localhost"
 const servicePort = 8512
 const serviceDomain = `http://${serviceIp}:${servicePort}`
@@ -35,6 +35,7 @@ export default {
         sugarProjectSave: serviceDomain.concat("/sugar-project/save"),
         sugarProjectUpdate: serviceDomain.concat("/sugar-project/update"),
         sugarProjectDelete: serviceDomain.concat("/sugar-project/delete"),
+        sugarProjectFetch: serviceDomain.concat("/sugar-project/fetch"),
 
         sugarReportList: serviceDomain.concat("/sugar-report/query"),
         sugarReportDelete: serviceDomain.concat("/sugar-report/delete"),

@@ -98,12 +98,6 @@ el-XXX 全局样式覆盖
   width: 100%;
   text-align: center;
 }
-.sugar-table-opt{
-  text-align: center;
-  &::v-deep .el-button{
-    height: 20px; line-height: 20px; font-size: 10px;
-  }
-}
 
 // 全局表左右下边框
 .sugar-table-3borders{
