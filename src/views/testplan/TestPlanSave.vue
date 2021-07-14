@@ -14,7 +14,7 @@
         </el-form-item>
         <el-form-item prop="projectId" label="所属项目">
           <div class="sugar-normal-line">
-            <el-select v-model="jmxSave.projectId" :disabled="jmxSave.id !== undefined">
+            <el-select v-model="jmxSave.projectId" :disabled="jmxSave.id !== undefined" no-data-text="暂无项目,请先添加">
               <el-option v-for="project in projectList" :key="project.id" :value="project.id" :label="project.name"></el-option>
             </el-select>
           </div>
@@ -118,7 +118,7 @@ export default {
     let query = {accountId: this.$store.state.sugarAccount.id}
     this.$axios.post(this.$store.state.restApi.sugarProjectList, query).then(response => {
       if(response.data.code === 0){
-        this.projectList = response.data.payload
+        this.projectList = response.data.payload.list
         if(this.projectList.length === 0){
           this.$message({message: '暂未添加项目，请先添加项目', type: "error", duration: 3000})
         }

@@ -6,7 +6,6 @@
         <div class="header-title">管理项目</div>
         <div class="header-close" @click="$emit('close')"><i class="iconfont icon-guanbi"></i></div>
       </div>
-
       <div class="project-content">
         <div class="project-query">
           <div class="sugar-label-input sugar-normal-line">
@@ -26,7 +25,6 @@
             <el-button type="primary" @click="activeCreate = true"><span style="color: #2ebf91;">添加</span></el-button>
           </div>
         </div>
-
         <div class="project-list">
           <div class="project-table">
             <el-table :data="projects.list" ref="projectTable" height="100%" row-key="id" highlight-current-row empty-text="暂无项目" @row-click="setCurrentProject">
@@ -51,7 +49,6 @@
         </div>
       </div>
     </div>
-
 
     <transition name="fade">
       <div class="project-add-wrap" v-if="activeCreate">
@@ -85,7 +82,6 @@
           </div>
         </div>
       </div>
-
       <div class="project-add-wrap" v-if="activeEdit">
         <div class="project-add">
           <div class="sugar-header">
@@ -139,7 +135,6 @@
           </div>
         </div>
       </div>
-
     </transition>
   </div>
 </template>
@@ -167,6 +162,7 @@ export default {
   },
 
   methods: {
+    // 项目查询
     handleQuery(){
       this.$axios.post(this.$store.state.restApi.sugarProjectList, this.projectQuery).then(response => {
         if(response.data.code === 0){
@@ -188,7 +184,6 @@ export default {
       }
     },
 
-
     // 保存项目
     handleProjectSave(){
       this.$refs.createProjectForm.validate(valid => {
@@ -200,6 +195,7 @@ export default {
                 this.$message({message: "新建项目成功", type: "success", duration: 3000})
                 this.createProject = {id: '', name: '', remark: '', memberIds: [this.$store.state.sugarAccount.id]}
                 this.activeCreate = false
+                this.handleQuery()
               } else {
                 this.$message({message: response.data.message, type: "error", duration: 3000})
               }
@@ -270,6 +266,7 @@ export default {
       }
     },
 
+    // 保存项目编辑
     handleEditSave(){
       this.$confirm("确认保存编辑？", "", {confirmButtonText: "确定", cancelButtonText: "取消"}).then(() => {
         this.editProject.accountId = this.$store.state.sugarAccount.id
@@ -286,7 +283,6 @@ export default {
         })
       }).catch(() => {})
     },
-
   },
 
   mounted() {

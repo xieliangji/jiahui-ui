@@ -160,6 +160,8 @@ export default {
       this.selectDropdownCommand = command
       if(command === this.dropdownCommand.logout){
         this.$store.commit("setSugarAccount", undefined)
+        this.$store.commit('initTestPlan')
+        this.$store.commit('setExecutorId', undefined)
       }
     },
 
@@ -207,7 +209,6 @@ export default {
     },
 
     handleUpdating(){
-      console.log("updating")
       this.isInfoEdit = true
     },
 

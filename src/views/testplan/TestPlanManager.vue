@@ -99,9 +99,9 @@ export default {
         updaterName: '',
         pageSize: 10,
         pageNum: 1,
+        accountId: this.$store.state.sugarAccount.id
       },
 
-      planTableHeight: '800px',
       plans: {
         pageSize: '',
         pageNum: '',

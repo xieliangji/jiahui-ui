@@ -67,7 +67,7 @@
               <div slot="header" class="sugar-table-header">操作</div>
               <template slot-scope="scope">
                 <div style="width: 100%; text-align: center;">
-                  <el-button type="primary" style="color: #2ebf91 !important;" @click="handleDetail">{{scope?"":""}}详情</el-button>
+                  <el-button type="primary" style="color: #2ebf91 !important;" @click="handleDetail(scope.row)">{{scope?"":""}}详情</el-button>
                   <el-button type="primary" style="color: #ff6d6f !important;" @click="handleDelete">删除</el-button>
                 </div>
               </template>
@@ -137,8 +137,8 @@ export default {
       this.currentReport = row
     },
 
-    handleDetail(){
-      this.$axios.get(`${this.$store.state.restApi.sugarReportFetch}?id=${this.currentReport.id}`).then(response => {
+    handleDetail(report){
+      this.$axios.get(`${this.$store.state.restApi.sugarReportFetch}?id=${report.id}`).then(response => {
         if(response.data.code === 0){
           this.reportDetail = response.data.payload
           this.isShowDetail = true
@@ -176,7 +176,7 @@ export default {
 .report-header {
   display: flex; flex-flow: row nowrap; box-sizing: border-box; border-bottom: 1px solid #DCDFE6;
   height: 32px; line-height: 32px; text-align: center; background-color: #eef2f3;
-  font-weight: bold; font-size: 16px;
+  font-weight: bold; font-size: 15px;
   .report-logo{
     width: 48px;
     background: {
