@@ -1,13 +1,8 @@
-// const serviceIp = "192.168.17.234"
-const serviceIp = "122.51.180.68"
-// const serviceIp = "localhost"
-const servicePort = 8512
-const serviceDomain = `http://${serviceIp}:${servicePort}`
-const serviceWebSocketDomain = `ws://${serviceIp}:${servicePort}`
+const serviceDomain = process.env.VUE_APP_BASEURL
+const serviceWebSocketDomain = process.env.VUE_APP_WSURL
 
 export default {
     sugarAccount: undefined,
-
 
     testPlan: undefined,
     currentTestElement: undefined,
@@ -45,6 +40,5 @@ export default {
         sugarFileQuery: serviceDomain.concat("/sugar-file/query"),
         sugarFileDelete: serviceDomain.concat("/sugar-file/delete"),
         sugarFileUpdate: serviceDomain.concat("/sugar-file/update"),
-
     }
 }
