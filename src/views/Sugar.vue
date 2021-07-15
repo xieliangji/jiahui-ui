@@ -176,7 +176,7 @@ export default {
         // 注册
         this.$confirm("确定要注册？", "", {confirmButtonText: "确定", cancelButtonText: "取消"}).then(() => {
           let requestData = this.sugarAccount
-          this.$axios.post(this.$store.state.restApi.sugarAccountSingUp, requestData).then(response => {
+          this.$axios.post(this.$RESTAPI.sugarAccountSingUp, requestData).then(response => {
             if(response.data.code === 0){
               this.$message({message: "注册成功", type: "success", duration: 3000})
               this.selectDropdownCommand = undefined
@@ -190,7 +190,7 @@ export default {
       } else if(this.selectDropdownCommand === this.dropdownCommand.login){
         // 登录
         let requestData = this.sugarAccount
-        this.$axios.post(this.$store.state.restApi.sugarAccountSignIn, requestData).then(response => {
+        this.$axios.post(this.$RESTAPI.sugarAccountSignIn, requestData).then(response => {
           if(response.data.code === 0){
             this.$message({message: "登录成功！", type: "success", duration: 3000})
             this.sugarAccount = JSON.parse(JSON.stringify(response.data.payload))

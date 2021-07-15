@@ -189,7 +189,7 @@ export default {
         pageSize: this.uploadQuery.pageSize,
         pageNum: this.uploadQuery.pageNum
       }
-      this.$axios.post(this.$store.state.restApi.sugarFileQuery, uploadQuery).then(response => {
+      this.$axios.post(this.$RESTAPI.sugarFileQuery, uploadQuery).then(response => {
         if(response.data.code === 0){
           this.uploads = response.data.payload
         } else {
@@ -230,7 +230,7 @@ export default {
         data.append("uploaderId", this.$store.state.sugarAccount.id)
         data.append("remark", this.upload.remark)
         data.append("file", this.upload.fileList[0].raw)
-        this.$axios.post(this.$store.state.restApi.sugarFileUpload, data, {headers: {'Content-Type': 'multipart/form-data'}}).then(response => {
+        this.$axios.post(this.$RESTAPI.sugarFileUpload, data, {headers: {'Content-Type': 'multipart/form-data'}}).then(response => {
           if(response.data.code === 0){
             this.$message({message: '上传成功', type: 'success', duration: 3000})
             this.showUpload = false
@@ -252,7 +252,7 @@ export default {
 
     handleDelete(){
       this.$confirm("删除（卸载）当前文件？", "", {confirmButtonText: '确定', cancelButtonText: '取消'}).then(() => {
-        this.$axios.get(`${this.$store.state.restApi.sugarFileDelete}?id=${this.currentFile.id}`).then(response => {
+        this.$axios.get(`${this.$RESTAPI.sugarFileDelete}?id=${this.currentFile.id}`).then(response => {
           if(response.data.code === 0){
             this.$message({message: '删除成功', type: "success", duration: 3000})
             this.handleQuery()
@@ -288,7 +288,7 @@ export default {
         updaterId: this.$store.state.sugarAccount.id
       }
       this.$confirm("确定更新？", "", {confirmButtonText: '确定', cancelButtonText: '取消'}).then(() => {
-        this.$axios.post(this.$store.state.restApi.sugarFileUpdate, updateFile).then(response => {
+        this.$axios.post(this.$RESTAPI.sugarFileUpdate, updateFile).then(response => {
           if(response.data.code === 0){
             this.$message({message: '更新成功', type: "success", duration: 3000})
             this.handleQuery()

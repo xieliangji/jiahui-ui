@@ -81,7 +81,7 @@ export default {
       for(let index = 0; index < this.functionArguments.length; index++){
         functionCall.argumentDescriptions.push(this.functionArguments[index].value)
       }
-      this.$axios.post(this.$store.state.restApi.sugarJMeterExecuteFunction, functionCall).then(response => {
+      this.$axios.post(this.$RESTAPI.sugarJMeterExecuteFunction, functionCall).then(response => {
         if(response.data.code === 0){
           this.functionCallResult = response.data.payload
         } else {
@@ -124,7 +124,7 @@ export default {
     }
   },
   mounted() {
-    this.$axios.get(this.$store.state.restApi.sugarJMeterFunctions).then(response => {
+    this.$axios.get(this.$RESTAPI.sugarJMeterFunctions).then(response => {
       if(response.data.code === 0){
         this.functionList = response.data.payload
         this.currentFunction = this.functionList[0]

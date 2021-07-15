@@ -120,7 +120,7 @@ export default {
         reportQuery.createEndTime = this.reportQuery.createTimes[1]
       }
 
-      this.$axios.post(this.$store.state.restApi.sugarReportList, reportQuery).then(response => {
+      this.$axios.post(this.$RESTAPI.sugarReportList, reportQuery).then(response => {
         if(response.data.code === 0){
           this.reports = response.data.payload
           this.reportQuery.pageNum = this.reports.pageNum
@@ -138,7 +138,7 @@ export default {
     },
 
     handleDetail(report){
-      this.$axios.get(`${this.$store.state.restApi.sugarReportFetch}?id=${report.id}`).then(response => {
+      this.$axios.get(`${this.$RESTAPI.sugarReportFetch}?id=${report.id}`).then(response => {
         if(response.data.code === 0){
           this.reportDetail = response.data.payload
           this.isShowDetail = true
@@ -152,7 +152,7 @@ export default {
 
     handleDelete(){
       this.$confirm("确定删除该测试报告？", "", {confirmButtonText: "确定", cancelButtonText: "取消"}).then(() => {
-        this.$axios.get(`${this.$store.state.restApi.sugarReportDelete}?id=${this.currentReport.id}`).then(response => {
+        this.$axios.get(`${this.$RESTAPI.sugarReportDelete}?id=${this.currentReport.id}`).then(response => {
           if(response.data.code === 0){
             this.$message({message: "删除测试报告成功", type: "success", duration: 3000})
             this.handleQuery()

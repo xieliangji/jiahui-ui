@@ -113,7 +113,7 @@ export default {
   },
   methods: {
     handleQuery(){
-      this.$axios.post(this.$store.state.restApi.sugarJMXQuery, this.planQuery).then(response => {
+      this.$axios.post(this.$RESTAPI.sugarJMXQuery, this.planQuery).then(response => {
         if(response.data.code === 0){
           this.plans = response.data.payload
         } else {
@@ -151,8 +151,7 @@ export default {
     handleExecute(){
       this.$confirm("执行当前测试计划？", "", {confirmButtonText: '是', cancelButtonText: '否'}).then(() => {
         let executeTestPlan = {id: this.currentPlan.id, accountId: this.$store.state.sugarAccount.id}
-        console.log(executeTestPlan)
-        this.$axios.post(this.$store.state.restApi.sugarJMXExecute, executeTestPlan).then(response => {
+        this.$axios.post(this.$RESTAPI.sugarJMXExecute, executeTestPlan).then(response => {
           if(response.data.code === 0){
             this.$message({message: "当前测试计划正在执行，稍后查看测试报告", type: "success", duration: 3000})
           } else {
@@ -166,7 +165,7 @@ export default {
 
     handleDelete(){
       this.$confirm("是否删除当前测试计划？", "", {confirmButtonText: '是', cancelButtonText: "否"}).then(() => {
-        this.$axios.get(`${this.$store.state.restApi.sugarJMXDelete}?id=${this.currentPlan.id}`).then(response => {
+        this.$axios.get(`${this.$RESTAPI.sugarJMXDelete}?id=${this.currentPlan.id}`).then(response => {
           if(response.data.code === 0){
             this.$message({message: "删除测试计划成功", type: "success", duration: 3000})
             this.handleQuery()

@@ -82,7 +82,7 @@ export default {
               this.$message({message: '请检查必填项', type: "error", duration: 3000})
               return
             }
-            this.$axios.post(this.$store.state.restApi.sugarJMXUpdate, this.jmxSave).then(response => {
+            this.$axios.post(this.$RESTAPI.sugarJMXUpdate, this.jmxSave).then(response => {
               if(response.data.code === 0){
                 this.$message({message: '更新测试计划成功', type: "success", duration: 3000})
                 this.$emit('saveEditClose')
@@ -100,7 +100,7 @@ export default {
               this.$message({message: '请检查必填项', type: "error", duration: 3000})
               return
             }
-            this.$axios.post(this.$store.state.restApi.sugarJMXSave, this.jmxSave).then(response => {
+            this.$axios.post(this.$RESTAPI.sugarJMXSave, this.jmxSave).then(response => {
               if(response.data.code === 0){
                 this.$message({message: '新建测试计划成功', type: "success", duration: 3000})
                 this.$emit('saveEditClose')
@@ -116,7 +116,7 @@ export default {
 
   mounted() {
     let query = {accountId: this.$store.state.sugarAccount.id}
-    this.$axios.post(this.$store.state.restApi.sugarProjectList, query).then(response => {
+    this.$axios.post(this.$RESTAPI.sugarProjectList, query).then(response => {
       if(response.data.code === 0){
         this.projectList = response.data.payload.list
         if(this.projectList.length === 0){

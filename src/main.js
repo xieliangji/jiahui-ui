@@ -13,10 +13,12 @@ import {JL} from './views/jmeter/js/JmeterTestElement'
 import Axios from 'axios'
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
+import RESTAPI from './assets/js/rest'
 
 Vue.config.productionTip = false
 Vue.prototype.$JL = JL
 Vue.prototype.$axios = Axios
+Vue.prototype.$RESTAPI = RESTAPI
 
 Vue.use(El)
 Vue.use(AT)

@@ -164,7 +164,7 @@ export default {
   methods: {
     // 项目查询
     handleQuery(){
-      this.$axios.post(this.$store.state.restApi.sugarProjectList, this.projectQuery).then(response => {
+      this.$axios.post(this.$RESTAPI.sugarProjectList, this.projectQuery).then(response => {
         if(response.data.code === 0){
           this.projects = response.data.payload
           this.projectQuery.pageNum = this.projects.pageNum
@@ -190,7 +190,7 @@ export default {
         if(valid){
           this.$confirm("确认保存项目？", "", {confirmButtonText: "确定", cancelButtonText: "取消"}).then(() => {
             this.createProject.creatorId = this.$store.state.sugarAccount.id
-            this.$axios.post(this.$store.state.restApi.sugarProjectSave, this.createProject).then(response => {
+            this.$axios.post(this.$RESTAPI.sugarProjectSave, this.createProject).then(response => {
               if(response.data.code === 0){
                 this.$message({message: "新建项目成功", type: "success", duration: 3000})
                 this.createProject = {id: '', name: '', remark: '', memberIds: [this.$store.state.sugarAccount.id]}
@@ -215,7 +215,7 @@ export default {
     },
 
     enableEdit(project){
-      this.$axios.get(`${this.$store.state.restApi.sugarProjectFetch}?id=${project.id}`).then(response => {
+      this.$axios.get(`${this.$RESTAPI.sugarProjectFetch}?id=${project.id}`).then(response => {
         if(response.data.code === 0){
           this.editProject = response.data.payload
           let memberIds = []
@@ -243,7 +243,7 @@ export default {
 
     handleDelete(){
       this.$confirm("是否删除当前项目？", "", {confirmButtonText: '是', cancelButtonText: '否'}).then(() => {
-        this.$axios.get(this.$store.state.restApi.sugarProjectDelete + `?id=${this.currentProject.id}`).then(response => {
+        this.$axios.get(this.$RESTAPI.sugarProjectDelete + `?id=${this.currentProject.id}`).then(response => {
           if(response.data.code === 0){
             this.$message({message: '项目删除成功', type:"success", duration: 3000})
             this.handleQuery()
@@ -270,7 +270,7 @@ export default {
     handleEditSave(){
       this.$confirm("确认保存编辑？", "", {confirmButtonText: "确定", cancelButtonText: "取消"}).then(() => {
         this.editProject.accountId = this.$store.state.sugarAccount.id
-        this.$axios.post(this.$store.state.restApi.sugarProjectUpdate, this.editProject).then(response => {
+        this.$axios.post(this.$RESTAPI.sugarProjectUpdate, this.editProject).then(response => {
           if(response.data.code === 0){
             this.$message({message: "编辑成功", type: "success", duration: 3000})
             this.disableEdit()
@@ -287,7 +287,7 @@ export default {
 
   mounted() {
     this.handleQuery()
-    this.$axios.get(this.$store.state.restApi.sugarAccountList).then(response => {
+    this.$axios.get(this.$RESTAPI.sugarAccountList).then(response => {
       if(response.data.code === 0){
         this.accountList = response.data.payload
       } else {

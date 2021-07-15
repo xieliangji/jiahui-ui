@@ -339,7 +339,7 @@ export default {
      *  WebSocket 实时获取当前执行已完成的取样结果
      */
     handleWebSocket(executorId){
-      let sampleEventWS = new WebSocket(`${this.$store.state.restApi.sugarJMeterSampleEventWS}/${executorId}`)
+      let sampleEventWS = new WebSocket(`${this.$RESTAPI.sugarJMeterSampleEventWS}/${executorId}`)
       sampleEventWS.onopen = webSocketEvent => {
         console.log(`SampleResult WebSocket ${webSocketEvent.type}`)
         this.handleShow('sampleResult')
@@ -373,11 +373,11 @@ export default {
       let executePayload = {executorId: executorId, testPlanList: testPlanList}
       this.isExecuting = true
       this.executingLoading = Loading.service({target: '#tree-data', text: "测试计划执行中", background: 'rgba(0,0,0,.2)'})
-      this.$axios.post(this.$store.state.restApi.sugarJMeterExecuteTestPlan, executePayload).then(response => {
+      this.$axios.post(this.$RESTAPI.sugarJMeterExecuteTestPlan, executePayload).then(response => {
         this.$nextTick(() => this.executingLoading.close())
         if(response.data.code === 0){
           //
-          console.log(response.data.payload)
+          // console.log(response.data.payload)
         } else {
           this.$message({message: response.data.message, type: "error", duration: 3000})
         }
@@ -391,7 +391,7 @@ export default {
 
     handleStopExecuting(){
       this.$confirm("是否停止当前测试计划执行？", "", {confirmButtonText: "是", cancelButtonText: "否"}).then(() => {
-        this.$axios.get(`${this.$store.state.restApi.sugarJMeterExecuteTestPlanStop}?executorId=${this.$store.state.executorId}`).then(resposne => {
+        this.$axios.get(`${this.$RESTAPI.sugarJMeterExecuteTestPlanStop}?executorId=${this.$store.state.executorId}`).then(resposne => {
           if(resposne.data.code === 0){
             this.$message({message: resposne.data.payload, type: "success", duration: 3000})
             this.executingLoading.close()

@@ -192,7 +192,6 @@ export default {
   computed: {
     resultTreeData(){
       let data = []
-      console.log(this.sampleResults)
       for(let index = 0; index < this.sampleResults.length; index++){
         let sampleResult = this.sampleResults[index]
         if(this.isSuccessOnly && !this.isFailureOnly){
