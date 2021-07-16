@@ -106,74 +106,6 @@ el-XXX 全局样式覆盖
   border-bottom: 1px solid #DCDFE6;
 }
 
-
-// 全局对话框标题样式
-.sugar-dialog-header{
-  line-height: 18px;
-  padding: 5px;
-  display: flex;
-  flex-flow: row nowrap;
-  font-weight: bold;
-  .logo{
-    width: 32px;
-    height: 16px;
-    background: {
-      image: url("../../assets/logo.svg");
-      size: 32px 16px;
-    }
-  }
-
-  .header-content{
-    flex-grow: 1;
-  }
-
-  .header-close{
-    width: 18px;
-    text-align: center;
-    color: #ff6d6f;
-    cursor: pointer;
-    background-color: #F0F2F0;
-    border-radius: 2px;
-    &::after{
-      content: "x";
-      text-align: center;
-    }
-  }
-}
-
-.sugar-dialog-body{
-  max-height: 800px;
-  overflow: auto;
-  background-color: #eef2f3;
-}
-
-
-.sugar-header{
-  height: 32px; line-height: 32px;
-  display: flex; flex-flow: row nowrap;
-  text-align: center; font-size: 15px; font-weight: bold;
-  border-bottom: 1px solid #DCDFE6; border-top-right-radius: 5px;
-
-  .header-logo{
-    width: 48px;
-    background: {
-      image: url("../logo.svg");
-      size: 48px 32px;
-    };
-  }
-  .header-close{
-    width: 32px;
-    background-color: #bdc3c7;
-    color: #ff6d6f;
-    border-top-right-radius: 5px;
-    cursor: pointer;
-  }
-  .header-title{
-    flex-grow: 1;
-  }
-}
-
-
 // 全局带文字边框样式
 .sugar-top-border{
   border-top: 1px solid $borderColor;
@@ -196,4 +128,50 @@ el-XXX 全局样式覆盖
 }
 .fade-enter, .fade-leave-to{
   opacity: 0;
+}
+
+
+
+// 弹出窗口
+.sugar-dialog-wrap{
+  position: fixed;
+  top: 0; bottom: 0; left: 0; right: 0;
+  background-color: rgba(0,0,0,.2);
+  z-index: 512;
+
+  .sugar-dialog{
+    position: fixed;
+    top: 100px; bottom: 100px; left: calc(50% - 720px); right: calc(50% - 720px);
+    height: calc(100% - 200px);
+    background-color: #eef2f3;
+    box-shadow: 0 0 3px #2d2f30;
+    border-radius: 3px;
+    z-index: 513;
+
+    .sugar-dialog-body{
+      height: calc(100% - 32px);
+      overflow: auto;
+    }
+  }
+
+  .sugar-dialog-header{
+    height: 32px; line-height: 32px; display: flex; flex-flow: row nowrap; border-bottom: 1px solid #DCDFE6; padding: 0;
+    border-top-right-radius: 3px;
+    text-align: center; font-size: 15px; font-weight: bold;
+    .header-logo{
+      width: 48px;
+      background: {
+        image: url("../logo.svg");
+        size: 48px 32px;
+      };
+    }
+
+    .header-title{
+      flex-grow: 1;
+    }
+
+    .header-close{
+      width: 32px; height: 32px; cursor: pointer; background-color: #bdc3c7; color: #ff6d6f;
+    }
+  }
 }

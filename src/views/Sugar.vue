@@ -224,7 +224,7 @@ export default {
   },
   computed: {
     isLogin(){
-      return this.$store.state.sugarAccount !== undefined
+      return this.$store.state.sugarAccount !== undefined && this.$store.state.sugarAccount !== null
     }
   }
 }

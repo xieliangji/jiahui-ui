@@ -2,7 +2,14 @@ import {TestPlan} from "@/views/jmeter/js/TestPlan";
 
 export default {
     setSugarAccount: (state, payload) => {
-        state.sugarAccount = payload
+        if(payload === undefined){
+            sessionStorage.removeItem("sugarAccount")
+            state.sugarAccount = undefined
+        } else {
+            sessionStorage.setItem("sugarAccount", JSON.stringify(payload))
+            state.sugarAccount = payload
+        }
+
     },
 
     /**

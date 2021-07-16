@@ -8,6 +8,7 @@
       <test-plan-save v-if="isShowPlanSave" :jmx-save="savePlan" @close="handleClose('planSave')" @saveEditClose="handleSaveEditClose"></test-plan-save>
       <report-manager v-if="isShowReport" @close="handleClose('report')"></report-manager>
       <file-manager v-if="isShowFile" @close="handleClose('file')"></file-manager>
+      <task-manager v-if="isShowTask" @close="handleClose('task')"></task-manager>
     </transition>
     <div id="sugar-jmeter-tree">
       <div id="tree-opt">
@@ -19,7 +20,7 @@
         <div class="sugar-jmeter-opt" v-if="isExecuting" @click="handleStopExecuting">停止执行</div>
         <div class="sugar-jmeter-opt" :style="{background: isShowProject ? '#2ebf91':''}" v-if="isLogin" @click="handleShow('report')">测试报告</div>
         <div class="sugar-jmeter-opt" :style="{background: isShowFile ? '#2ebf91': ''}" v-if="isLogin" @click="handleShow('file')">文件管理</div>
-        <div class="sugar-jmeter-opt" :style="{background: isShowProject ? '#2ebf91':''}" v-if="isLogin">定时任务</div>
+        <div class="sugar-jmeter-opt" :style="{background: isShowTask ? '#2ebf91':''}" v-if="isLogin" @click="handleShow('task')">定时任务</div>
         <div class="sugar-jmeter-opt" :style="{background: isShowFuncHelper ? '#2ebf91':''}" @click="handleShow('function')">函数助手</div>
       </div>
       <div class="sugar-opt-boundary"></div>
@@ -201,9 +202,11 @@ import TestPlanManager from "@/views/testplan/TestPlanManager";
 import TestPlanSave from "@/views/testplan/TestPlanSave";
 import ReportManager from "@/views/report/ReportManager";
 import FileManager from "@/views/file/FileManager";
+import TaskManager from "@/views/task/TaskManager";
 export default {
   name: "SugarJmeter",
   components: {
+    TaskManager,
     FileManager,
     ReportManager,
     TestPlanSave,
@@ -284,6 +287,7 @@ export default {
       isShowPlanSave: false, // 控制测试计划保存页面的显式、隐藏
       isShowReport: false, // 控制测试报告页面的显式、隐藏
       isShowFile: false, // 控制文件管理页面的显式、隐藏
+      isShowTask: false, // 控制定时任务页面的显式、隐藏
 
       isExecuting: false, // 标识测试计划是否正在执行
       executingLoading: undefined, // 加载状态
@@ -315,7 +319,9 @@ export default {
         case 'sampleResult': this.isShowSampleEvent = true; break
         case 'report': this.isShowReport = true; break
         case 'file': this.isShowFile = true; break
+        case 'task': this.isShowTask = true; break
       }
+      console.log(name)
     },
     handleClose(name){
       switch (name){
@@ -326,6 +332,7 @@ export default {
         case 'sampleResult': this.isShowSampleEvent = false; break
         case 'report': this.isShowReport = false; break
         case 'file': this.isShowFile = false; break
+        case 'task': this.isShowTask = false; break
       }
     },
 
@@ -439,7 +446,7 @@ export default {
     },
 
     isLogin(){
-      return this.$store.state.sugarAccount !== undefined
+      return this.$store.state.sugarAccount !== undefined && this.$store.state.sugarAccount !== null
     }
   },
 }

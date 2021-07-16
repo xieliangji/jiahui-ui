@@ -60,7 +60,7 @@ export default {
 
 <style scoped>
 .if-left{
-  width: 355px;
+  width: 260px;
   margin-right: 5px;
 }
 </style>

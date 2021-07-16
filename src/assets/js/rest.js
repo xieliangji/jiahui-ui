@@ -1,6 +1,9 @@
+/**
+ *  后台服务接口地址
+ */
+
 const httpDomain = process.env.VUE_APP_BASEURL
 const wsDomain = process.env.VUE_APP_WSURL
-
 export default {
     sugarJMeterFunctions: httpDomain.concat("/sugar-jmeter/functions"),
     sugarJMeterExecuteFunction: httpDomain.concat("/sugar-jmeter/execute-function"),
@@ -13,6 +16,7 @@ export default {
     sugarJMXUpdate: httpDomain.concat("/sugar-test-plan/update"),
     sugarJMXDelete: httpDomain.concat("/sugar-test-plan/delete"),
     sugarJMXExecute: httpDomain.concat("/sugar-test-plan/execute"),
+    sugarJMXFetch: httpDomain.concat("/sugar-test-plan/fetch-test-plans"),
 
     sugarAccountSingUp: httpDomain.concat("/sugar-account/signUp"),
     sugarAccountSignIn: httpDomain.concat("/sugar-account/signIn"),
@@ -32,4 +36,13 @@ export default {
     sugarFileQuery: httpDomain.concat("/sugar-file/query"),
     sugarFileDelete: httpDomain.concat("/sugar-file/delete"),
     sugarFileUpdate: httpDomain.concat("/sugar-file/update"),
+
+    sugarTaskSave: httpDomain.concat("/sugar-task/save"),
+    sugarTaskQuery: httpDomain.concat("/sugar-task/query"),
+    sugarTaskFetch: httpDomain.concat("/sugar-task/fetch"),
+    sugarTaskUpdate: httpDomain.concat("/sugar-task/update"),
+    sugarTaskDelete: httpDomain.concat("/sugar-task/delete"),
+    sugarTaskEnable: httpDomain.concat("/sugar-task/enable"),
+    sugarTaskDisable: httpDomain.concat("/sugar-task/disable"),
+
 }

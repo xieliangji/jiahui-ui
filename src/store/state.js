@@ -1,5 +1,5 @@
 export default {
-    sugarAccount: undefined, // as current signed in user/account.
+    sugarAccount: JSON.parse(sessionStorage.getItem('sugarAccount')), // as current signed in user/account.
 
     testPlan: undefined,
     currentTestElement: undefined,

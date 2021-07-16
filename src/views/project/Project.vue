@@ -1,7 +1,7 @@
 <template>
-  <div class="sugar-project-wrap">
-    <div class="sugar-project">
-      <div class="sugar-header">
+  <div class="sugar-dialog-wrap">
+    <div class="sugar-dialog">
+      <div class="sugar-dialog-header">
         <div class="header-logo"></div>
         <div class="header-title">管理项目</div>
         <div class="header-close" @click="$emit('close')"><i class="iconfont icon-guanbi"></i></div>
@@ -53,7 +53,7 @@
     <transition name="fade">
       <div class="project-add-wrap" v-if="activeCreate">
         <div class="project-add">
-          <div class="sugar-header">
+          <div class="sugar-dialog-header">
             <div class="header-logo"></div>
             <div class="header-title">添加项目</div>
             <div class="header-close" @click="disableCreate"><i class="iconfont icon-guanbi"></i></div>
@@ -84,7 +84,7 @@
       </div>
       <div class="project-add-wrap" v-if="activeEdit">
         <div class="project-add">
-          <div class="sugar-header">
+          <div class="sugar-dialog-header">
             <div class="header-logo"></div>
             <div class="header-title">编辑项目</div>
             <div class="header-close" @click="disableEdit"><i class="iconfont icon-guanbi"></i></div>
@@ -325,28 +325,6 @@ export default {
 
 <style scoped lang="scss">
 
-.sugar-project-wrap{
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 512;
-  background-color: rgba(0,0,0,.3);
-
-  .sugar-project{
-    position: fixed;
-    height: calc(100% - 200px);
-    top: 100px;
-    right: calc(50% - 720px);
-    bottom: 100px;
-    left: calc(50% - 720px);
-    background-color: #eef2f3;
-    box-shadow: 0 0 5px 1px #536976;
-    border-radius: 5px;
-  }
-}
-
 .project-add-wrap{
   position: fixed;
   height: calc(100% - 200px);
@@ -360,7 +338,6 @@ export default {
   .project-add{
     position: fixed;
     top: 200px;
-    //height: calc(100% - 400px);
     left: calc(50% - 400px);
     right: 320px;
     width: 800px;
