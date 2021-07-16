@@ -172,7 +172,7 @@ export default {
   data(){
     return {
       taskQuery: {name: '', creatorName: '', testPlanName: '', taskStatus: 2, pageSize: 10, pageNum: 1, createTimes: []},
-      tasks: {pageSize: 10, pageNum: 1, total: 0, list: [{taskStatus: 1, createTime: '2021-07-07 12:00:00'}]},
+      tasks: {pageSize: 10, pageNum: 1, total: 0, list: []},
 
       showTask: false,
       testPlans: [],
@@ -269,6 +269,7 @@ export default {
           if(response.data.code === 0){
             this.$message({message: '添加定时任务成功', type: "success", duration: 3000})
             this.handleCloseTask()
+            this.handleQuery()
           } else {
             this.$message({message: response.data.message, type: "error", duration: 3000})
           }
