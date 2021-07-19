@@ -291,6 +291,7 @@ export default {
         this.$axios.post(this.$RESTAPI.sugarFileUpdate, updateFile).then(response => {
           if(response.data.code === 0){
             this.$message({message: '更新成功', type: "success", duration: 3000})
+            this.expands = []
             this.handleQuery()
           } else {
             this.$message({message: response.data.message, type: "error", duration: 3000})

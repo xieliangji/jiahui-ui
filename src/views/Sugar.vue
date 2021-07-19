@@ -162,6 +162,15 @@ export default {
         this.$store.commit("setSugarAccount", undefined)
         this.$store.commit('initTestPlan')
         this.$store.commit('setExecutorId', undefined)
+        this.sugarAccount = {
+          id: undefined,
+          username: '',
+          email: '',
+          password: '',
+          repeatPassword: '',
+          createTime: undefined,
+          updateTime: undefined
+        }
       }
     },
 

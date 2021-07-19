@@ -153,7 +153,7 @@ export default {
 <style scoped lang="scss">
 
 #reportDetail{
-  z-index: 20512;
+  z-index: 612;
   position: fixed;
   height: 100vh;
   background-color: rgba(0,0,0,.2);

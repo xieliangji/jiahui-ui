@@ -1,12 +1,12 @@
 <template>
-  <el-drawer visible :size="1350" :close-on-press-escape="false" :close-on-click-modal="false" :wrapper-closable="false" :with-header="false">
-    <div id="sugarTestPlanManager" class="test-plan-manager">
-      <div class="test-plan-manager-header">
-        <div class="manager-header-logo"></div>
-        <div class="manager-header-title" style="text-align: center;">管理测试计划</div>
-        <div class="manager-header-close" @click="$emit('close')"><i class="iconfont icon-guanbi"></i></div>
+  <div class="sugar-dialog-wrap">
+    <div id="sugarTestPlanManager" class="sugar-dialog">
+      <div class="sugar-dialog-header">
+        <div class="header-logo"></div>
+        <div class="header-title" style="text-align: center;">管理测试计划</div>
+        <div class="header-close" @click="$emit('close')"><i class="iconfont icon-guanbi"></i></div>
       </div>
-      <div class="test-plan-manager-content">
+      <div class="sugar-dialog-body">
         <div class="manager-content-query">
           <div class="sugar-normal-line sugar-flex-row">
             <div class="sugar-label-input">
@@ -84,7 +84,7 @@
       </div>
     </div>
 
-  </el-drawer>
+  </div>
 </template>
 
 <script>
@@ -184,63 +184,21 @@ export default {
 
 <style scoped lang="scss">
 
-.test-plan-manager{
-  height: 100%;
-  background-color: #eef2f3;
+.manager-content-query{
+  height: 100px;
+  padding: 20px 10px 0 10px;
+}
 
-  // 页面头部样式
-  .test-plan-manager-header {
-    height: 32px;
-    line-height: 32px;
-    display: flex;
-    flex-flow: row nowrap;
-    border-bottom: 1px solid #DCDFE6;
-    box-sizing: border-box;
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center;
-    .manager-header-logo{
-      width: 48px;
-      background: {
-        image: url("../../assets/logo.svg");
-        size: 48px 32px;
-      };
-    }
+.manager-content-table {
+  height: calc(100% - 100px);
 
-    .manager-header-close{
-      width: 32px;
-      color: #ff6d6f;
-      background-color: #bdc3c7;
-      cursor: pointer;
-    }
-
-    .manager-header-title{
-      flex-grow: 1;
-    }
+  .content-table-list{
+    height: calc(100% - 40px);
+    overflow: hidden;
+    padding: 10px;
   }
-
-  // 页面内容样式
-  .test-plan-manager-content{
-    height: calc(100% - 32px);
-
-    .manager-content-query{
-      height: 100px;
-      padding: 20px 10px 0 10px;
-    }
-
-    .manager-content-table {
-      height: calc(100% - 100px);
-
-      .content-table-list{
-        height: calc(100% - 40px);
-        overflow: hidden;
-        padding: 10px;
-      }
-      .content-table-pagination{
-        height: 40px; line-height: 40px; text-align: right;
-      }
-    }
-
+  .content-table-pagination{
+    height: 40px; line-height: 40px; text-align: right;
   }
 }
 
