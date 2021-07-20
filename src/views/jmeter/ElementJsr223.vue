@@ -35,8 +35,8 @@
       <div class="sugar-normal-line sugar-label-input">
         <div class="label">文件名</div>
         <div class="input" @dblclick="handleScriptUpload">
-          <el-input readonly v-model="element.filename" placeholder="双击选择上传脚本文件"></el-input>
-          <input id="scriptInput" type="file" style="display: none" @change="handleScriptFileUpload"/>
+          <el-input readonly v-model="scriptFileName" placeholder="双击选择上传脚本文件"></el-input>
+          <input id="scriptInput" type="file" style="display: none" accept=".js,.bsh,.groovy,.py" @change="handleScriptFileChange"/>
         </div>
       </div>
     </div>
@@ -59,19 +59,45 @@
 import SugarJmeterElement from "@/components/SugarJmeterElement";
 import {JT} from "@/views/jmeter/js/JmeterTestElement";
 import JmeterEditor from "@/components/JmeterEditor";
+import {upload} from "@/views/jmeter/js/TestPlanFileUploader";
 export default {
   name: "ElementJsr223",
   components: {JmeterEditor, SugarJmeterElement},
   props: {
     element: Object
   },
+  data(){
+    return {
+      scriptFileName: ''
+    }
+  },
   methods: {
     handleScriptUpload(){
-
+      let scriptInputEl = document.getElementById('scriptInput')
+      scriptInputEl.click()
     },
 
-    handleScriptFileUpload(){
+    handleScriptFileChange(){
+      let scriptInputEl = document.getElementById('scriptInput')
+      let fileName = scriptInputEl.files[0].name
+      this.$confirm(`是否上传脚本文件 [${fileName}]`,"", {confirmButtonText: '是', cancelButtonText: '否'}).then(() => {
+        let payload = new FormData()
+        let uploaderId = (this.$store.state.sugarAccount === undefined || this.$store.state.sugarAccount === null) ? 0: this.$store.state.sugarAccount.id
+        payload.append("file", scriptInputEl.files[0])
+        payload.append("uploaderId", uploaderId)
 
+        upload(payload).then(path => {
+          let pathBits = path.split('/')
+          let pathName = pathBits.length > 0 ? pathBits[pathBits.length - 1] : ""
+          this.scriptFileName = `${pathName} （${fileName}）`
+          this.element.filename = path
+          scriptInputEl.value = ''
+        }).catch(() => {
+          scriptInputEl.value = ''
+        })
+      }).catch(() => {
+        scriptInputEl.value = ''
+      })
     },
 
     handleScriptUpdate(script){

@@ -131,7 +131,10 @@
                   <el-table-column prop="path">
                     <div slot="header" class="sugar-table-header">文件名称</div>
                     <template slot-scope="scope">
-                      <el-input readonly v-model="scope.row.path" placeholder="双击上传相关测试文件" @dblclick="handleHttpFileUpload"></el-input>
+                      <div @dblclick="handleHttpFileUpload">
+                        <el-input readonly v-model="scope.row.filePath" placeholder="双击上传相关测试文件"></el-input>
+                        <input :id="scope.row.id" type="file" style="display: none" @change="handleFileChange"/>
+                      </div>
                     </template>
                   </el-table-column>
                   <el-table-column prop="paramName">
@@ -280,6 +283,7 @@
 import SugarJmeterElement from "@/components/SugarJmeterElement";
 import JmeterEditor from "@/components/JmeterEditor";
 import {HttpArgument, HttpFile} from "@/views/jmeter/js/JmeterTestElement";
+import {upload} from "@/views/jmeter/js/TestPlanFileUploader";
 export default {
   name: "ElementHttp",
   components: {JmeterEditor, SugarJmeterElement},
@@ -292,7 +296,7 @@ export default {
       activeTab2: 'argument',
       currentArgument: undefined,
       fileTableKey: 1,
-      currentFile: undefined
+      currentFile: undefined,
     }
   },
   methods: {
@@ -339,6 +343,7 @@ export default {
 
     handleFileAdd(){
       let file = new HttpFile()
+      file.filePath = ''
       this.element.files.push(file)
       this.currentFile = file
       this.$refs.filesTable.setCurrentRow(this.currentFile)
@@ -357,7 +362,37 @@ export default {
     },
 
     handleHttpFileUpload(){
+      let fileEl = document.getElementById(this.currentFile.id)
+      fileEl.click()
+    },
 
+    handleFileChange(){
+      let fileEl = document.getElementById(this.currentFile.id)
+      let file = fileEl.files[0]
+      let fileName = file.name
+      this.$confirm(`是否上传文件 [${fileName}]`, "", {confirmButtonText: "是", cancelButtonText: "否"}).then(() => {
+        let uploaderId = (this.$store.state.sugarAccount === undefined || this.$store.state.sugarAccount === null) ? 0: this.$store.state.sugarAccount.id
+        let payload = new FormData()
+        payload.append("file", file)
+        payload.append("uploaderId", uploaderId)
+
+        upload(payload).then(path => {
+          this.currentFile.path = path
+          let pathBits = path.split('/')
+          let uploadedFileName = pathBits.length > 0? pathBits[pathBits.length - 1] : ""
+          this.currentFile.filePath = `${uploadedFileName} (${fileName})`
+          fileEl.value = ''
+
+          for(let index = 0; index < this.element.files.length; index++){
+            let tableFile = this.element.files[index]
+            let file = new HttpFile()
+            file.path = tableFile.path
+            file.mimetype = tableFile.mimetype
+          }
+        })
+      }).catch(() => {
+        fileEl.value = ''
+      })
     }
   },
   computed: {

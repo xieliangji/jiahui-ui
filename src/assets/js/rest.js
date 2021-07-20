@@ -45,4 +45,6 @@ export default {
     sugarTaskEnable: httpDomain.concat("/sugar-task/enable"),
     sugarTaskDisable: httpDomain.concat("/sugar-task/disable"),
 
+    sugarTestPlanFileUpload: httpDomain.concat("/sugar-test-file/upload"),
+
 }

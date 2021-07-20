@@ -3,7 +3,7 @@
     <div class="sugar-label-input sugar-normal-line">
       <div class="label">文件名</div>
       <div class="input" @dblclick="handleCsvUpload">
-        <Input v-model="element.filename" readonly placeholder="双击上传csv文件"></Input>
+        <Input v-model="fileName" readonly placeholder="双击上传csv文件"></Input>
         <input id="csvFile" type="file" style="display: none" accept=".csv" @change="handleCsvChange"/>
       </div>
     </div>
@@ -82,6 +82,7 @@
 
 <script>
 import SugarJmeterElement from "@/components/SugarJmeterElement";
+import {upload} from "./js/TestPlanFileUploader";
 export default {
   name: "ConfigElementCsv",
   components: {SugarJmeterElement},
@@ -90,7 +91,7 @@ export default {
   },
   data(){
     return {
-
+      filename: undefined
     }
   },
   methods: {
@@ -101,9 +102,21 @@ export default {
 
     handleCsvChange(){
       let csv = document.getElementById("csvFile")
+      let uploaderId = (this.$store.state.sugarAccount === undefined || this.$store.state.sugarAccount === null) ? 0: this.$store.state.sugarAccount.id
 
-      console.log(csv.files)
+      let payload = new FormData();
+      payload.append("file", csv.files[0])
+      payload.append("uploaderId", uploaderId)
+      this.filename = csv.files[0].name
+
+      upload(payload).then(path => this.element.filename = path)
       csv.value = ''
+    }
+  },
+  computed: {
+    fileName(){
+      let filePathArray = this.element.filename.split("/")
+      return filePathArray.length > 0 ? `${filePathArray[filePathArray.length - 1]} （${this.filename}）` : ""
     }
   }
 }
